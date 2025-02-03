@@ -19,7 +19,7 @@ export default async function AboutUs() {
     const herodata_main = strapioutput.MainPageCards;
     const featuresdata = (herodata_main?.items && herodata_main.items.length > 0) ? herodata_main.items.map((item: any, index: number) => {
         //sbse phle nikalenge url 
-        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.formats.large.url}` : item.image.formats.large?.url || item.image.url;
+        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image?.formats?.large?.url}` : item.image?.formats?.large?.url || item.image?.url;
         return {
             id: item.id,
             image: imgurl,

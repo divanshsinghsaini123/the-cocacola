@@ -2,9 +2,9 @@
 
 const STRAPI_URLHomepage = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/home-page?populate[hero][populate]=image&populate[promosAndOffers][populate][items][populate]=image&populate[features][populate][items][populate]=image&populate[moreFromCocaCola][populate][items][populate]=image&populate[socialLinks][populate][Instagram]=*&populate[socialLinks][populate][Youtube]=*&populate[socialLinks][populate][X]=*&populate[socialLinks][populate][Facebook]=*&populate[footer][populate][Section1][populate][links]=*&populate[footer][populate][Section2][populate][links]=*&populate[footer][populate][Section3][populate][links]=*&populate[footer][populate][FooterImage]=true&populate[NavbarImage]=true";
 
-if (process.env.NODE_ENV === "development") {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-}
+// if (process.env.NODE_ENV === "development") {
+//     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// }
 if (!STRAPI_URLHomepage) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
