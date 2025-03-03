@@ -42,7 +42,7 @@ const ProductComponent: React.FC<ProductProps> = ({
             {/* Background */}
             <div className={`absolute inset-0 w-full h-full z-0`}>
                 <Image
-                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + backgroundImage}
+                    src={backgroundImage}
                     alt="Background"
                     fill
                     className="object-cover md:opacity-100 opacity-50"
@@ -55,7 +55,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                 <div className="w-full md:w-1/2 flex justify-center">
                     <div className="relative w-[300px] md:w-[450px] aspect-[3/4]">
                         <Image
-                            src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + productImage}
+                            src={productImage}
                             alt={title}
                             fill
                             className="object-contain"

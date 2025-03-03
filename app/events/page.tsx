@@ -1,6 +1,5 @@
 import { GetEventsData } from "@/src/lib/strapi";
-import Event from "./_components/event";
-
+import EventsCarousel from "./_components/EventsCarousel";
 export default async function EventsPage() {
     const data = await GetEventsData();
     const heading = data?.Heading;
@@ -8,8 +7,8 @@ export default async function EventsPage() {
     const events = data?.Event;
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 min-h-screen">
-            <div className="text-center mb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+            <div className="text-center mb-10">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight mb-6">
                     {heading}
                 </h1>
@@ -18,11 +17,7 @@ export default async function EventsPage() {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {events?.map((event: any, index: number) => (
-                    <Event key={event.id} event={event} />
-                ))}
-            </div>
+            <EventsCarousel events={events || []} />
         </div>
     );
 }
