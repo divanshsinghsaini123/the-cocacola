@@ -22,9 +22,9 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="bg-white  top-0 z-50">
+        <nav className="bg-white top-0 z-50">
             <div className="max-w-7xl mx-auto px-3 sm:px-3 lg:px-3">
-                <div className="flex items-center gap-15 h-20">
+                <div className="flex items-center justify-between md:justify-start gap-14 h-20">
                     {/* Logo */}
                     <div className="flex-shrink-0 flex items-center">
                         <Link href="/" className="flex items-center">
@@ -40,14 +40,14 @@ export default function Navbar() {
                     </div>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-12 h-[100%]">
+                    <div className="hidden md:flex items-center space-x-10 h-[100%]">
                         {navLinks.map((link) => {
                             const isActive = pathname === link.href;
                             return (
                                 <Link
                                     key={link.name}
                                     href={link.href}
-                                    className={`pt-2 h-[100%] flex items-center text-black font-bold text-md tracking-wide transition-all duration-200 border-b-4 ${isActive ? "border-black" : "border-transparent hover:border-black"
+                                    className={`pt-2 h-[100%] flex items-center text-black font-bold text-[15px] tracking-wide transition-all duration-200 border-b-4 ${isActive ? "border-black" : "border-transparent hover:border-black"
                                         }`}
                                 >
                                     {link.name}
