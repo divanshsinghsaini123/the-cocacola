@@ -13,14 +13,14 @@ export default function ExploreBrands() {
     ];
 
     return (
-        <section className="w-full bg-[#EEEEEE] py-20">
+        <section className="w-full bg-[#EEEEEE] py-20 ">
             <div className="max-w-3xl mx-auto px-4 sm:px-6">
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-7 text-black">Explore Our Brands</h2>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6">
                     {brands.map((brand, index) => (
-                        <div key={index} className="bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[120px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow">
-                            <div className="relative w-[100%] h-[100%]">
+                        <div key={index} className="group bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow overflow-hidden">
+                            <div className="relative w-[100%] h-[100%] transform transition-transform duration-300 group-hover:scale-110">
                                 <Image
                                     src={brand.image}
                                     alt={brand.name}
