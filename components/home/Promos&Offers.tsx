@@ -70,7 +70,7 @@ export default function PromosAndOffers() {
                 {/* Mobile: Scrollable, Desktop: Grid */}
                 <div
                     ref={scrollContainerRef}
-                    className="flex overflow-x-hidden gap-4 sm:gap-6 sm:grid sm:grid-cols-2 sm:overflow-visible snap-x snap-mandatory pb-6 sm:pb-0 no-scrollbar cursor-grab active:cursor-grabbing"
+                    className="flex overflow-x-auto gap-4 sm:gap-6 sm:grid sm:grid-cols-2 sm:overflow-visible snap-x snap-mandatory pb-6 sm:pb-0 no-scrollbar cursor-grab active:cursor-grabbing"
                     onScroll={handleScroll}
                     onMouseDown={handleMouseDown}
                     onMouseLeave={handleMouseLeave}
