@@ -44,25 +44,28 @@ export default function Features() {
 
                             {/* Content Card */}
                             <div className={`
-                                w-[88%] lg:w-[544px] lg:h-[552px] flex flex-col justify-center
+                                w-[88%] lg:w-[544px] lg:h-[552px] flex flex-col justify-between
                                 bg-white p-6 md:p-10 lg:p-14 rounded-[16px] shadow-lg
                                 relative z-10
                                 -mt-20 lg:-mt-35 
                                 ${feature.alignment === 'right' ? 'lg:-mr-5' : 'lg:-ml-5'}
                                 ${feature.alignment === 'right' ? 'lg:translate-x-10' : 'lg:-translate-x-10'}
                             `}>
-                                <h3 className="text-[22px] md:text-[28px] mb-4 font-black text-black leading-[1.2]">
-                                    {feature.title}
-                                </h3>
-                                <p className="text-[14px] md:text-[16px] text-black mb-8 leading-[1.5]">
-                                    {feature.description}
-                                </p>
+                                <div>
+                                    <h3 className="text-[22px] md:text-[28px] mb-4 font-black text-black leading-[1.2]">
+                                        {feature.title}
+                                    </h3>
+                                    <p className="text-[14px] md:text-[16px] text-black mb-8 leading-[1.5]">
+                                        {feature.description}
+                                    </p>
+                                </div>
                                 <Link
                                     href={feature.link}
                                     className="w-full md:w-[327px] block text-center py-2 rounded-full border-2 border-black text-black font-bold text-[16px] hover:bg-black hover:text-white transition-colors duration-300"
                                 >
                                     {feature.buttonText}
                                 </Link>
+
                             </div>
                         </div>
                     ))}
