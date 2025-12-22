@@ -6,7 +6,7 @@ export default function Features() {
     const features = [
         {
             id: 1,
-            image: "/assets/sprite-squad-december-dt.png",
+            image: "/assets/Home/sprite-squad-december-dt.png",
             title: "Anta Claus + Winter Spiced Cranberry",
             description: "Enter for your chance to win a signed Anthony Edwards backboard used in his video shoot, or a Sprite Winter Spiced Cranberry 12-pack and cooler.",
             buttonText: "Learn More",
@@ -15,7 +15,7 @@ export default function Features() {
         },
         {
             id: 2,
-            image: "/assets/Features2.webp",
+            image: "/assets/Home/Features2.webp",
             title: "Sprite Vanilla Frost",
             description: "Step out of the ordinary with Sprite Vanilla Frost, here for a limited time only, exclusively at the Kroger Family of Stores.",
             buttonText: "Secure Yours",

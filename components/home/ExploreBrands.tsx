@@ -4,12 +4,12 @@ import Link from "next/link";
 
 export default function ExploreBrands() {
     const brands = [
-        { name: "Coca-Cola", image: "/assets/cococola_brand.webp" },
-        { name: "Diet Coke", image: "/assets/dietcoke_brand.webp" },
-        { name: "Sprite", image: "/assets/sprite_brand.webp" },
-        { name: "Fanta", image: "/assets/fanta_brand.webp" },
-        { name: "Smartwater", image: "/assets/smartwater_brand.webp" },
-        { name: "Minute Maid", image: "/assets/minutemade_brand.webp" },
+        { name: "Coca-Cola", image: "/assets/Home/cococola_brand.webp" },
+        { name: "Diet Coke", image: "/assets/Home/dietcoke_brand.webp" },
+        { name: "Sprite", image: "/assets/Home/sprite_brand.webp" },
+        { name: "Fanta", image: "/assets/Home/fanta_brand.webp" },
+        { name: "Smartwater", image: "/assets/Home/smartwater_brand.webp" },
+        { name: "Minute Maid", image: "/assets/Home/minutemade_brand.webp" },
     ];
 
     return (

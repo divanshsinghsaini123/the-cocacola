@@ -8,7 +8,7 @@ export default function MoreFromCocaCola() {
     const originalItems = [
         {
             id: 1,
-            image: "/assets/coke-offering-vending.jpg",
+            image: "/assets/Home/coke-offering-vending.jpg",
             title: "Coca-Cola Vending",
             description: "Each time you make a purchase with your mobile wallet at select Coca-Cola vending machines, you’ll be one step closer to earning a drink reward.",
             buttonText: "Start Earning Today",
@@ -16,7 +16,7 @@ export default function MoreFromCocaCola() {
         },
         {
             id: 2,
-            image: "/assets/coke-offering-refreshing-films.jpg",
+            image: "/assets/Home/coke-offering-refreshing-films.jpg",
             title: "Coca-Cola Refreshing Films",
             description: "Coca-Cola® Refreshing Films provides students the opportunity to create content for the big screen.",
             buttonText: "Check It Out",
@@ -24,7 +24,7 @@ export default function MoreFromCocaCola() {
         },
         {
             id: 3,
-            image: "/assets/plusone-card.jpg",
+            image: "/assets/Home/plusone-card.jpg",
             title: "you plus +one",
             description: "Have you downloaded yet? The +one app brings the universe of Coca-Cola® into the palm of your hand. Start earning rewards today!",
             buttonText: "Download Now",
@@ -32,7 +32,7 @@ export default function MoreFromCocaCola() {
         },
         {
             id: 4,
-            image: "/assets/newExhibit.webp",
+            image: "/assets/Home/newExhibit.webp",
             title: "New Exhibit at World of Coca-Cola",
             description: "Experience the magic of Coca-Cola’s history like never before—step into Coca-Cola Stories at World of Coca-Cola.",
             buttonText: "Learn More",
@@ -40,7 +40,7 @@ export default function MoreFromCocaCola() {
         },
         {
             id: 5,
-            image: "/assets/drinkup.webp",
+            image: "/assets/Home/drinkup.webp",
             title: "Drink up what we’ve dreamed up!",
             description: "Coca-Cola Freestyle gives you the freedom to explore, pour, and enjoy your perfect drinks.",
             buttonText: "Explore and Pour",

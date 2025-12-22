@@ -109,7 +109,7 @@ export default function Footer() {
                 <div className="mb-9">
                     <Link href="/">
                         <Image
-                            src="/assets/logo-white-large.svg"
+                            src="/assets/Home/logo-white-large.svg"
                             alt="The Coca-Cola Company"
                             width={249}
                             height={40}

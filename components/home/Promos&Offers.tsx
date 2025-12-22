@@ -8,14 +8,14 @@ export default function PromosAndOffers() {
     const offers = [
         {
             id: 1,
-            image: "/assets/pro&offer1.webp",
+            image: "/assets/Home/pro&offer1.webp",
             title: "Enter for a chance to win groceries for a year",
             description: "There's nothing more comforting than a stocked kitchen. We'll take care of that all year.",
             link: "#"
         },
         {
             id: 2,
-            image: "/assets/nascar-home-tile.png",
+            image: "/assets/Home/nascar-home-tile.png",
             title: "Coca-Cola® DAYTONA 500® Flyaway Sweepstakes",
             description: "Enter for your chance to win a NASCAR® VIP experience that will get your heart racing.",
             link: "#"
