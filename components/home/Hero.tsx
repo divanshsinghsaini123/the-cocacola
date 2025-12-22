@@ -16,7 +16,7 @@ export default function Hero() {
                             priority
                         />
                         {/* Overlay gradient for better text readability if needed, though the image seems dark enough on the left */}
-                        <div className="absolute inset-0 bg-black/15 md:bg-gradient-to-r md:from-black/15 md:via-transparent md:to-transparent " />
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent md:bg-gradient-to-r md:from-black/15 md:via-transparent md:to-transparent " />
                     </div>
 
                     {/* Content */}
@@ -28,7 +28,7 @@ export default function Hero() {
                             <p className="text-[16px] md:text-[16px] leading-[1.5] max-w-[500px] text-white px-3 md:px-0">
                                 Enter our holiday sweepstakes for your chance to win an unforgettable 5-day/4-night journey to the winter wonderland of Sweden, including a stay at the world-famous ICEHOTEL.
                             </p>
-                            <div className="pt-1 md:pt-4 w-full md:w-auto lg:w-auto">
+                            <div className="pt-1 md:pt-4 w-full md:w-auto lg:w-auto flex justify-center md:block">
                                 <Link
                                     href="#"
                                     className="pt-2 block w-[290px] h-[40px] lg:w-[327px] lg:h-[40px] md:inline-block bg-white text-black text-[18px] font-bold rounded-full hover:bg-gray-100 transition-colors duration-200 text-center"

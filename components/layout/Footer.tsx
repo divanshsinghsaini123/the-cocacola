@@ -1,7 +1,32 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+
+const ChevronDown = ({ isOpen }: { isOpen: boolean }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={2.5}
+        stroke="currentColor"
+        className={`w-6 h-6 transition-transform duration-300 ${isOpen ? "rotate-270" : "rotate-90"}`}
+    >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+    </svg>
+);
 
 export default function Footer() {
+    const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+
+    const toggleSection = (section: string) => {
+        setOpenSections((prev) => ({
+            ...prev,
+            [section]: !prev[section],
+        }));
+    };
+
     const socialIcons = [
         {
             name: "X",
@@ -93,14 +118,26 @@ export default function Footer() {
                     </Link>
                 </div>
 
-                {/* Separator */}
+                {/* Separator - Visible on Desktop only or kept as per original? Image has line after logo. */}
                 <div className="border-t border-white mb-10"></div>
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-10">
                     {/* HELP Column */}
                     <div className="md:col-span-2">
-                        <h3 className="text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Help</h3>
-                        <ul className="space-y-3 text-md font-bold">
+                        {/* Mobile Header (Accordion Button) */}
+                        <button
+                            onClick={() => toggleSection('help')}
+                            className="flex justify-between items-center w-full md:hidden py-2"
+                        >
+                            <h3 className="text-[20px] font-bold text-white">Help</h3>
+                            <ChevronDown isOpen={openSections['help']} />
+                        </button>
+
+                        {/* Desktop Header */}
+                        <h3 className="hidden md:block text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Help</h3>
+
+                        {/* Link List */}
+                        <ul className={`space-y-3 text-md font-bold ${openSections['help'] ? 'block py-4 ml-5' : 'hidden'} md:block md:py-0`}>
                             {helpLinks.map((link) => (
                                 <li key={link.name}>
                                     <Link href={link.href} className="hover:underline">
@@ -113,8 +150,17 @@ export default function Footer() {
 
                     {/* SHOP & VISIT Column */}
                     <div className="md:col-span-3">
-                        <h3 className="text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Shop & Visit</h3>
-                        <ul className="space-y-3 text-md font-bold">
+                        <button
+                            onClick={() => toggleSection('shop')}
+                            className="flex justify-between items-center w-full md:hidden py-2"
+                        >
+                            <h3 className="text-[20px] font-bold text-white">Shop & Visit</h3>
+                            <ChevronDown isOpen={openSections['shop']} />
+                        </button>
+
+                        <h3 className="hidden md:block text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Shop & Visit</h3>
+
+                        <ul className={`space-y-3 text-md font-bold ${openSections['shop'] ? 'block py-4 ml-5' : 'hidden'} md:block md:py-0`}>
                             {shopLinks.map((link) => (
                                 <li key={link.name}>
                                     <Link href={link.href} className="hover:underline">
@@ -127,8 +173,17 @@ export default function Footer() {
 
                     {/* LEGAL Column */}
                     <div className="md:col-span-4">
-                        <h3 className="text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Legal</h3>
-                        <ul className="space-y-3 text-md font-bold">
+                        <button
+                            onClick={() => toggleSection('legal')}
+                            className="flex justify-between items-center w-full md:hidden py-2"
+                        >
+                            <h3 className="text-[20px] font-bold text-white">Legal</h3>
+                            <ChevronDown isOpen={openSections['legal']} />
+                        </button>
+
+                        <h3 className="hidden md:block text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Legal</h3>
+
+                        <ul className={`space-y-3 text-md font-bold ${openSections['legal'] ? 'block py-4 ml-7' : 'hidden'} md:block md:py-0`}>
                             {legalLinks.map((link) => (
                                 <li key={link.name}>
                                     <Link href={link.href} className="hover:underline">
@@ -140,7 +195,7 @@ export default function Footer() {
                     </div>
 
                     {/* Social Icons */}
-                    <div className="md:col-span-3 flex justify-start md:justify-end items-start gap-4">
+                    <div className="md:col-span-3 flex justify-start md:justify-end items-start gap-4 mt-8 md:mt-0 pt-8 md:pt-0 border-t border-white md:border-t-0">
                         {socialIcons.map((social) => (
                             <a
                                 key={social.name}
