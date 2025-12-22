@@ -29,7 +29,7 @@ export default function Navbar() {
                     <div className="flex-shrink-0 flex items-center">
                         <Link href="/" className="flex items-center">
                             <Image
-                                src="/assets/Coke-company-logo-black.svg"
+                                src="/assets/Home/Coke-company-logo-black.svg"
                                 alt="The Coca-Cola Company"
                                 width={125}
                                 height={20}
