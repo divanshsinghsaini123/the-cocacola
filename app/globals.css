@@ -1,9 +1,36 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "TCCC-UnityText";
+  src: url("https://db.onlinewebfonts.com/t/7d3930158276067e79e7e9b281b78976.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TCCC-UnityText";
+  src: url("https://db.onlinewebfonts.com/t/bdd218abbfbb5b0110069f995c5af6de.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+}
+
 @theme {
-  --font-sans: Noto-regional, Noto-latin, TCCC-UnityText, sans-serif;
+  --font-sans: "TCCC-UnityText", Noto-regional, Noto-latin, sans-serif;
 }
 
 body {
   font-family: var(--font-sans);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }

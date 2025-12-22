@@ -73,7 +73,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="flex items-center md:hidden">
+                    <div className="flex items-center md:hidden gap-4">
                         <button
                             onClick={toggleMenu}
                             type="button"
@@ -122,23 +122,42 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="md:hidden bg-white border-t border-gray-100 absolute w-full" id="mobile-menu">
-                    <div className="px-4 pt-2 pb-6 space-y-1">
+                <div className="fixed inset-0 z-50 bg-white" id="mobile-menu">
+                    <div className="flex justify-end p-4">
+                        <button
+                            onClick={toggleMenu}
+                            className="p-2 text-black hover:text-gray-700"
+                        >
+                            <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="px-6 pt-2 space-y-4">
                         {navLinks.map((link) => {
-                            const isActive = pathname === link.href;
                             return (
                                 <Link
                                     key={link.name}
                                     href={link.href}
-                                    className={`block px-3 py-4 text-base font-bold text-black border-b border-gray-100 ${isActive ? "bg-gray-50" : ""
-                                        }`}
+                                    className="block text-[22px] font-bold text-black"
                                     onClick={() => setIsOpen(false)}
                                 >
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex justify-between items-center w-full">
                                         {link.name}
                                         {link.hasChevron && (
                                             <svg
-                                                className="w-4 h-4"
+                                                className="w-5 h-5"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
