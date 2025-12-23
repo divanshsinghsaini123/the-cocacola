@@ -4,8 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, useEffect, useCallback } from "react";
 
-export default function MoreFromCocaCola() {
-    const originalItems = [
+export interface MoreFromCocaColaItem {
+    id: number;
+    image: string;
+    title: string;
+    description: string;
+    buttonText: string;
+    link: string;
+}
+
+export default function MoreFromCocaCola({ items: userItems }: { items?: MoreFromCocaColaItem[] }) {
+    const defaultItems: MoreFromCocaColaItem[] = [
         {
             id: 1,
             image: "/assets/Home/coke-offering-vending.jpg",
@@ -48,76 +57,22 @@ export default function MoreFromCocaCola() {
         }
     ];
 
-    // Triple the items to create the illusion of infinite scroll
-    const items = [...originalItems, ...originalItems, ...originalItems];
+    const finalItems = userItems || defaultItems;
 
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeft, setScrollLeft] = useState(0);
     const [activeIndex, setActiveIndex] = useState(0);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    // Initialize scroll position to the middle set
-    useEffect(() => {
-        if (scrollContainerRef.current) {
-            const container = scrollContainerRef.current;
-            const singleSetWidth = container.scrollWidth / 3;
-            container.scrollLeft = singleSetWidth;
-        }
-    }, []);
-
-    const handleScroll = () => {
+    const checkScroll = () => {
         if (!scrollContainerRef.current) return;
         const container = scrollContainerRef.current;
-        const totalWidth = container.scrollWidth;
-        const oneSetWidth = totalWidth / 3;
+        const cardWidth = container.firstElementChild?.clientWidth || 0;
+        if (cardWidth === 0) return;
 
-        // Infinite scroll logic: Reset position if we scroll too far
-        if (container.scrollLeft >= oneSetWidth * 2) {
-            container.scrollLeft -= oneSetWidth;
-        } else if (container.scrollLeft <= 0) {
-            container.scrollLeft += oneSetWidth;
-        }
-
-        // Calculate active index (0-4)
-        // Adjust scrollLeft to be relative to the start of the virtual "middle" set for index calc
-        // or just use modulo.
-        // Approximate card width including gap: 300px + 24px (gap-6) = 324px (mobile), 380 + 24 = 404 (desktop)
-        // A safer way is using relative progress.
-
-        const relativeScroll = container.scrollLeft % oneSetWidth;
-        const totalItems = originalItems.length;
-        const itemWidth = oneSetWidth / totalItems;
-        const currentItem = Math.round(relativeScroll / itemWidth) % totalItems;
-
-        setActiveIndex(currentItem);
+        // Add gap to card width (gap-6 = 24px)
+        const stride = cardWidth + 24;
+        const newIndex = Math.round(container.scrollLeft / stride);
+        setActiveIndex(newIndex);
     };
-
-    // Drag to Scroll Handlers
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!scrollContainerRef.current) return;
-        setIsDragging(true);
-        setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
-        setScrollLeft(scrollContainerRef.current.scrollLeft);
-    };
-
-    const handleMouseLeave = () => {
-        setIsDragging(false);
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging || !scrollContainerRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - scrollContainerRef.current.offsetLeft;
-        const walk = (x - startX) * 2; // Scroll-fast factor of 2
-        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
-    };
-
-    // Touch support is naturally handled by overflow-x-auto, but infinite scroll logic in handleScroll works for both.
 
     return (
         <section className="w-full bg-[#EEEEEE] -mb-5 pt-10">
@@ -126,22 +81,18 @@ export default function MoreFromCocaCola() {
 
                 <div
                     ref={scrollContainerRef}
-                    className="flex overflow-x-auto gap-6 pb-8 no-scrollbar cursor-grab active:cursor-grabbing"
-                    onScroll={handleScroll}
-                    onMouseDown={handleMouseDown}
-                    onMouseLeave={handleMouseLeave}
-                    onMouseUp={handleMouseUp}
-                    onMouseMove={handleMouseMove}
-                    style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
+                    className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden"
+                    onScroll={checkScroll}
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                    {items.map((item, index) => (
-                        <div key={`${item.id}-${index}`} className="min-w-[300px] md:min-w-[calc((100%-3rem)/3)] w-[300px] md:w-[calc((100%-3rem)/3)] bg-white rounded-[20px] overflow-hidden flex flex-col shadow-sm flex-shrink-0 select-none snap-start">
+                    {finalItems.map((item, index) => (
+                        <div key={`${item.id}-${index}`} className="w-[85vw] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-start bg-white rounded-[20px] overflow-hidden flex flex-col shadow-sm group">
                             <div className="relative h-[200px] md:h-[250px] w-full">
                                 <Image
                                     src={item.image}
                                     alt={item.title}
                                     fill
-                                    className="object-cover pointer-events-none" // Prevent image drag
+                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
                             </div>
                             <div className="p-6 md:p-8 flex flex-col flex-grow text-left">
@@ -152,7 +103,7 @@ export default function MoreFromCocaCola() {
                                     {item.description}
                                 </p>
                                 <div className="mt-auto">
-                                    <Link href={item.link} className="inline-flex items-center text-black font-bold text-[14px] md:text-[16px] group border-b-2 border-black hover:border-transparent transition-all pb-0.5 pointer-events-auto">
+                                    <Link href={item.link} className="inline-flex items-center text-black font-bold text-[14px] md:text-[16px] group border-b-2 border-black hover:border-transparent transition-all pb-0.5">
                                         {item.buttonText}
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -166,7 +117,7 @@ export default function MoreFromCocaCola() {
 
                 {/* Pagination Dots */}
                 <div className="flex justify-center items-center gap-2 mt-4">
-                    {originalItems.map((_, index) => (
+                    {finalItems.map((_, index) => (
                         <div
                             key={index}
                             className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'
