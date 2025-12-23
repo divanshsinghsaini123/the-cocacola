@@ -18,7 +18,7 @@ export default function Navbar() {
         { name: "Discover", href: "/discover", hasChevron: true },
         { name: "Impact", href: "/impact", hasChevron: true },
         { name: "Shop", href: "/shop" },
-        { name: "Promos & Offers", href: "/promos" },
+        { name: "Promos & Offers", href: "/promos&offers" },
     ];
 
     return (

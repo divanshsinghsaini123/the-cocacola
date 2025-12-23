@@ -20,7 +20,7 @@ export default function ExploreBrands() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6">
                     {brands.map((brand, index) => (
                         <div key={index} className="group bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow overflow-hidden">
-                            <div className="relative w-[100%] h-[100%] transform transition-transform duration-300 group-hover:scale-110">
+                            <div className="relative w-[100%] h-[100%] transform transition-transform duration-300 group-hover:scale-105">
                                 <Image
                                     src={brand.image}
                                     alt={brand.name}
@@ -33,7 +33,7 @@ export default function ExploreBrands() {
                 </div>
 
                 <div className="flex justify-center">
-                    <Link href="#" className="px-32 py-2 rounded-full border-2 border-black text-black font-bold text-[15px] hover:bg-black hover:text-white transition-colors duration-300">
+                    <Link href="/brands" className="px-32 py-2 rounded-full border-2 border-black text-black font-bold text-[15px] hover:bg-black hover:text-white transition-colors duration-300">
                         View All
                     </Link>
                 </div>
