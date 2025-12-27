@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import React from "react";
+import AdminNavbar from "./_components/AdminNavbar";
 
 export default async function AdminLayout({
     children,
@@ -25,8 +26,11 @@ export default async function AdminLayout({
 
     // 3️⃣ Token valid → render admin UI
     return (
-        <section>
-            {children}
+        <section className="min-h-screen bg-gray-50">
+            <AdminNavbar />
+            <main className="p-8">
+                {children}
+            </main>
         </section>
     );
 }
