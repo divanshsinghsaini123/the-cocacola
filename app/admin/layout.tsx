@@ -1,34 +1,21 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import jwt from "jsonwebtoken";
+"use client";
+
 import React from "react";
 import AdminNavbar from "./_components/AdminNavbar";
+import { usePathname } from "next/navigation";
 
-export default async function AdminLayout({
+export default function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("admin_token")?.value;
+    const pathname = usePathname();
+    const isLoginPage = pathname === "/admin/login";
 
-    // 1️⃣ No token → redirect
-    if (!token) {
-        redirect("/admin/login");
-    }
-
-    // 2️⃣ Invalid token → redirect
-    try {
-        jwt.verify(token, process.env.JWT_SECRET!);
-    } catch (error) {
-        redirect("/admin/login");
-    }
-
-    // 3️⃣ Token valid → render admin UI
     return (
         <section className="min-h-screen bg-gray-50">
-            <AdminNavbar />
-            <main className="p-8">
+            {!isLoginPage && <AdminNavbar />}
+            <main className={!isLoginPage ? "p-8" : ""}>
                 {children}
             </main>
         </section>

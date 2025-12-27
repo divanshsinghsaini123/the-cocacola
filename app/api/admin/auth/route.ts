@@ -6,7 +6,7 @@ import { connectDB } from "@/src/lib/mongoose";
 import { Admin } from "@/src/models/Admin";
 import bcrypt from "bcrypt";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
     await connectDB();
 
     const { username, password } = await request.json();
@@ -16,8 +16,8 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const isValid = await bcrypt.compare(password, admin.password);
-    if (!isValid) {
+    // const isValid = await bcrypt.compare(password, admin.password);
+    if (password !== admin.password) {
         return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 
@@ -41,7 +41,7 @@ export async function GET(request: Request) {
     return response;
 }
 
-export async function POST() {
+export async function DELETE() {
     (await cookies()).delete("admin_token");
     return NextResponse.json({ message: "Logged out" });
 }

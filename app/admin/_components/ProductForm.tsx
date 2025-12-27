@@ -1,0 +1,264 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+
+interface ProductFormProps {
+    initialData?: any;
+    brandId?: string; // required valid ID
+}
+
+export default function ProductForm({ initialData, brandId }: ProductFormProps) {
+    const router = useRouter();
+    const isEditMode = !!initialData;
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState("");
+
+    // If editing, brandId might be in initialData.brand
+    const finalBrandId = brandId || initialData?.brand;
+
+    const [formData, setFormData] = useState({
+        brand: finalBrandId || "",
+        name: initialData?.name || "",
+        slug: initialData?.slug || "",
+        image: initialData?.image || "",
+        description: initialData?.description || "",
+        sizesAvailable: initialData?.sizesAvailable || [],
+        nutrition: {
+            quantity: initialData?.nutrition?.quantity || "",
+            diet: initialData?.nutrition?.diet || "",
+            ingredients: initialData?.nutrition?.ingredients || "",
+            extras: initialData?.nutrition?.extras || [],
+        },
+        isActive: initialData?.isActive ?? true,
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (success) setSuccess("");
+    };
+
+    const handleNutritionChange = (name: string, value: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            nutrition: { ...prev.nutrition, [name]: value },
+        }));
+        if (success) setSuccess("");
+    };
+
+    // Handling Extra Nutrition items
+    const handleAddExtra = () => {
+        setFormData((prev) => ({
+            ...prev,
+            nutrition: {
+                ...prev.nutrition,
+                extras: [...(prev.nutrition.extras || []), { key: { type: "", amount: "", percentage: "" } }],
+            },
+        }));
+    };
+
+    const handleExtraChange = (index: number, field: string, value: string) => {
+        const newExtras = [...formData.nutrition.extras];
+        newExtras[index] = {
+            ...newExtras[index],
+            key: { ...newExtras[index].key, [field]: value },
+        };
+        setFormData((prev) => ({
+            ...prev,
+            nutrition: { ...prev.nutrition, extras: newExtras },
+        }));
+    };
+
+    const handleRemoveExtra = (index: number) => {
+        setFormData((prev) => ({
+            ...prev,
+            nutrition: {
+                ...prev.nutrition,
+                extras: prev.nutrition.extras.filter((_: any, i: number) => i !== index),
+            },
+        }));
+    };
+
+    // Sizes
+    const handleAddSize = () => {
+        setFormData((prev) => ({
+            ...prev,
+            sizesAvailable: [...prev.sizesAvailable, ""],
+        }));
+    };
+
+    const handleSizeChange = (index: number, value: string) => {
+        const newSizes = [...formData.sizesAvailable];
+        newSizes[index] = value;
+        setFormData((prev) => ({ ...prev, sizesAvailable: newSizes }));
+    };
+
+    const handleRemoveSize = (index: number) => {
+        setFormData((prev) => ({
+            ...prev,
+            sizesAvailable: prev.sizesAvailable.filter((_: any, i: number) => i !== index),
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setSuccess("");
+
+        try {
+            const payload = {
+                ...formData,
+                sizesAvailable: formData.sizesAvailable.filter((s: string) => s.trim() !== ""),
+                ...(isEditMode && { id: initialData._id }),
+            };
+
+            const method = isEditMode ? "PUT" : "POST";
+
+            const res = await fetch("/api/admin/products", {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.error || "Something went wrong");
+            }
+
+            setSuccess("Product saved successfully!");
+            if (!isEditMode) {
+                // optionally redirect back to brand page
+                // router.push(`/admin/brands/edit/${finalBrandId}`);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Failed to save product: " + error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b pb-6">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900">{isEditMode ? "Edit Product" : "New Product"}</h2>
+                    <p className="text-sm text-gray-500">Managing product details including nutrition and sizes.</p>
+                </div>
+                {success && <div className="text-green-600 font-semibold bg-green-50 px-4 py-2 rounded-lg">✓ {success}</div>}
+            </div>
+
+            {/* Basic Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <label className="text-sm font-semibold">Product Name</label>
+                    <input name="name" value={formData.name} onChange={handleChange} className="input-field" required placeholder="e.g. Diet Coke" />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-semibold">Slug</label>
+                    <input name="slug" value={formData.slug} onChange={handleChange} className="input-field" required placeholder="e.g. diet-coke" />
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <label className="text-sm font-semibold">Detailed Description</label>
+                <textarea name="description" value={formData.description} onChange={handleChange} className="input-field h-24" placeholder="Product description..." />
+            </div>
+
+            <div className="space-y-2">
+                <label className="text-sm font-semibold">Product Image URL</label>
+                <div className="flex gap-4">
+                    <input name="image" value={formData.image} onChange={handleChange} className="input-field flex-1" required placeholder="https://..." />
+                    {formData.image && (
+                        <div className="relative w-12 h-12 bg-gray-50 border rounded overflow-hidden">
+                            <Image src={formData.image} alt="prev" fill className="object-contain" />
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <hr />
+
+            {/* Sizes */}
+            <div>
+                <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-semibold text-lg">Available Sizes</h3>
+                    <button type="button" onClick={handleAddSize} className="text-xs text-blue-600 font-bold hover:underline">+ Add Size</button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {formData.sizesAvailable.map((size: string, idx: number) => (
+                        <div key={idx} className="flex gap-1">
+                            <input value={size} onChange={(e) => handleSizeChange(idx, e.target.value)} className="input-field text-sm" placeholder="e.g. 250ml" />
+                            <button type="button" onClick={() => handleRemoveSize(idx)} className="text-red-500 px-2">✕</button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <hr />
+
+            {/* Nutrition */}
+            <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Nutrition Information</h3>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                        <label className="text-xs font-bold text-gray-500">Base Quantity</label>
+                        <input value={formData.nutrition.quantity} onChange={(e) => handleNutritionChange("quantity", e.target.value)} className="input-field" placeholder="e.g. 100ml" />
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-xs font-bold text-gray-500">Calories (Diet)</label>
+                        <input value={formData.nutrition.diet} onChange={(e) => handleNutritionChange("diet", e.target.value)} className="input-field" placeholder="e.g. 42kcal" />
+                    </div>
+                </div>
+                <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500">Ingredients</label>
+                    <textarea value={formData.nutrition.ingredients} onChange={(e) => handleNutritionChange("ingredients", e.target.value)} className="input-field h-20" placeholder="Carbonated water..." />
+                </div>
+
+                {/* Extras */}
+                <div className="bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300">
+                    <div className="flex justify-between mb-3">
+                        <label className="text-sm font-bold text-gray-700">Extra Nutrients (Fat, Sugars, etc)</label>
+                        <button type="button" onClick={handleAddExtra} className="text-xs bg-black text-white px-2 py-1 rounded hover:bg-gray-800">+ Add Nutrient</button>
+                    </div>
+                    <div className="space-y-3">
+                        {formData.nutrition.extras.map((extra: any, i: number) => (
+                            <div key={i} className="flex gap-2 items-center">
+                                <input placeholder="Type (e.g. Fat)" value={extra.key.type} onChange={(e) => handleExtraChange(i, "type", e.target.value)} className="input-field text-sm flex-1" />
+                                <input placeholder="Amount (e.g. 0g)" value={extra.key.amount} onChange={(e) => handleExtraChange(i, "amount", e.target.value)} className="input-field text-sm w-24" />
+                                <input placeholder="% (e.g. 0%)" value={extra.key.percentage} onChange={(e) => handleExtraChange(i, "percentage", e.target.value)} className="input-field text-sm w-20" />
+                                <button type="button" onClick={() => handleRemoveExtra(i)} className="text-red-500 hover:text-red-700 px-2 font-bold">✕</button>
+                            </div>
+                        ))}
+                        {formData.nutrition.extras.length === 0 && <p className="text-xs text-gray-400 italic">No extra nutrients added.</p>}
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t">
+                <button type="button" onClick={() => router.back()} className="px-5 py-2.5 bg-gray-100 rounded-lg font-semibold text-gray-600 hover:bg-gray-200">Go Back</button>
+                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-black text-white rounded-lg font-bold hover:bg-gray-800 disabled:opacity-50">
+                    {loading ? "Saving..." : "Save Product"}
+                </button>
+            </div>
+
+            <style jsx>{`
+                .input-field {
+                    width: 100%;
+                    padding: 0.5rem 1rem;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 0.5rem;
+                    outline: none;
+                    transition: all 0.2s;
+                }
+                .input-field:focus {
+                    ring: 2px solid black;
+                    border-color: transparent;
+                }
+            `}</style>
+        </form>
+    );
+}

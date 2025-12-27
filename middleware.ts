@@ -6,6 +6,11 @@ export function middleware(req: NextRequest) {
 
     // Protect admin routes
     if (req.nextUrl.pathname.startsWith("/admin")) {
+        // Skip check for login page
+        if (req.nextUrl.pathname === "/admin/login") {
+            return NextResponse.next();
+        }
+
         if (!token) {
             return NextResponse.redirect(new URL("/admin/login", req.url));
         }

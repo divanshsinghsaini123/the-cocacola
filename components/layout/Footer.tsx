@@ -17,8 +17,13 @@ const ChevronDown = ({ isOpen }: { isOpen: boolean }) => (
     </svg>
 );
 
+import { usePathname } from "next/navigation";
+
 export default function Footer() {
+    const pathname = usePathname();
     const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+
+    if (pathname?.startsWith('/admin')) return null;
 
     const toggleSection = (section: string) => {
         setOpenSections((prev) => ({
@@ -69,7 +74,7 @@ export default function Footer() {
     ];
 
     const helpLinks = [
-        { name: "Admin Login", href: "#" },
+        { name: "Admin Login", href: "/admin/login" },
         { name: "FAQs", href: "#" },
         { name: "Sitemap", href: "#" },
         { name: "Contact Us", href: "#" },
