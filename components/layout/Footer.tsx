@@ -69,8 +69,7 @@ export default function Footer() {
     ];
 
     const helpLinks = [
-        { name: "Sign-up", href: "#" },
-        { name: "Login", href: "#" },
+        { name: "Admin Login", href: "#" },
         { name: "FAQs", href: "#" },
         { name: "Sitemap", href: "#" },
         { name: "Contact Us", href: "#" },
