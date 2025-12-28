@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
     const token = req.cookies.get("admin_token")?.value;
 
     // Protect admin routes

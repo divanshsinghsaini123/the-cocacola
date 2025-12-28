@@ -22,13 +22,9 @@ export async function POST(request: Request) {
 
         // If no admin found, CREATE one (Auto-registration)
         if (!admin) {
-            console.log("Admin not found, creating new admin:", username);
-            try {
-                admin = await Admin.create({ username, password });
-            } catch (error: any) {
-                console.error("Error creating admin:", error);
-                return NextResponse.json({ error: "Failed to create admin: " + error.message }, { status: 500 });
-            }
+
+            return NextResponse.json({ error: "Failed to create admin: " }, { status: 500 });
+
         }
 
         // Verify Password (Plain text currently)
