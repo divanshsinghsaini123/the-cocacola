@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { CldUploadWidget } from 'next-cloudinary';
 
 interface ProductFormProps {
     initialData?: any;
@@ -170,12 +171,60 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
 
             <div className="space-y-2">
                 <label className="text-sm font-semibold">Product Image URL</label>
-                <div className="flex gap-4">
-                    <input name="image" value={formData.image} onChange={handleChange} className="input-field flex-1" required placeholder="https://..." />
-                    {formData.image && (
-                        <div className="relative w-12 h-12 bg-gray-50 border rounded overflow-hidden">
-                            <Image src={formData.image} alt="prev" fill className="object-contain" />
+                <div className="flex gap-4 items-center">
+                    {formData.image ? (
+                        <div className="flex items-center gap-4">
+                            <div className="relative w-20 h-20 bg-gray-50 border rounded overflow-hidden">
+                                <Image src={formData.image} alt="prev" fill className="object-contain" />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <CldUploadWidget
+                                    uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                                    onSuccess={(result: any) => {
+                                        handleChange({ target: { name: 'image', value: result.info.secure_url } } as any);
+                                    }}
+                                    options={{ maxFiles: 1, folder: 'products' }}
+                                >
+                                    {({ open }: any) => (
+                                        <button
+                                            type="button"
+                                            onClick={() => open()}
+                                            className="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                                        >
+                                            Change Image
+                                        </button>
+                                    )}
+                                </CldUploadWidget>
+                                <button
+                                    type="button"
+                                    onClick={() => handleChange({ target: { name: 'image', value: "" } } as any)}
+                                    className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 rounded-md hover:bg-red-100 text-left"
+                                >
+                                    Remove
+                                </button>
+                            </div>
                         </div>
+                    ) : (
+                        <CldUploadWidget
+                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                            onSuccess={(result: any) => {
+                                handleChange({ target: { name: 'image', value: result.info.secure_url } } as any);
+                            }}
+                            options={{ maxFiles: 1 }}
+                        >
+                            {({ open }: any) => (
+                                <button
+                                    type="button"
+                                    onClick={() => open()}
+                                    className="flex items-center justify-center w-full max-w-xs h-32 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-black hover:text-black transition-colors"
+                                >
+                                    <span className="text-sm font-medium flex flex-col items-center">
+                                        + Upload Image
+                                        <span className="text-xs text-gray-400 mt-1">(800x800)</span>
+                                    </span>
+                                </button>
+                            )}
+                        </CldUploadWidget>
                     )}
                 </div>
             </div>

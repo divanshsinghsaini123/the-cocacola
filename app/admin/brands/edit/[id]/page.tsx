@@ -32,11 +32,21 @@ export default async function EditBrandPage({ params }: EditBrandPageProps) {
     return (
         <div className="max-w-5xl mx-auto space-y-8">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-8">Edit Brand</h1>
+                <div className="flex items-center justify-between mb-8">
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Edit Brand</h1>
+                    <a
+                        href="#products-section"
+                        className="px-5 py-2.5 text-sm font-bold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-md flex items-center gap-2 hover:translate-y-[-1px]"
+                    >
+                        <span>↓</span> Go to Products
+                    </a>
+                </div>
                 <BrandForm initialData={brand} />
             </div>
 
-            <BrandProducts brandId={brand._id} brandName={brand.name} />
+            <div id="products-section" className="scroll-mt-10">
+                <BrandProducts brandId={brand._id} brandName={brand.name} />
+            </div>
         </div>
     );
 }

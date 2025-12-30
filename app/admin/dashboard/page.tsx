@@ -52,7 +52,7 @@ export default async function DashboardPage() {
                                     href={`/admin/brands/edit/${brand._id}`}
                                     className="flex-1 px-4 py-2 text-sm font-semibold text-center text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-black transition-colors"
                                 >
-                                    Edit
+                                    Edit/Products
                                 </Link>
                                 <Link
                                     href={`/brands/${brand.slug}`}

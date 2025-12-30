@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { CldUploadWidget } from 'next-cloudinary';
 
 interface BrandFormProps {
     initialData?: any;
 }
 
 export default function BrandForm({ initialData }: BrandFormProps) {
-    const router = useRouter();
+
     const isEditMode = !!initialData;
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
@@ -27,10 +27,10 @@ export default function BrandForm({ initialData }: BrandFormProps) {
             d3: initialData?.descriptions?.d3 || "",
         },
         socialLinks: {
-            facebook: initialData?.socialLinks?.facebook || "",
-            x: initialData?.socialLinks?.x || "",
-            instagram: initialData?.socialLinks?.instagram || "",
-            youtube: initialData?.socialLinks?.youtube || "",
+            facebook: initialData?.socialLinks?.facebook || process.env.FACEBOOK_URL,
+            x: initialData?.socialLinks?.x || process.env.X_URL,
+            instagram: initialData?.socialLinks?.instagram || process.env.INSTAGRAM_URL,
+            youtube: initialData?.socialLinks?.youtube || process.env.YOUTUBE_URL,
         },
         youtubeVideos: initialData?.youtubeVideos || [], // Array of strings
         isActive: initialData?.isActive ?? true,
@@ -72,7 +72,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
     const handleArrayRemove = (field: "images" | "youtubeVideos", index: number) => {
         setFormData((prev) => ({
             ...prev,
-            [field]: prev[field].filter((_: string, i: number) => i !== index),
+            [field]: prev[field].filter((_: any, i: number) => i !== index),
         }));
     };
 
@@ -174,44 +174,112 @@ export default function BrandForm({ initialData }: BrandFormProps) {
             <section className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-800">Visual Identity</h3>
                 <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">Logo URL <span className="text-red-500">*</span></label>
-                    <div className="flex gap-4 items-start">
-                        <input
-                            type="url"
-                            name="logo"
-                            value={formData.logo}
-                            onChange={handleChange}
-                            placeholder="https://example.com/logo.png"
-                            required
-                            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all"
-                        />
-                        {formData.logo && (
-                            <div className="relative w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 overflow-hidden flex-shrink-0">
-                                <Image src={formData.logo} alt="Preview" fill className="object-contain" />
+                    <label className="text-sm font-semibold text-gray-700">Logo (Single Image) <span className="text-red-500">*</span></label>
+                    <div className="flex gap-4 items-center">
+                        {formData.logo ? (
+                            <div className="flex items-center gap-4">
+                                <div className="relative w-24 h-24 bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm p-2">
+                                    <Image src={formData.logo} alt="Logo" fill className="object-contain" />
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <CldUploadWidget
+                                        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                                        onSuccess={(result: any) => {
+                                            handleChange({ target: { name: 'logo', value: result.info.secure_url } } as any);
+                                        }}
+                                        options={{ maxFiles: 1, folder: 'brands' }}
+                                    >
+                                        {({ open }: any) => (
+                                            <button
+                                                type="button"
+                                                onClick={() => open()}
+                                                className="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                                            >
+                                                Change Logo
+                                            </button>
+                                        )}
+                                    </CldUploadWidget>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleChange({ target: { name: 'logo', value: "" } } as any)}
+                                        className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 rounded-md hover:bg-red-100 text-left"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
                             </div>
+                        ) : (
+                            <CldUploadWidget
+                                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                                onSuccess={(result: any) => {
+                                    handleChange({ target: { name: 'logo', value: result.info.secure_url } } as any);
+                                }}
+                                options={{ maxFiles: 1, folder: 'brands' }}
+                            >
+                                {({ open }: any) => (
+                                    <button
+                                        type="button"
+                                        onClick={() => open()}
+                                        className="flex items-center justify-center w-full max-w-xs h-32 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-black hover:text-black transition-colors"
+                                    >
+                                        <span className="text-sm font-medium flex flex-col items-center">
+                                            + Upload Logo
+                                            <span className="text-xs text-gray-400 mt-1">(500x500)</span>
+                                        </span>
+                                    </button>
+                                )}
+                            </CldUploadWidget>
                         )}
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 flex justify-between">
+                    <label className="text-sm font-semibold text-gray-700 flex justify-between items-center">
                         Brand Images (Gallery)
-                        <button type="button" onClick={() => handleArrayAdd("images")} className="text-xs text-blue-600 hover:underline">+ Add Image</button>
+                        <CldUploadWidget
+                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                            onSuccess={(result: any) => {
+                                setFormData(prev => ({
+                                    ...prev,
+                                    images: [...prev.images, result.info.secure_url]
+                                }));
+                            }}
+                            options={{ multiple: true, folder: 'brands' }}
+                        >
+                            {({ open }: any) => (
+                                <button
+                                    type="button"
+                                    onClick={() => open()}
+                                    className="text-xs text-blue-600 hover:underline font-semibold"
+                                >
+                                    + Add New Image (1920x1080)
+                                </button>
+                            )}
+                        </CldUploadWidget>
                     </label>
-                    <div className="grid gap-3">
-                        {formData.images.map((url: string, index: number) => (
-                            <div key={index} className="flex gap-3">
-                                <input
-                                    type="url"
-                                    value={url}
-                                    onChange={(e) => handleArrayChange("images", index, e.target.value)}
-                                    placeholder="https://example.com/banner.jpg"
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-black outline-none"
-                                />
-                                <button type="button" onClick={() => handleArrayRemove("images", index)} className="text-red-500 hover:text-red-700 px-2">✕</button>
-                            </div>
-                        ))}
-                    </div>
+
+                    {formData.images.length > 0 ? (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {formData.images.map((url: string, index: number) => (
+                                <div key={index} className="relative group aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                                    <Image src={url} alt={`Gallery ${index}`} fill className="object-cover" />
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => handleArrayRemove("images", index)}
+                                            className="px-3 py-1.5 bg-red-600 text-white text-xs rounded font-medium hover:bg-red-700 shadow-lg transform scale-95 hover:scale-100 transition-all"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-sm text-gray-400 italic p-6 border border-dashed border-gray-200 rounded-xl text-center bg-gray-50/50">
+                            No images added to gallery yet.
+                        </div>
+                    )}
                 </div>
             </section>
 
