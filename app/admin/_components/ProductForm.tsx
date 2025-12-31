@@ -25,6 +25,7 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
         slug: initialData?.slug || "",
         image: initialData?.image || "",
         description: initialData?.description || "",
+        summary: initialData?.summary || "",
         sizesAvailable: initialData?.sizesAvailable || [],
         nutrition: {
             quantity: initialData?.nutrition?.quantity || "",
@@ -165,8 +166,12 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
             </div>
 
             <div className="space-y-2">
-                <label className="text-sm font-semibold">Detailed Description</label>
-                <textarea name="description" value={formData.description} onChange={handleChange} className="input-field h-24" placeholder="Product description..." />
+                <label className="text-sm font-semibold">Detailed Description ( 25 - 30 words )</label>
+                <textarea maxLength={170} name="description" value={formData.description} onChange={handleChange} className="input-field h-24" placeholder="Product description..." />
+            </div>
+            <div className="space-y-2">
+                <label className="text-sm font-semibold">Summary (20 - 30 words )</label>
+                <textarea maxLength={190} name="summary" value={formData.summary} onChange={handleChange} className="input-field h-24" placeholder="Product summary..." />
             </div>
 
             <div className="space-y-2">
@@ -258,7 +263,7 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
                         <input value={formData.nutrition.quantity} onChange={(e) => handleNutritionChange("quantity", e.target.value)} className="input-field" placeholder="e.g. 100ml" />
                     </div>
                     <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-500">Calories (Diet)</label>
+                        <label className="text-xs font-bold text-gray-500">Based on __ KiloCalories (Diet)</label>
                         <input value={formData.nutrition.diet} onChange={(e) => handleNutritionChange("diet", e.target.value)} className="input-field" placeholder="e.g. 42kcal" />
                     </div>
                 </div>
