@@ -132,7 +132,7 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
             setSuccess("Product saved successfully!");
             if (!isEditMode) {
                 // optionally redirect back to brand page
-                // router.push(`/admin/brands/edit/${finalBrandId}`);
+                router.push(`/admin/dashboard`);
             }
         } catch (error) {
             console.error(error);

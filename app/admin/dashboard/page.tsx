@@ -2,9 +2,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
+import { Product } from "@/src/models/Product";
+import DeleteBrandButton from "./DeleteBrandButton";
 
 export const dynamic = "force-dynamic"; // Ensure fresh data on every visit
-
+async function deleteBrand(id: string) {
+    try {
+        await Brand.deleteOne({ _id: id });
+        await Product.deleteMany({ brand: id });
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
 export default async function DashboardPage() {
     await connectDB();
     const brands = await Brand.find({}).sort({ createdAt: -1 }).lean();
@@ -30,6 +41,10 @@ export default async function DashboardPage() {
                         key={brand._id.toString()}
                         className="group relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-sm transition-all hover:shadow-lg hover:border-gray-300"
                     >
+                        {/* Delete Button */}
+                        <DeleteBrandButton id={brand._id.toString()} />
+
+
                         {/* Image Area */}
                         <div className="relative flex items-center justify-center w-full h-48 p-6 bg-gray-50 group-hover:bg-gray-100 transition-colors">
                             <div className="relative w-full h-full">

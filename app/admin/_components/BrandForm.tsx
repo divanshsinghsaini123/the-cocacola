@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import BunnyUpload from "./BunnyUpload";
 
@@ -11,6 +12,7 @@ interface BrandFormProps {
 
 export default function BrandForm({ initialData }: BrandFormProps) {
 
+    const router = useRouter();
     const isEditMode = !!initialData;
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
@@ -108,6 +110,9 @@ export default function BrandForm({ initialData }: BrandFormProps) {
             }
 
             setSuccess("Data saved successfully!");
+            if (!isEditMode) {
+                router.push("/admin/dashboard");
+            }
         } catch (error) {
             console.error(error);
             alert("Failed to save brand: " + error);
