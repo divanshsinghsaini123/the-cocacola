@@ -31,7 +31,7 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
             quantity: initialData?.nutrition?.quantity || "",
             diet: initialData?.nutrition?.diet || "",
             ingredients: initialData?.nutrition?.ingredients || "",
-            extras: initialData?.nutrition?.extras || [],
+            nutritionfacts: initialData?.nutrition?.nutritionfacts || [],
         },
         isActive: initialData?.isActive ?? true,
     });
@@ -56,20 +56,20 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
             ...prev,
             nutrition: {
                 ...prev.nutrition,
-                extras: [...(prev.nutrition.extras || []), { key: { type: "", amount: "", percentage: "" } }],
+                nutritionfacts: [...(prev.nutrition.nutritionfacts || []), { key: { name: "", amount: "" } }],
             },
         }));
     };
 
     const handleExtraChange = (index: number, field: string, value: string) => {
-        const newExtras = [...formData.nutrition.extras];
+        const newExtras = [...formData.nutrition.nutritionfacts];
         newExtras[index] = {
             ...newExtras[index],
             key: { ...newExtras[index].key, [field]: value },
         };
         setFormData((prev) => ({
             ...prev,
-            nutrition: { ...prev.nutrition, extras: newExtras },
+            nutrition: { ...prev.nutrition, nutritionfacts: newExtras },
         }));
     };
 
@@ -78,7 +78,7 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
             ...prev,
             nutrition: {
                 ...prev.nutrition,
-                extras: prev.nutrition.extras.filter((_: any, i: number) => i !== index),
+                nutritionfacts: prev.nutrition.nutritionfacts.filter((_: any, i: number) => i !== index),
             },
         }));
     };
@@ -132,8 +132,9 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
             setSuccess("Product saved successfully!");
             if (!isEditMode) {
                 // optionally redirect back to brand page
-                router.push(`/admin/dashboard`);
             }
+            router.push(`/admin/dashboard`);
+
         } catch (error) {
             console.error(error);
             alert("Failed to save product: " + error);
@@ -256,7 +257,12 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
 
             {/* Nutrition */}
             <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Nutrition Information</h3>
+                <h3 className="font-semibold text-lg flex items-center gap-3">
+                    Nutrition Information
+                    <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-md border border-red-100">
+                        ⚠️ Note: Include units with quantity (e.g. ml, g , Kcal)
+                    </span>
+                </h3>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1">
                         <label className="text-xs font-bold text-gray-500">Base Quantity</label>
@@ -279,15 +285,15 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
                         <button type="button" onClick={handleAddExtra} className="text-xs bg-black text-white px-2 py-1 rounded hover:bg-gray-800">+ Add Nutrient</button>
                     </div>
                     <div className="space-y-3">
-                        {formData.nutrition.extras.map((extra: any, i: number) => (
+                        {formData.nutrition.nutritionfacts.map((extra: any, i: number) => (
                             <div key={i} className="flex gap-2 items-center">
-                                <input placeholder="Type (e.g. Fat)" value={extra.key.type} onChange={(e) => handleExtraChange(i, "type", e.target.value)} className="input-field text-sm flex-1" />
+                                {/* <input placeholder="Type (e.g. Fat)" value={extra.key.type} onChange={(e) => handleExtraChange(i, "type", e.target.value)} className="input-field text-sm flex-1" /> */}
+                                <input placeholder="Nutrient Name(e.g. Fat)" value={extra.key.type} onChange={(e) => handleExtraChange(i, "name", e.target.value)} className="input-field text-sm w-20" />
                                 <input placeholder="Amount (e.g. 0g)" value={extra.key.amount} onChange={(e) => handleExtraChange(i, "amount", e.target.value)} className="input-field text-sm w-24" />
-                                <input placeholder="% (e.g. 0%)" value={extra.key.percentage} onChange={(e) => handleExtraChange(i, "percentage", e.target.value)} className="input-field text-sm w-20" />
                                 <button type="button" onClick={() => handleRemoveExtra(i)} className="text-red-500 hover:text-red-700 px-2 font-bold">✕</button>
                             </div>
                         ))}
-                        {formData.nutrition.extras.length === 0 && <p className="text-xs text-gray-400 italic">No extra nutrients added.</p>}
+                        {formData.nutrition.nutritionfacts.length === 0 && <p className="text-xs text-gray-400 italic">No extra nutrients added.</p>}
                     </div>
                 </div>
             </div>
