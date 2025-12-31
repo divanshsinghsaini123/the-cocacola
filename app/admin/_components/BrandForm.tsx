@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CldUploadWidget } from 'next-cloudinary';
+import BunnyUpload from "./BunnyUpload";
 
 interface BrandFormProps {
     initialData?: any;
@@ -27,10 +27,10 @@ export default function BrandForm({ initialData }: BrandFormProps) {
             d3: initialData?.descriptions?.d3 || "",
         },
         socialLinks: {
-            facebook: initialData?.socialLinks?.facebook || process.env.FACEBOOK_URL,
-            x: initialData?.socialLinks?.x || process.env.X_URL,
-            instagram: initialData?.socialLinks?.instagram || process.env.INSTAGRAM_URL,
-            youtube: initialData?.socialLinks?.youtube || process.env.YOUTUBE_URL,
+            facebook: initialData?.socialLinks?.facebook || "",
+            x: initialData?.socialLinks?.x || "",
+            instagram: initialData?.socialLinks?.instagram || "",
+            youtube: initialData?.socialLinks?.youtube || "",
         },
         youtubeVideos: initialData?.youtubeVideos || [], // Array of strings
         isActive: initialData?.isActive ?? true,
@@ -182,23 +182,23 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                     <Image src={formData.logo} alt="Logo" fill className="object-contain" />
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <CldUploadWidget
-                                        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                                        onSuccess={(result: any) => {
-                                            handleChange({ target: { name: 'logo', value: result.info.secure_url } } as any);
+                                    <BunnyUpload
+                                        folder="brands"
+                                        onSuccess={(url) => {
+                                            handleChange({ target: { name: 'logo', value: url } } as any);
                                         }}
-                                        options={{ maxFiles: 1, folder: 'brands' }}
                                     >
-                                        {({ open }: any) => (
+                                        {({ open, isLoading }) => (
                                             <button
                                                 type="button"
                                                 onClick={() => open()}
-                                                className="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                                                disabled={isLoading}
+                                                className="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
                                             >
-                                                Change Logo
+                                                {isLoading ? "Uploading..." : "Change Logo"}
                                             </button>
                                         )}
-                                    </CldUploadWidget>
+                                    </BunnyUpload>
                                     <button
                                         type="button"
                                         onClick={() => handleChange({ target: { name: 'logo', value: "" } } as any)}
@@ -209,26 +209,27 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                 </div>
                             </div>
                         ) : (
-                            <CldUploadWidget
-                                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                                onSuccess={(result: any) => {
-                                    handleChange({ target: { name: 'logo', value: result.info.secure_url } } as any);
+                            <BunnyUpload
+
+                                folder="brands"
+                                onSuccess={(url) => {
+                                    handleChange({ target: { name: 'logo', value: url } } as any);
                                 }}
-                                options={{ maxFiles: 1, folder: 'brands' }}
                             >
-                                {({ open }: any) => (
+                                {({ open, isLoading }) => (
                                     <button
                                         type="button"
                                         onClick={() => open()}
-                                        className="flex items-center justify-center w-full max-w-xs h-32 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-black hover:text-black transition-colors"
+                                        disabled={isLoading}
+                                        className="flex items-center justify-center w-full max-w-xs h-32 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-black hover:text-black transition-colors disabled:opacity-50"
                                     >
                                         <span className="text-sm font-medium flex flex-col items-center">
-                                            + Upload Logo
-                                            <span className="text-xs text-gray-400 mt-1">(500x500)</span>
+                                            {isLoading ? "Uploading..." : "+ Upload Logo"}
+                                            {!isLoading && <span className="text-xs text-gray-400 mt-1">(500x500)</span>}
                                         </span>
                                     </button>
                                 )}
-                            </CldUploadWidget>
+                            </BunnyUpload>
                         )}
                     </div>
                 </div>
@@ -236,26 +237,27 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                 <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700 flex justify-between items-center">
                         Brand Images (Gallery)
-                        <CldUploadWidget
-                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                            onSuccess={(result: any) => {
+                        <BunnyUpload
+                            folder="brands"
+                            multiple={true}
+                            onSuccess={(url) => {
                                 setFormData(prev => ({
                                     ...prev,
-                                    images: [...prev.images, result.info.secure_url]
+                                    images: [...prev.images, url]
                                 }));
                             }}
-                            options={{ multiple: true, folder: 'brands' }}
                         >
-                            {({ open }: any) => (
+                            {({ open, isLoading }) => (
                                 <button
                                     type="button"
                                     onClick={() => open()}
-                                    className="text-xs text-blue-600 hover:underline font-semibold"
+                                    disabled={isLoading}
+                                    className="text-xs text-blue-600 hover:underline font-semibold disabled:opacity-50"
                                 >
-                                    + Add New Image (1920x1080)
+                                    {isLoading ? "Uploading..." : "+ Add New Image (1920x1080)"}
                                 </button>
                             )}
-                        </CldUploadWidget>
+                        </BunnyUpload>
                     </label>
 
                     {formData.images.length > 0 ? (

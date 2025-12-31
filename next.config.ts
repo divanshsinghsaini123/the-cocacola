@@ -5,7 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "res.cloudinary.com",
+        hostname: "sg.storage.bunnycdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "coco-cola-pullzone.b-cdn.net",
       }
     ]
   }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { CldUploadWidget } from 'next-cloudinary';
+import BunnyUpload from "./BunnyUpload";
 
 interface ProductFormProps {
     initialData?: any;
@@ -183,23 +183,23 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
                                 <Image src={formData.image} alt="prev" fill className="object-contain" />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <CldUploadWidget
-                                    uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                                    onSuccess={(result: any) => {
-                                        handleChange({ target: { name: 'image', value: result.info.secure_url } } as any);
+                                <BunnyUpload
+                                    folder="products"
+                                    onSuccess={(url) => {
+                                        handleChange({ target: { name: 'image', value: url } } as any);
                                     }}
-                                    options={{ maxFiles: 1, folder: 'products' }}
                                 >
-                                    {({ open }: any) => (
+                                    {({ open, isLoading }) => (
                                         <button
                                             type="button"
                                             onClick={() => open()}
-                                            className="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                                            disabled={isLoading}
+                                            className="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
                                         >
-                                            Change Image
+                                            {isLoading ? "Uploading..." : "Change Image"}
                                         </button>
                                     )}
-                                </CldUploadWidget>
+                                </BunnyUpload>
                                 <button
                                     type="button"
                                     onClick={() => handleChange({ target: { name: 'image', value: "" } } as any)}
@@ -210,26 +210,26 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
                             </div>
                         </div>
                     ) : (
-                        <CldUploadWidget
-                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                            onSuccess={(result: any) => {
-                                handleChange({ target: { name: 'image', value: result.info.secure_url } } as any);
+                        <BunnyUpload
+                            folder="products"
+                            onSuccess={(url) => {
+                                handleChange({ target: { name: 'image', value: url } } as any);
                             }}
-                            options={{ maxFiles: 1 }}
                         >
-                            {({ open }: any) => (
+                            {({ open, isLoading }) => (
                                 <button
                                     type="button"
                                     onClick={() => open()}
-                                    className="flex items-center justify-center w-full max-w-xs h-32 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-black hover:text-black transition-colors"
+                                    disabled={isLoading}
+                                    className="flex items-center justify-center w-full max-w-xs h-32 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-black hover:text-black transition-colors disabled:opacity-50"
                                 >
                                     <span className="text-sm font-medium flex flex-col items-center">
-                                        + Upload Image
-                                        <span className="text-xs text-gray-400 mt-1">(800x800)</span>
+                                        {isLoading ? "Uploading..." : "+ Upload Image"}
+                                        {!isLoading && <span className="text-xs text-gray-400 mt-1">(800x800)</span>}
                                     </span>
                                 </button>
                             )}
-                        </CldUploadWidget>
+                        </BunnyUpload>
                     )}
                 </div>
             </div>
