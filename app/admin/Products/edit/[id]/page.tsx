@@ -26,8 +26,8 @@ export default async function EditProductPage({ params }: PageProps) {
     // Serialize IDs
     product._id = product._id.toString();
     product.brand = product.brand.toString();
-    if (product.nutrition && product.nutrition.extras) {
-        product.nutrition.extras = product.nutrition.extras.map((e: any) => ({
+    if (product.nutrition && product.nutrition.nutritionfacts) {
+        product.nutrition.nutritionfacts = product.nutrition.nutritionfacts.map((e: any) => ({
             ...e,
             _id: e._id ? e._id.toString() : undefined // often subdocs have _id
         }));

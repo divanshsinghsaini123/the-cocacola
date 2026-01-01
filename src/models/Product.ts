@@ -7,12 +7,11 @@ const NutritionSchema = new Schema(
         diet: String,          // "120 kcal"
         ingredients: String,
 
-        extras: [
+        nutritionfacts: [
             {
                 key: {
-                    type: String,
+                    name: String,
                     amount: String,
-                    percentage: String,
                 },
             },
         ],
@@ -45,6 +44,9 @@ const ProductSchema = new Schema(
         },
 
         description: {
+            type: String,
+        },
+        summary: {
             type: String,
         },
 
