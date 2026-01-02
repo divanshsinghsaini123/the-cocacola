@@ -240,7 +240,12 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
             {/* Sizes */}
             <div>
                 <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-semibold text-lg">Available Sizes</h3>
+                    <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-lg">Available Sizes</h3>
+                        <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-md border border-red-100">
+                            ⚠️ Note: Include units with quantity (e.g. ml, L , g , Kg)
+                        </span>
+                    </div>
                     <button type="button" onClick={handleAddSize} className="text-xs text-blue-600 font-bold hover:underline">+ Add Size</button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
