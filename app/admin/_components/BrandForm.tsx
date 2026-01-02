@@ -138,8 +138,9 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                             ✓ {success}
                         </div>
                     )}
-                    <div className={`px-4 py-1.5 text-xs font-bold rounded-full tracking-wide ${formData.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                        {formData.isActive ? "ACTIVE" : "INACTIVE"}
+                    <div className="text-sm font-medium text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                        <span className="text-red-500 font-bold text-lg leading-none align-middle mr-1">*</span>
+                        <span className="align-middle">fields are mandatory</span>
                     </div>
                 </div>
             </div>

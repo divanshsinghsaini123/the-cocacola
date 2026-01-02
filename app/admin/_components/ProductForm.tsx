@@ -151,32 +151,38 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
                     <h2 className="text-2xl font-bold text-gray-900">{isEditMode ? "Edit Product" : "New Product"}</h2>
                     <p className="text-sm text-gray-500">Managing product details including nutrition and sizes.</p>
                 </div>
-                {success && <div className="text-green-600 font-semibold bg-green-50 px-4 py-2 rounded-lg">✓ {success}</div>}
+                <div className="flex items-center gap-4">
+                    {success && <div className="text-green-600 font-semibold bg-green-50 px-4 py-2 rounded-lg">✓ {success}</div>}
+                    <div className="text-sm font-medium text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                        <span className="text-red-500 font-bold text-lg leading-none align-middle mr-1">*</span>
+                        <span className="align-middle">fields are mandatory</span>
+                    </div>
+                </div>
             </div>
 
             {/* Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-semibold">Product Name</label>
+                    <label className="text-sm font-semibold">Product Name <span className="text-red-500">*</span></label>
                     <input name="name" value={formData.name} onChange={handleChange} className="input-field" required placeholder="e.g. Diet Coke" />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-sm font-semibold">Slug</label>
+                    <label className="text-sm font-semibold">Slug <span className="text-red-500">*</span></label>
                     <input name="slug" value={formData.slug} onChange={handleChange} className="input-field" required placeholder="e.g. diet-coke" />
                 </div>
             </div>
 
             <div className="space-y-2">
-                <label className="text-sm font-semibold">Detailed Description ( 25 - 30 words )</label>
-                <textarea maxLength={170} name="description" value={formData.description} onChange={handleChange} className="input-field h-24" placeholder="Product description..." />
+                <label className="text-sm font-semibold">Detailed Description ( 25 - 30 words ) <span className="text-red-500">*</span></label>
+                <textarea maxLength={170} name="description" value={formData.description} onChange={handleChange} className="input-field h-24" required placeholder="Product description..." />
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-semibold">Summary (20 - 30 words )</label>
-                <textarea maxLength={190} name="summary" value={formData.summary} onChange={handleChange} className="input-field h-24" placeholder="Product summary..." />
+                <label className="text-sm font-semibold">Summary (20 - 30 words ) <span className="text-red-500">*</span></label>
+                <textarea maxLength={190} name="summary" value={formData.summary} onChange={handleChange} className="input-field h-24" required placeholder="Product summary..." />
             </div>
 
             <div className="space-y-2">
-                <label className="text-sm font-semibold">Product Image URL</label>
+                <label className="text-sm font-semibold">Product Image URL <span className="text-red-500">*</span></label>
                 <div className="flex gap-4 items-center">
                     {formData.image ? (
                         <div className="flex items-center gap-4">
