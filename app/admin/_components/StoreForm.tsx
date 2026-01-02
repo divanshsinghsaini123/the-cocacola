@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import BunnyUpload from "./BunnyUpload";
-import router from "next/router";
 
 export default function StoreForm({ store }: any) {
     const isEditmode = !!store;
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
 
@@ -43,8 +43,9 @@ export default function StoreForm({ store }: any) {
                 ...formData,
                 ...(isEditmode && { id: store._id }),
             }
+
             const RequestType = isEditmode ? "PUT" : "POST";
-            const response = await fetch("api/admin/store",
+            const response = await fetch("/api/admin/stores",
                 {
                     method: RequestType,
                     headers: {
@@ -240,6 +241,7 @@ export default function StoreForm({ store }: any) {
             <div className="flex justify-end gap-3 pt-6 border-t mt-4">
                 <button
                     type="button"
+                    onClick={() => router.back()}
                     className="px-5 py-2.5 bg-gray-100 rounded-lg font-semibold text-gray-600 hover:bg-gray-200 transition-colors"
                 >
                     Cancel
