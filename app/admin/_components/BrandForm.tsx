@@ -391,7 +391,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-6 py-2.5 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-all shadow-md hover:shadow-lg"
+                        className="px-6 py-2.5 text-sm  font-semibold text-white bg-black rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-all shadow-md hover:shadow-lg"
                     >
                         {loading ? "Saving..." : isEditMode ? "Update Brand" : "Create Brand"}
                     </button>
