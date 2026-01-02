@@ -1,6 +1,7 @@
 import ProductForm from "../../_components/ProductForm";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
+import { Store } from "@/src/models/store";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -22,17 +23,26 @@ export default async function AddProductPage({ searchParams }: PageProps) {
     }
 
     await connectDB();
-    const brand = await Brand.findById(brandId);
+    let brand: any;
+    let stores: any[] = [];
+
+    try {
+        brand = await Brand.findById(brandId);
+        stores = await Store.find({}).where({ isActive: true }).lean();
+        console.log(stores);
+    }
+    catch (e) {
+        console.log(e);
+    }
 
     if (!brand) return notFound();
-
     return (
         <div className="max-w-5xl mx-auto">
             <div className="mb-8">
                 <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">Adding Product To</span>
                 <h1 className="text-4xl font-extrabold text-gray-900 mt-1">{brand.name}</h1>
             </div>
-            <ProductForm brandId={brandId} />
+            <ProductForm brandId={brandId} stores={JSON.parse(JSON.stringify(stores))} />
         </div>
     );
 }

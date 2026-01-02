@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import BunnyUpload from "./BunnyUpload";
 
 interface ProductFormProps {
     initialData?: any;
     brandId?: string; // required valid ID
+    stores?: any[];
 }
 
-export default function ProductForm({ initialData, brandId }: ProductFormProps) {
+export default function ProductForm({ initialData, brandId, stores = [] }: ProductFormProps) {
     const router = useRouter();
     const isEditMode = !!initialData;
     const [loading, setLoading] = useState(false);
@@ -21,6 +22,7 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
 
     const [formData, setFormData] = useState({
         brand: finalBrandId || "",
+        stores: initialData?.stores || [],
         name: initialData?.name || "",
         slug: initialData?.slug || "",
         image: initialData?.image || "",
@@ -35,6 +37,15 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
         },
         isActive: initialData?.isActive ?? true,
     });
+
+    const handleStoreToggle = (storeId: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            stores: prev.stores.includes(storeId)
+                ? prev.stores.filter((id: string) => id !== storeId)
+                : [...prev.stores, storeId],
+        }));
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -237,6 +248,50 @@ export default function ProductForm({ initialData, brandId }: ProductFormProps) 
                         </BunnyUpload>
                     )}
                 </div>
+            </div>
+
+            <hr />
+
+            {/* Store Availability */}
+            <div>
+                <div className="flex justify-between items-center mb-4">
+                    <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-lg">Available in Stores</h3>
+                        <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100">
+                            Select stores where this product is available
+                        </span>
+                    </div>
+                </div>
+
+                {stores && stores.length > 0 ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        {stores.map((store: any) => (
+                            <label key={store._id} className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-black transition-colors shadow-sm">
+                                <div className="relative flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-gray-300 transition-all checked:border-black checked:bg-black"
+                                        checked={formData.stores.includes(store._id)}
+                                        onChange={() => handleStoreToggle(store._id)}
+                                    />
+                                    <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col select-none">
+                                    <span className="text-sm font-semibold text-gray-900 line-clamp-1" title={store.name}>{store.name}</span>
+                                    <span className="text-xs text-gray-500 line-clamp-1">{store.address || "No address"}</span>
+                                </div>
+                            </label>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center p-6 bg-gray-50 rounded-xl border border-dashed border-gray-300 text-gray-500 italic">
+                        No stores found. Please create stores first.
+                    </div>
+                )}
             </div>
 
             <hr />

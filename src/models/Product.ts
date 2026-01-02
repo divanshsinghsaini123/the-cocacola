@@ -57,6 +57,11 @@ const ProductSchema = new Schema(
 
         nutrition: NutritionSchema,
 
+        stores: [{
+            type: Schema.Types.ObjectId,
+            ref: "Store",
+        }],
+
         isActive: {
             type: Boolean,
             default: true,

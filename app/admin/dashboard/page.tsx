@@ -19,7 +19,6 @@ async function deleteBrand(id: string) {
 export default async function DashboardPage() {
     await connectDB();
     const brands = await Brand.find({}).sort({ createdAt: -1 }).lean();
-
     return (
         <div className="space-y-8">
             <div className="flex items-center justify-between">
@@ -71,7 +70,6 @@ export default async function DashboardPage() {
                         {/* Delete Button */}
                         <DeleteBrandButton id={brand._id.toString()} />
 
-
                         {/* Image Area */}
                         <div className="relative flex items-center justify-center w-full h-48 p-6 bg-gray-50 group-hover:bg-gray-100 transition-colors">
                             <div className="relative w-full h-full">
@@ -86,7 +84,7 @@ export default async function DashboardPage() {
 
                         {/* Content Area */}
                         <div className="flex flex-col flex-1 p-5">
-                            <h3 className="text-xl font-bold text-gray-900 truncate" title={brand.name}>
+                            <h3 className="text-xl font-bold text-gray-900 truncate pb-5" title={brand.name}>
                                 {brand.name}
                             </h3>
                             <div className="mt-4 flex gap-3 mt-auto">
