@@ -27,15 +27,15 @@ export default function AdminNavbar() {
     };
 
     return (
-        <nav className="flex items-center justify-between px-8 py-4 bg-white border-b shadow-sm">
-            <Link href="/admin/dashboard" className="text-2xl font-bold text-[#F40009] tracking-tight">
+        <nav className="flex items-center justify-between px-4 py-3 md:px-8 md:py-4 bg-white border-b shadow-sm">
+            <Link href="/admin/dashboard" className="text-xl md:text-2xl font-bold text-[#F40009] tracking-tight">
                 Coca-Cola Admin
             </Link>
             <div>
                 <button
                     onClick={handleLogout}
                     disabled={loading}
-                    className="px-5 py-2 text-sm font-semibold text-white transition-colors bg-black rounded-full hover:bg-gray-800 disabled:opacity-50"
+                    className="px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold text-white transition-colors bg-black rounded-full hover:bg-gray-800 disabled:opacity-50"
                 >
                     {loading ? "..." : "Logout"}
                 </button>

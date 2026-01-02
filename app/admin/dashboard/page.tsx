@@ -21,15 +21,15 @@ export default async function DashboardPage() {
     const brands = await Brand.find({}).sort({ createdAt: -1 }).lean();
     return (
         <div className="space-y-8">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Brands</h1>
-                    <p className="mt-2 text-gray-500">Manage your brands and their products.</p>
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Brands</h1>
+                    <p className="mt-1 md:mt-2 text-sm md:text-base text-gray-500">Manage your brands and their products.</p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                     <Link
                         href="/admin/stores"
-                        className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow-md"
+                        className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow-md"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
 
                     <Link
                         href="/admin/brands/add"
-                        className="px-5 py-2.5 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow-md"
+                        className="px-4 py-2 md:px-5 md:py-2.5 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow-md"
                     >
                         + Add New Brand
                     </Link>

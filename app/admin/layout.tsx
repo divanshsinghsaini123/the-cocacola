@@ -15,7 +15,7 @@ export default function AdminLayout({
     return (
         <section className="min-h-screen bg-gray-50">
             {!isLoginPage && <AdminNavbar />}
-            <main className={!isLoginPage ? "p-8" : ""}>
+            <main className={!isLoginPage ? "p-4 md:p-8" : ""}>
                 {children}
             </main>
         </section>

@@ -153,7 +153,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+        <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto p-4 md:p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
             {/* Header */}
             <div className="flex items-center justify-between border-b pb-6">
                 <div>
