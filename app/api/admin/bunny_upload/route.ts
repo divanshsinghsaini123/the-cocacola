@@ -12,6 +12,12 @@ export async function PUT(req: Request) {
             return NextResponse.json({ error: "Missing data" }, { status: 400 });
         }
 
+        // 5MB Limit
+        const MAX_SIZE = 0.5 * 1024 * 1024;
+        if (file.size > MAX_SIZE) {
+            return NextResponse.json({ error: "File size exceeds 5MB limit" }, { status: 400 });
+        }
+
         if (!["brands", "products", "stores"].includes(folder)) {
             return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
         }

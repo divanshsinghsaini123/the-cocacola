@@ -190,6 +190,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                 <div className="flex flex-col gap-2">
                                     <BunnyUpload
                                         folder="brands"
+                                        maxSizeMB={0.5}
                                         onSuccess={(url) => {
                                             handleChange({ target: { name: 'logo', value: url } } as any);
                                         }}
@@ -216,8 +217,8 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                             </div>
                         ) : (
                             <BunnyUpload
-
                                 folder="brands"
+                                maxSizeMB={0.5}
                                 onSuccess={(url) => {
                                     handleChange({ target: { name: 'logo', value: url } } as any);
                                 }}
@@ -246,6 +247,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                         <BunnyUpload
                             folder="brands"
                             multiple={true}
+                            maxSizeMB={0.5}
                             onSuccess={(url) => {
                                 setFormData(prev => ({
                                     ...prev,

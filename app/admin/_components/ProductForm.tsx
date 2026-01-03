@@ -201,6 +201,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
                             <div className="flex flex-col gap-2">
                                 <BunnyUpload
                                     folder="products"
+                                    maxSizeMB={0.5}
                                     onSuccess={(url) => {
                                         handleChange({ target: { name: 'image', value: url } } as any);
                                     }}
@@ -228,6 +229,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
                     ) : (
                         <BunnyUpload
                             folder="products"
+                            maxSizeMB={0.5}
                             onSuccess={(url) => {
                                 handleChange({ target: { name: 'image', value: url } } as any);
                             }}
