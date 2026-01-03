@@ -63,7 +63,7 @@ export default function StoreCarousel({ stores }: StoreCarouselProps) {
 
                             {/* Content Area */}
                             <div>
-                                <h3 className="text-[20px] font-bold text-black mb-4">
+                                <h3 className="text-[25px] font-bold text-black mb-4">
                                     {store.name}
                                 </h3>
 
