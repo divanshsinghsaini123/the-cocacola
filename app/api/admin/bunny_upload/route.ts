@@ -17,7 +17,8 @@ export async function PUT(req: Request) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
-        const filePath = `${folder}/${Date.now()}-${file.name}`;
+        const sanitizedFileName = file.name.replace(/\s+/g, "-");
+        const filePath = `${folder}/${Date.now()}-${sanitizedFileName}`;
 
         const options = {
             method: "PUT",
