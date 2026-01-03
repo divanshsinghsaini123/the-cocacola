@@ -49,7 +49,8 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const processedValue = name === "slug" ? value.replace(/\s+/g, "-") : value;
+        setFormData((prev) => ({ ...prev, [name]: processedValue }));
         if (success) setSuccess("");
     };
 
@@ -142,7 +143,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
 
             setSuccess("Product saved successfully!");
 
-            router.push(`/admin/dashboard`);
+            router.push(`/admin/brands/edit/${finalBrandId}`);
 
         } catch (error) {
             console.error(error);
@@ -354,7 +355,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
                         {formData.nutrition.nutritionfacts.map((extra: any, i: number) => (
                             <div key={i} className="flex gap-2 items-center">
                                 {/* <input placeholder="Type (e.g. Fat)" value={extra.key.type} onChange={(e) => handleExtraChange(i, "type", e.target.value)} className="input-field text-sm flex-1" /> */}
-                                <input placeholder="Nutrient Name(e.g. Fat)" value={extra.key.type} onChange={(e) => handleExtraChange(i, "name", e.target.value)} className="input-field text-sm w-20" />
+                                <input placeholder="Nutrient Name(e.g. Fat)" value={extra.key.name} onChange={(e) => handleExtraChange(i, "name", e.target.value)} className="input-field text-sm w-20" />
                                 <input placeholder="Amount (e.g. 0g)" value={extra.key.amount} onChange={(e) => handleExtraChange(i, "amount", e.target.value)} className="input-field text-sm w-24" />
                                 <button type="button" onClick={() => handleRemoveExtra(i)} className="text-red-500 hover:text-red-700 px-2 font-bold">✕</button>
                             </div>

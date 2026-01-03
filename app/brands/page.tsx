@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
@@ -14,23 +15,31 @@ export default async function BrandsPage() {
                     Select a brand to explore its unique products, flavors, and nutritional information.
                 </p>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6">
-                    {brands.map((brand: any, index: number) => (
-                        <div
-                            key={brand._id ? String(brand._id) : index}
-                            className="group bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 overflow-hidden"
-                        >
-                            <div className="relative w-[100%] h-[100%]">
-                                <Image
-                                    src={brand.logo}
-                                    alt={brand.name}
-                                    fill
-                                    className="object-contain"
-                                />
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                {brands.length === 0 ? (
+                    <div className="text-center text-gray-500 py-12 bg-white rounded-2xl shadow-sm">
+                        <p className="text-lg font-medium">No active brands found.</p>
+                        <p className="text-sm mt-1">Please check back later.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6">
+                        {brands.map((brand: any, index: number) => (
+                            <Link
+                                href={`/brands/${brand.slug}`}
+                                key={brand._id ? String(brand._id) : index}
+                                className="group bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 overflow-hidden block"
+                            >
+                                <div className="relative w-[100%] h-[100%]">
+                                    <Image
+                                        src={brand.logo}
+                                        alt={brand.name}
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </div>
         </main>
     );

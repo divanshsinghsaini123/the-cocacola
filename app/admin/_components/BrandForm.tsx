@@ -41,7 +41,8 @@ export default function BrandForm({ initialData }: BrandFormProps) {
     // Helper for simple text inputs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const processedValue = name === "slug" ? value.replace(/\s+/g, "-") : value;
+        setFormData((prev) => ({ ...prev, [name]: processedValue }));
         if (success) setSuccess("");
     };
 
@@ -190,7 +191,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                 <div className="flex flex-col gap-2">
                                     <BunnyUpload
                                         folder="brands"
-                                        maxSizeMB={0.5}
+                                        maxSizeMB={0.2}
                                         onSuccess={(url) => {
                                             handleChange({ target: { name: 'logo', value: url } } as any);
                                         }}
@@ -218,7 +219,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                         ) : (
                             <BunnyUpload
                                 folder="brands"
-                                maxSizeMB={0.5}
+                                maxSizeMB={0.2}
                                 onSuccess={(url) => {
                                     handleChange({ target: { name: 'logo', value: url } } as any);
                                 }}
@@ -262,7 +263,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                     disabled={isLoading}
                                     className="text-xs text-blue-600 hover:underline font-semibold disabled:opacity-50"
                                 >
-                                    {isLoading ? "Uploading..." : "+ Add New Image (1920x1080)"}
+                                    {isLoading ? "Uploading..." : "+ Add New Image (1440*810)"}
                                 </button>
                             )}
                         </BunnyUpload>
