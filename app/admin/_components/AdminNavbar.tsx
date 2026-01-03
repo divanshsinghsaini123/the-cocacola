@@ -12,7 +12,7 @@ export default function AdminNavbar() {
         try {
             setLoading(true);
             const res = await fetch("/api/admin/auth", {
-                method: "POST",
+                method: "DELETE",
             });
 
             if (res.ok) {
