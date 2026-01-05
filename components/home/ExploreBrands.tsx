@@ -1,16 +1,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-
-export default function ExploreBrands() {
-    const brands = [
-        { name: "Coca-Cola", image: "/assets/Home/cococola_brand.webp" },
-        { name: "Diet Coke", image: "/assets/Home/dietcoke_brand.webp" },
-        { name: "Sprite", image: "/assets/Home/sprite_brand.webp" },
-        { name: "Fanta", image: "/assets/Home/fanta_brand.webp" },
-        { name: "Smartwater", image: "/assets/Home/smartwater_brand.webp" },
-        { name: "Minute Maid", image: "/assets/Home/minutemade_brand.webp" },
-    ];
+import { connectDB } from "@/src/lib/mongoose";
+import { Brand } from "@/src/models/Brand";
+export default async function ExploreBrands() {
+    await connectDB();
+    const brands = await Brand.find({ isActive: true }).lean();
 
     return (
         <section className="w-full bg-[#EEEEEE] py-20 ">
@@ -18,21 +13,25 @@ export default function ExploreBrands() {
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-7 text-black">Explore Our Brands</h2>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6">
-                    {brands.map((brand, index) => (
-                        <div key={index} className="group bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow overflow-hidden">
-                            <div className="relative w-[100%] h-[100%] transform transition-transform duration-300 group-hover:scale-105">
+                    {brands.map((brand: any, index: number) => (
+                        <Link
+                            href={`/brands/${brand.slug}`}
+                            key={brand._id ? String(brand._id) : index}
+                            className="group bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 overflow-hidden block"
+                        >
+                            <div className="relative w-[100%] h-[100%]">
                                 <Image
-                                    src={brand.image}
+                                    src={brand.logo}
                                     alt={brand.name}
                                     fill
                                     className="object-contain"
                                 />
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
 
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-6">
                     <Link href="/brands" className="px-32 py-2 rounded-full border-2 border-black text-black font-bold text-[15px] hover:bg-black hover:text-white transition-colors duration-300">
                         View All
                     </Link>
