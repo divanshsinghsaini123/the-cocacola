@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { connectDB } from "@/src/lib/mongoose";
 import { Product } from "@/src/models/Product";
 import { Brand } from "@/src/models/Brand";
-import Link from "next/link";
 import StoreCarousel from "./_components/StoreCarousel";
 
 interface ProductPageProps {
