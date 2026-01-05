@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "coco-cola-pullzone.b-cdn.net",
+      },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
       }
     ]
   }

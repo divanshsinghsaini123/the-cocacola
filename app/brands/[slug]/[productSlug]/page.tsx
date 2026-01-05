@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { connectDB } from "@/src/lib/mongoose";
 import { Product } from "@/src/models/Product";
 import { Brand } from "@/src/models/Brand";
+import { Store } from "@/src/models/store";
 import StoreCarousel from "./_components/StoreCarousel";
 
 interface ProductPageProps {
@@ -16,7 +17,8 @@ interface ProductPageProps {
 export default async function ProductDetailPage({ params }: ProductPageProps) {
     const { slug, productSlug } = await params;
     await connectDB();
-
+    console.log(Store.modelName); // Ensure Store model is registered
+    ////////i am facing issue  here again and again , i don;t know why 
     // 1. Find Brand first to ensure valid URL context
     const brand = await Brand.findOne({ slug, isActive: true }).select("_id name slug logo socialLinks").lean();
     if (!brand) notFound();
@@ -152,51 +154,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             {product.stores && product.stores.length > 0 && (
                 <StoreCarousel stores={JSON.parse(JSON.stringify(product.stores))} />
             )}
-
-            {/* Follow Section */}
-            <div className="max-w-[1120px] mx-auto px-4 md:px-0 mb-20 md:mt-25">
-                <div className="w-full bg-black rounded-[15px] py-7 px-8 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <h2 className="text-white text-[28px] md:text-[32px] font-bold tracking-tight">Follow {brand.name}</h2>
-                    <div className="flex gap-4">
-                        {[
-                            { name: 'facebook', path: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z", link: brand.socialLinks?.facebook },
-                            { name: 'x', path: "M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z", link: brand.socialLinks?.x },
-                            { name: 'instagram', path: "M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z M17.5 6.5h.01 M16 2H8a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V6a4 4 0 0 0-4-4z", link: brand.socialLinks?.instagram },
-                            { name: 'youtube', path: "M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z M9.75 15.02l5.75-3.27-5.75-3.27z", link: brand.socialLinks?.youtube }
-                        ]
-                            .filter(icon => icon.link)
-                            .map((icon) => (
-                                <a
-                                    key={icon.name}
-                                    href={icon.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-8 h-8 md:w-10 md:h-10 border border-white rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill={icon.name === 'youtube' || icon.name === 'x' || icon.name === 'facebook' ? "currentColor" : "none"}
-                                        stroke={icon.name === 'youtube' || icon.name === 'x' || icon.name === 'facebook' ? "none" : "currentColor"}
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path d={icon.path} />
-                                    </svg>
-                                </a>
-                            ))}
-                    </div>
-                </div>
-                {product.summary && (
-                    <p className="mt-12 text-m text-black font-medium uppercase text-center md:text-left leading-relaxed tracking-wide">
-                        {product.summary}
-                    </p>
-                )}
-            </div>
-
         </main >
     );
 }
