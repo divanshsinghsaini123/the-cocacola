@@ -6,7 +6,6 @@ import { Brand } from "@/src/models/Brand";
 import { Product } from "@/src/models/Product";
 import Link from "next/link";
 import BrandImageCarousel from "./_components/BrandImageCarousel";
-import VideoCard from "./_components/VideoCard";
 import BrandVideoCarousel from "./_components/BrandVideoCarousel";
 
 interface BrandPageProps {
