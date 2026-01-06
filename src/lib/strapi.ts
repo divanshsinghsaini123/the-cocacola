@@ -7,7 +7,14 @@ if (!STRAPI_URL) {
 
 export async function GetHomePageData() {
     try {
-        const response = await fetch(STRAPI_URL);
+        const response = await fetch(STRAPI_URL
+            , {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Failed to fetch home page data");
