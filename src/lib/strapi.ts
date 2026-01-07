@@ -1,6 +1,6 @@
 
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL as string;
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/home-page?populate[hero][populate]=image&populate[promosAndOffers][populate][items][populate]=image&populate[features][populate][items][populate]=image&populate[moreFromCocaCola][populate][items][populate]=image";
 if (!STRAPI_URL) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }

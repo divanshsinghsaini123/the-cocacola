@@ -3,9 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
+interface PromosAndOffersProps {
+    data: any;
+}
+export default function PromosAndOffers({ data }: PromosAndOffersProps) {
+    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
-export default function PromosAndOffers() {
-    const offers = [
+    // Fallback static data if data.items is missing or empty
+    const defaultOffers = [
         {
             id: 1,
             image: "/assets/Home/pro&offer1.webp",
@@ -21,6 +26,21 @@ export default function PromosAndOffers() {
             link: "#"
         }
     ];
+
+    const offers = (data?.items && data.items.length > 0) ? data.items.slice(0, 2).map((item: any) => {
+        const imageUrl = `${STRAPI_BASE_URL}${item.image.formats.large.url}`;
+
+        return {
+            id: item.id,
+            image: imageUrl,
+            title: item.title || "No Title",
+            description: item.description || "No Description",
+            link: item.buttonLink || "#",
+            buttonText: item.buttonText || "Enter Now"
+        };
+    }) : defaultOffers;
+
+    const isLocal = STRAPI_BASE_URL.includes("localhost");
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -62,10 +82,19 @@ export default function PromosAndOffers() {
         scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     };
 
+    interface Offer {
+        id: number;
+        image: string;
+        title: string;
+        description: string;
+        link: string;
+        buttonText: string;
+    }
+
     return (
         <section className="w-full bg-[#EEEEEE] py-10 lg:py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6">
-                <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-10 text-black">Promos & Offers</h2>
+                <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-10 text-black">{data.sectionTitle}</h2>
 
                 {/* Mobile: Scrollable, Desktop: Grid */}
                 <div
@@ -78,7 +107,7 @@ export default function PromosAndOffers() {
                     onMouseMove={handleMouseMove}
                     style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
                 >
-                    {offers.map((offer) => (
+                    {offers.map((offer: Offer) => (
                         <div key={offer.id} className="min-w-[85%] sm:min-w-0 bg-white rounded-[20px] overflow-hidden flex flex-col snap-center shadow-sm select-none">
                             <div className="relative h-[250px] md:h-[430px] sm:h-[350px] w-full">
                                 <Image
@@ -86,6 +115,7 @@ export default function PromosAndOffers() {
                                     alt={offer.title}
                                     fill
                                     className="object-cover pointer-events-none"
+                                    unoptimized={isLocal}
                                 />
                             </div>
                             <div className="p-6 md:p-8 flex flex-col flex-grow text-left">
@@ -97,7 +127,7 @@ export default function PromosAndOffers() {
                                 </p>
                                 <div className="mt-auto">
                                     <Link href={offer.link} className="inline-flex items-center text-black font-bold text-[16px] group pointer-events-auto">
-                                        <span className="border-b-2 border-black group-hover:border-transparent transition-all">Enter Now</span>
+                                        <span className="border-b-2 border-black group-hover:border-transparent transition-all">{offer.buttonText}</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                                         </svg>
@@ -110,7 +140,7 @@ export default function PromosAndOffers() {
 
                 {/* Mobile Pagination Indicator */}
                 <div className="flex justify-center items-center gap-2 mt-4 sm:hidden">
-                    {offers.map((_, index) => (
+                    {offers.map((_: Offer, index: number) => (
                         <div
                             key={index}
                             className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'

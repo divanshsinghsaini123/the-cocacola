@@ -13,8 +13,8 @@ export default async function Home() {
     <main>
       <Hero data={data.hero} />
       <PromosAndOffers data={data.promosAndOffers} />
-      <Features data={data.features} />
-      <MoreFromCocaCola data={data.moreFromCocaCola} />
+      {/* <Features data={data.features} />
+      <MoreFromCocaCola data={data.moreFromCocaCola} /> */}
       <ExploreBrands />
     </main>
   );

@@ -1,7 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
+interface HeroProps {
+    data: any;
+}
+const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL!;
 
-export default function Hero() {
+export default function Hero({ data }: HeroProps) {
+    const imageUrl = data?.image?.formats?.large?.url
+        ? `${STRAPI_BASE_URL}${data.image.formats.large.url}`
+        : "";
+    const isLocal = STRAPI_BASE_URL.includes("localhost");
     return (
         <section className="w-full bg-[#EEEEEE] pt-4 lg:pt-14 pb-4 lg:pb-14">
             <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-6">
@@ -9,12 +17,14 @@ export default function Hero() {
                     {/* Background Image */}
                     <div className="absolute inset-0 ">
                         <Image
-                            src="/assets/Home/coke-holiday-home-banner-dt.png"
+                            src={imageUrl}
                             alt="Winter Adventure in Sweden"
                             fill
                             className="object-cover object-center"
                             priority
+                            unoptimized={isLocal}
                         />
+
                         {/* Overlay gradient for better text readability if needed, though the image seems dark enough on the left */}
                         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent md:bg-gradient-to-r md:from-black/15 md:via-transparent md:to-transparent " />
                     </div>
