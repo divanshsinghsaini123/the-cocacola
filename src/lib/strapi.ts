@@ -20,7 +20,7 @@ export async function GetHomePageData() {
             throw new Error("Failed to fetch home page data");
         }
         const data = await response.json();
-        return data;
+        return data.data;
     } catch (error) {
         console.error("Error fetching home page data:", error);
         return null;

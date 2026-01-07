@@ -11,10 +11,10 @@ export default async function Home() {
 
   return (
     <main>
-      <Hero />
-      <PromosAndOffers />
-      <Features />
-      <MoreFromCocaCola />
+      <Hero data={data.hero} />
+      <PromosAndOffers data={data.promosAndOffers} />
+      <Features data={data.features} />
+      <MoreFromCocaCola data={data.moreFromCocaCola} />
       <ExploreBrands />
     </main>
   );
