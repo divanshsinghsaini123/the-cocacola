@@ -33,18 +33,18 @@ export default function Hero({ data }: HeroProps) {
                     <div className="relative h-full flex flex-col justify-start pt-5 lg:pt-0 md:justify-center md:pt-0 items-center md:items-start text-center md:text-left px-6 px-[10px] md:px-[60px] lg:px-[80px]">
                         <div className="max-w-[600px] text-black md:text-white space-y-2 md:space-y-5 flex flex-col items-center md:items-start">
                             <h1 className="leading-[1.3] text-[23px] md:text-[40px] lg:text-[35px] font-bold  text-white">
-                                You Could Win a Winter Adventure in Sweden
+                                {data.heading}
                             </h1>
                             <p className="text-[16px] md:text-[16px] leading-[1.5] max-w-[500px] text-white px-3 md:px-0">
-                                Enter our holiday sweepstakes for your chance to win an unforgettable 5-day/4-night journey to the winter wonderland of Sweden, including a stay at the world-famous ICEHOTEL.
+                                {data.description[0]?.children[0]?.text}
                             </p>
                             <div className="pt-1 md:pt-4 w-full md:w-auto lg:w-auto flex justify-center md:block">
-                                <Link
-                                    href="#"
+                                {data.ShowButton && <Link
+                                    href={data.ButttonLink || "#"}
                                     className="pt-2 block w-[290px] h-[40px] lg:w-[327px] lg:h-[40px] md:inline-block bg-white text-black text-[18px] font-bold rounded-full hover:bg-gray-100 transition-colors duration-200 text-center"
                                 >
-                                    Enter Now
-                                </Link>
+                                    {data.ButtonText}
+                                </Link>}
                             </div>
                         </div>
                     </div>

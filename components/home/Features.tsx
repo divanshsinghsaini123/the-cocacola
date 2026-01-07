@@ -2,8 +2,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Features() {
-    const features = [
+interface FeaturesProps {
+    data: any;
+}
+export default function Features({ data }: FeaturesProps) {
+    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+    const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const defaultfeatures = [
         {
             id: 1,
             image: "/assets/Home/sprite-squad-december-dt.png",
@@ -23,14 +28,36 @@ export default function Features() {
             alignment: "right" // Image on right, Card on left
         }
     ];
+    const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: any, index: number) => {
+        //sbse phle nikalenge url 
+        const imgurl = `${STRAPI_BASE_URL}${item.image.formats.large.url}`;
+        return {
+            id: item.id,
+            image: imgurl,
+            title: item.title,
+            description: item.description,
+            buttonText: item.buttonText,
+            link: item.buttonLink || "#",
+            alignment: index % 2 === 0 ? "left" : "right"
+        }
+    }) : defaultfeatures;
 
+    interface featuree {
+        id: number,
+        image: string,
+        title: string,
+        description: string,
+        buttonText: string,
+        link: string,
+        alignment: string
+    }
     return (
         <section className="w-full bg-[#EEEEEE] pb-20 pt-0">
             <div className="max-w-7xl mx-auto px-0 lg:px-16">
-                <h2 className="text-[26px] md:text-[32px] font-bold text-center lg:mb-25 text-black px-4">Features</h2>
+                <h2 className="text-[26px] md:text-[32px] font-bold text-center lg:mb-25 text-black px-4">{data.sectionTitle}</h2>
 
                 <div className="space-y-24 lg:space-y-32">
-                    {features.map((feature) => (
+                    {featuresdata.map((feature: featuree) => (
                         <div key={feature.id} className={`flex flex-col ${feature.alignment === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center relative`}>
                             {/* Image Container */}
                             <div className="w-full lg:w-[660px] h-[400px] lg:h-[540px] relative rounded-none lg:rounded-[16px] overflow-hidden shadow-sm mb-2">
@@ -39,6 +66,7 @@ export default function Features() {
                                     alt={feature.title}
                                     fill
                                     className="object-contain"
+                                    unoptimized={isLocal}
                                 />
                             </div>
 
