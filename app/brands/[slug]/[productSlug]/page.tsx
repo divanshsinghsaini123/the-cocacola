@@ -7,6 +7,8 @@ import { Brand } from "@/src/models/Brand";
 import { Store } from "@/src/models/store";
 import StoreCarousel from "./_components/StoreCarousel";
 
+export const dynamic = "force-dynamic";
+
 interface ProductPageProps {
     params: Promise<{
         slug: string;

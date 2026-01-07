@@ -3,6 +3,8 @@ import Image from "next/image";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
 
+export const dynamic = "force-dynamic";
+
 export default async function BrandsPage() {
     await connectDB();
     const brands = await Brand.find({ isActive: true }).lean();

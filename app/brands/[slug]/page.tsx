@@ -8,6 +8,8 @@ import Link from "next/link";
 import BrandImageCarousel from "./_components/BrandImageCarousel";
 import BrandVideoCarousel from "./_components/BrandVideoCarousel";
 
+export const dynamic = "force-dynamic";
+
 interface BrandPageProps {
     params: Promise<{
         slug: string;

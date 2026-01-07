@@ -13,6 +13,7 @@ export async function GetHomePageData() {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                next: { revalidate: 120 },
             }
         );
 
