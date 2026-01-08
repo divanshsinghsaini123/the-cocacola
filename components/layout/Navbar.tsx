@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { usePathname } from "next/navigation";
-
-export default function Navbar() {
+interface NavbarProps {
+    stores: any[]
+}
+export default function Navbar({ stores }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const isAdmin = pathname?.startsWith('/admin');
@@ -16,13 +18,30 @@ export default function Navbar() {
         setIsOpen(!isOpen);
     };
 
-    const navLinks = [
-        { name: "Brands", href: "/brands" },
-        { name: "Discover", href: "/discover", hasChevron: true },
-        { name: "Impact", href: "/impact", hasChevron: true },
-        { name: "Shop", href: "/shop" },
-        { name: "Promos & Offers", href: "/promos&offers" },
-    ];
+    type NavLinkData = {
+        href: string;
+        hasChevron?: boolean;
+        dropdownContent?: { name: string; link: string }[];
+    };
+
+    let navLinks: Record<string, NavLinkData> = {
+        "Brands": { href: "/brands" },
+        "Discover": { href: "/discover", hasChevron: true, dropdownContent: [{ name: "Coke Studio Bharat", link: "#" }, { name: "Sprite Joke In A Bottle", link: "#" }] },
+        "Impact": { href: "/impact", hasChevron: true, dropdownContent: [{ name: "Sustainability", link: "#" }] },
+        "Shop": { href: "#", hasChevron: true },
+        "Promos & Offers": { href: "/promos&offers" }
+    };
+
+    if (navLinks["Shop"]) {
+        navLinks["Shop"].dropdownContent = stores.map((store) => {
+            return {
+                name: store.name,
+                link: store.link,
+            }
+        });
+    }
+
+    const [activeDropdown, setActiveDropdown] = useState<string>("");
 
     return (
         <nav className="bg-white top-0 z-50">
@@ -44,33 +63,55 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-10 h-[100%]">
-                        {navLinks.map((link) => {
+                        {Object.entries(navLinks).map(([name, linkData]) => {
+                            const link = { name, ...linkData };
                             const isActive = pathname === link.href;
                             return (
-                                <Link
-                                    key={link.name}
-                                    href={link.href}
-                                    className={`pt-2 h-[100%] flex items-center text-black font-bold text-[15px] tracking-wide transition-all duration-200 border-b-4 ${isActive ? "border-black" : "border-transparent hover:border-black"
-                                        }`}
+                                <div
+                                    key={name}
+                                    className="relative h-full flex items-center"
+                                    onMouseEnter={() => setActiveDropdown(link.name)}
+                                    onMouseLeave={() => setActiveDropdown("")}
                                 >
-                                    {link.name}
-                                    {link.hasChevron && (
-                                        <svg
-                                            className="ml-1 w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
+                                    <Link
+                                        href={link.href}
+                                        className={`pt-2 h-full flex items-center text-black font-bold text-[15px] tracking-wide transition-all duration-200 border-b-4 ${isActive ? "border-black" : "border-transparent hover:border-black"
+                                            }`}
+                                    >
+                                        {link.name}
+                                        {link.hasChevron && (
+                                            <svg
+                                                className={`ml-1 w-4 h-4 transition-transform duration-300 ${activeDropdown === link.name ? "rotate-90" : ""}`}
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M9 5l7 7-7 7"
+                                                />
+                                            </svg>
+                                        )}
+                                    </Link>
+                                    {activeDropdown === link.name && link.dropdownContent && (
+                                        <div
+                                            className="absolute top-full left-0 bg-white shadow-xl border border-gray-100 p-2 flex flex-col gap-1 min-w-[220px] rounded-lg animate-in fade-in slide-in-from-top-2 duration-200 z-50"
                                         >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M9 5l7 7-7 7"
-                                            />
-                                        </svg>
+                                            {link.dropdownContent.map((item) => (
+                                                <Link
+                                                    key={item.name}
+                                                    href={item.link}
+                                                    className="block py-2.5 px-4 text-[14px] font-medium text-gray-700 hover:bg-gray-50 hover:text-black rounded-md transition-colors"
+                                                >
+                                                    {item.name}
+                                                </Link>
+                                            ))}
+                                        </div>
                                     )}
-                                </Link>
+                                </div>
                             );
                         })}
                     </div>
@@ -148,7 +189,8 @@ export default function Navbar() {
                         </button>
                     </div>
                     <div className="px-6 pt-2 space-y-4">
-                        {navLinks.map((link) => {
+                        {Object.entries(navLinks).map(([name, linkData]) => {
+                            const link = { name, ...linkData };
                             return (
                                 <Link
                                     key={link.name}
