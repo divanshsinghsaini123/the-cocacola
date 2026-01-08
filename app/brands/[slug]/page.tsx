@@ -8,6 +8,8 @@ import Link from "next/link";
 import BrandImageCarousel from "./_components/BrandImageCarousel";
 import BrandVideoCarousel from "./_components/BrandVideoCarousel";
 
+export const dynamic = "force-dynamic";
+
 interface BrandPageProps {
     params: Promise<{
         slug: string;
@@ -94,7 +96,7 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
 
                 {/* Follow Section (Black Bar) */}
                 <div className="w-full bg-black rounded-[20px] py-7 px-8 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-                    <h2 className="text-white text-[28px] md:text-[32px] font-bold tracking-tight">Follow {brand.name}</h2>
+                    <h2 className="text-white text-[20px] md:text-[32px] font-bold tracking-tight">Follow {brand.name}</h2>
                     <div className="flex gap-4">
                         {[
                             { name: 'facebook', path: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z", link: brand.socialLinks?.facebook },
