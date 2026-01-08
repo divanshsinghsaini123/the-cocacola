@@ -4,11 +4,11 @@ import Features from "../components/home/Features";
 import MoreFromCocaCola from "../components/home/MoreFromCocoCola";
 import ExploreBrands from "../components/home/ExploreBrands";
 import { GetHomePageData } from "@/src/lib/strapi";
-
+import { notFound } from "next/navigation";
 
 export default async function Home() {
   const data = await GetHomePageData();
-
+  if (!data) return notFound();
   return (
     <main>
       <Hero data={data.hero} />
