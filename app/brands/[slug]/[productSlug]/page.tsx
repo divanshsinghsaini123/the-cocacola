@@ -7,6 +7,8 @@ import { Brand } from "@/src/models/Brand";
 import { Store } from "@/src/models/store";
 import StoreCarousel from "./_components/StoreCarousel";
 
+export const dynamic = "force-dynamic";
+
 interface ProductPageProps {
     params: Promise<{
         slug: string;
@@ -56,7 +58,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 <div className="flex flex-col lg:flex-row justify-between gap-12 lg:gap-10">
 
                     {/* Left Column: Image Container 544x544 */}
-                    <div className="w-full lg:w-[544px] h-[544px] bg-white rounded-[20px] flex items-center justify-center shadow-sm relative">
+                    <div className="w-full lg:w-[544px] aspect-square lg:h-[544px] bg-white rounded-[20px] flex items-center justify-center shadow-sm relative">
 
                         <div className="relative w-full h-full transition-transform duration-500 hover:scale-105">
                             <Image
@@ -157,4 +159,3 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         </main >
     );
 }
-
