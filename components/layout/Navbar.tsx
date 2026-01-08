@@ -42,6 +42,7 @@ export default function Navbar({ stores }: NavbarProps) {
     }
 
     const [activeDropdown, setActiveDropdown] = useState<string>("");
+    const [activeMobileDropdown, setActiveMobileDropdown] = useState<string>("");
 
     return (
         <nav className="bg-white top-0 z-50">
@@ -191,33 +192,61 @@ export default function Navbar({ stores }: NavbarProps) {
                     <div className="px-6 pt-2 space-y-4">
                         {Object.entries(navLinks).map(([name, linkData]) => {
                             const link = { name, ...linkData };
+                            const isActiveMobile = activeMobileDropdown === name;
+
                             return (
-                                <Link
-                                    key={link.name}
-                                    href={link.href}
-                                    className="block text-[22px] font-bold text-black"
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    <div className="flex justify-between items-center w-full">
-                                        {link.name}
-                                        {link.hasChevron && (
-                                            <svg
-                                                className="w-5 h-5"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
+                                <div key={name} className="border-b border-gray-100 last:border-0 pb-4">
+                                    {link.dropdownContent ? (
+                                        <div onClick={() => setActiveMobileDropdown(isActiveMobile ? "" : name)}>
+                                            <div className="flex justify-between items-center w-full text-[22px] font-bold text-black cursor-pointer">
+                                                {link.name}
+                                                {link.hasChevron && (
+                                                    <svg
+                                                        className={`w-5 h-5 transition-transform duration-300 ${isActiveMobile ? "rotate-90" : ""}`}
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M9 5l7 7-7 7"
+                                                        />
+                                                    </svg>
+                                                )}
+                                            </div>
+                                            <div
+                                                className={`overflow-hidden transition-all duration-300 ease-in-out ${isActiveMobile ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
+                                                    }`}
                                             >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M9 5l7 7-7 7"
-                                                />
-                                            </svg>
-                                        )}
-                                    </div>
-                                </Link>
+                                                <div className="flex flex-col space-y-3 pl-2 border-l-2 border-black ml-1">
+                                                    {link.dropdownContent.map((item) => (
+                                                        <Link
+                                                            key={item.name}
+                                                            href={item.link}
+                                                            className="text-lg font-medium text-gray-600 hover:text-black block py-1"
+                                                            onClick={() => setIsOpen(false)}
+                                                        >
+                                                            {item.name}
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <Link
+                                            href={link.href}
+                                            className="block text-[22px] font-bold text-black"
+                                            onClick={() => setIsOpen(false)}
+                                        >
+                                            <div className="flex justify-between items-center w-full">
+                                                {link.name}
+                                            </div>
+                                        </Link>
+                                    )}
+                                </div>
                             );
                         })}
                     </div>
