@@ -76,7 +76,7 @@ export default function BrandProducts({ brandId, brandName }: BrandProductsProps
                     <p className="text-sm text-gray-500">Manage products belonging to {brandName}</p>
                 </div>
                 <Link
-                    href={`/admin/products/add?brandId=${brandId}`}
+                    href={`/admin/Products/add?brandId=${brandId}`}
                     className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 transition-colors shadow-sm hover:shadow-md"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></svg>
@@ -124,7 +124,7 @@ export default function BrandProducts({ brandId, brandName }: BrandProductsProps
 
                             <div className="flex items-center gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
                                 <Link
-                                    href={`/admin/products/edit/${product._id}`}
+                                    href={`/admin/Products/edit/${product._id}`}
                                     className="flex-1 sm:flex-none justify-center px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-black transition-colors"
                                 >
                                     Edit
