@@ -13,12 +13,15 @@ export async function GetHomePageData() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                next: { revalidate: 120 },
             }
         );
 
         if (!response.ok) {
-            throw new Error("Failed to fetch home page data");
+            console.error(`Failed to fetch from: ${STRAPI_URL}`);
+            console.error(`Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         return data.data;
