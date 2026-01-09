@@ -30,7 +30,7 @@ export default function Features({ data }: FeaturesProps) {
     ];
     const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: any, index: number) => {
         //sbse phle nikalenge url 
-        const imgurl = `${STRAPI_BASE_URL}${item.image.formats.large.url}`;
+        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.formats.large.url}` : item.image.formats.large.url;
         return {
             id: item.id,
             image: imgurl,

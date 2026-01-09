@@ -8,7 +8,7 @@ interface PromosAndOffersProps {
 }
 export default function PromosAndOffers({ data }: PromosAndOffersProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
+    const isLocal = STRAPI_BASE_URL.includes("localhost");
     // Fallback static data if data.items is missing or empty
     const defaultOffers = [
         {
@@ -28,7 +28,7 @@ export default function PromosAndOffers({ data }: PromosAndOffersProps) {
     ];
 
     const offers = (data?.items && data.items.length > 0) ? data.items.slice(0, 2).map((item: any) => {
-        const imageUrl = `${STRAPI_BASE_URL}${item.image.formats.large.url}`;
+        const imageUrl = isLocal ? `${STRAPI_BASE_URL}${item.image.formats.large.url}` : item.image.formats.large.url;
 
         return {
             id: item.id,
@@ -40,7 +40,7 @@ export default function PromosAndOffers({ data }: PromosAndOffersProps) {
         };
     }) : defaultOffers;
 
-    const isLocal = STRAPI_BASE_URL.includes("localhost");
+
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);

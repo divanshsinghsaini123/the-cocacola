@@ -6,10 +6,10 @@ interface HeroProps {
 const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL!;
 
 export default function Hero({ data }: HeroProps) {
-    const imageUrl = data?.image?.formats?.large?.url
-        ? `${STRAPI_BASE_URL}${data.image.formats.large.url}`
-        : "";
     const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const imageUrl = data?.image?.formats?.large?.url
+        ? (isLocal ? `${STRAPI_BASE_URL}${data.image.formats.large.url}` : data.image.formats.large.url) : "";
+    console.log(imageUrl);
     return (
         <section className="w-full bg-[#EEEEEE] pt-4 lg:pt-14 pb-4 lg:pb-14">
             <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-6">

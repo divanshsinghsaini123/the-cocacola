@@ -19,6 +19,14 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "localhost",
         port: "1337",
+      },
+      // {
+      //   protocol: "https",
+      //   hostname: "active-nurture-c4d476a309.strapiapp.comhttps"
+      // },
+      {
+        protocol: "https",
+        hostname: "active-nurture-c4d476a309.media.strapiapp.com"
       }
     ]
   }

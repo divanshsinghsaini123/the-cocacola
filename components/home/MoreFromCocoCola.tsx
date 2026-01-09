@@ -63,7 +63,7 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
     ];
     const StrapiItems = (data?.items && data.items.length > 0) ? data.items.map((item: any) => {
         //sbse phle nikalenge url 
-        const imgurl = `${STRAPI_BASE_URL}${item.image.formats.small.url}`;
+        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.formats.small.url}` : item.image.formats.small.url;
         return {
             id: item.id,
             image: imgurl,
