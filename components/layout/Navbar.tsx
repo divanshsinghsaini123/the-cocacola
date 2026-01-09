@@ -10,6 +10,8 @@ interface NavbarProps {
 export default function Navbar({ stores }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
+    const [activeDropdown, setActiveDropdown] = useState<string>("");
+    const [activeMobileDropdown, setActiveMobileDropdown] = useState<string>("");
     const isAdmin = pathname?.startsWith('/admin');
 
     if (isAdmin) return null;
@@ -40,9 +42,6 @@ export default function Navbar({ stores }: NavbarProps) {
             }
         });
     }
-
-    const [activeDropdown, setActiveDropdown] = useState<string>("");
-    const [activeMobileDropdown, setActiveMobileDropdown] = useState<string>("");
 
     return (
         <nav className="bg-white top-0 z-50">
