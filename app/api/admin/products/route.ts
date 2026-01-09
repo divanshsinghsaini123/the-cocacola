@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import { Product } from "@/src/models/Product";
+import "@/src/models/Brand"; // Ensure Brand model is registered for populate
 
 // GET → get all products (optionally by brand)
 export async function GET(request: Request) {
