@@ -302,13 +302,14 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                 <div className="space-y-4">
                     {[1, 2, 3].map((num) => (
                         <div key={num} className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">Description Paragaph {num}</label>
+                            <label className="text-sm font-medium text-gray-700">Description Paragaph {num} (1-2 Lines)</label>
                             <textarea
                                 value={(formData.descriptions as any)[`d${num}`]}
                                 onChange={(e) => handleNestedChange("descriptions", `d${num}`, e.target.value)}
-                                rows={3}
+                                rows={2}
                                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all resize-none text-sm"
                                 placeholder={`Paragraph ${num} content...`}
+                                maxLength={200}
                             />
                         </div>
                     ))}
