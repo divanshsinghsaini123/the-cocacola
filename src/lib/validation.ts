@@ -1,0 +1,61 @@
+import { z } from "zod";
+
+export const AdminLoginSchema = z.object({
+    username: z.string().min(1, "Username is required"),
+    password: z.string().min(1, "Password is required"),
+});
+
+export const BrandSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    slug: z.string().min(1, "Slug is required"),
+    logo: z.string().min(1, "Logo is required"),
+    images: z.array(z.string()).optional(),
+    descriptions: z.object({
+        d1: z.string().optional(),
+        d2: z.string().optional(),
+        d3: z.string().optional(),
+    }).optional(),
+    socialLinks: z.object({
+        facebook: z.string().optional(),
+        x: z.string().optional(),
+        instagram: z.string().optional(),
+        youtube: z.string().optional(),
+    }).optional(),
+    youtubeVideos: z.array(z.string()).optional(),
+    isActive: z.boolean().optional(),
+});
+
+export const ProductSchema = z.object({
+    brand: z.string().min(1, "Brand is required"),
+    name: z.string().min(1, "Name is required"),
+    slug: z.string().min(1, "Slug is required"),
+    image: z.string().min(1, "Image is required"),
+    description: z.string().optional(),
+    summary: z.string().optional(),
+    sizesAvailable: z.array(z.string()).optional(),
+    nutrition: z.object({
+        quantity: z.string().optional(),
+        diet: z.string().optional(),
+        ingredients: z.string().optional(),
+        nutritionfacts: z.array(
+            z.object({
+                key: z.object({
+                    name: z.string(),
+                    amount: z.string(),
+                }),
+            })
+        ).optional(),
+    }).optional(),
+    stores: z.array(z.string()).optional(),
+    isActive: z.boolean().optional(),
+});
+
+export const StoreSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    image: z.string().min(1, "Image is required"),
+    link: z.string().min(1, "Link is required"),
+    address: z.string().optional(),
+    phone: z.string().optional(),
+    modeofstore: z.string().min(1, "Mode of store is required"),
+    isActive: z.boolean().optional(),
+});

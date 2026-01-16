@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
+import { BrandSchema } from "@/src/lib/validation";
 
 // GET all brands
 export async function GET() {
@@ -21,7 +22,13 @@ export async function POST(request: Request) {
     try {
         await connectDB();
         const body = await request.json();
-        const brand = await Brand.create(body);
+
+        const validation = BrandSchema.safeParse(body);
+        if (!validation.success) {
+            return NextResponse.json({ error: validation.error.issues[0].message }, { status: 400 });
+        }
+
+        const brand = await Brand.create(validation.data);
         return NextResponse.json({ brand }, { status: 201 });
     } catch (error) {
         return NextResponse.json(
@@ -37,9 +44,24 @@ export async function PUT(request: Request) {
         await connectDB();
         const body = await request.json();
 
+        // Separate ID from data for validation
+        const { id, ...data } = body;
+
+        if (!id) {
+            return NextResponse.json({ error: "Brand ID is required" }, { status: 400 });
+        }
+
+        const validation = BrandSchema.partial().safeParse(data); // Partial for updates if we want to allow partial updates, but PUT usually means replace. 
+        // However, the user flow seems to send full data. Let's strictly validate if it sends full data, OR allow partial. 
+        // Given the UI usually sends the whole form, strict or partial is fine. Let's use partial to be safe for updates.
+
+        if (!validation.success) {
+            return NextResponse.json({ error: validation.error.issues[0].message }, { status: 400 });
+        }
+
         const brand = await Brand.findByIdAndUpdate(
-            body.id,
-            body,
+            id,
+            validation.data,
             { new: true }
         );
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import { Product } from "@/src/models/Product";
+import { ProductSchema } from "@/src/lib/validation";
 import "@/src/models/Brand"; // Ensure Brand model is registered for populate
 
 // GET → get all products (optionally by brand)
@@ -33,7 +34,12 @@ export async function POST(request: Request) {
 
         const body = await request.json();
 
-        const product = await Product.create(body);
+        const validation = ProductSchema.safeParse(body);
+        if (!validation.success) {
+            return NextResponse.json({ error: validation.error.issues[0].message }, { status: 400 });
+        }
+
+        const product = await Product.create(validation.data);
 
         return NextResponse.json({ product }, { status: 201 });
     } catch (error) {
@@ -51,9 +57,19 @@ export async function PUT(request: Request) {
 
         const body = await request.json();
 
+        const { id, ...data } = body;
+        if (!id) {
+            return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+        }
+
+        const validation = ProductSchema.partial().safeParse(data);
+        if (!validation.success) {
+            return NextResponse.json({ error: validation.error.issues[0].message }, { status: 400 });
+        }
+
         const product = await Product.findByIdAndUpdate(
-            body.id,
-            body,
+            id,
+            validation.data,
             { new: true }
         );
 
