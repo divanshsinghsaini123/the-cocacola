@@ -19,11 +19,19 @@ export const metadata: Metadata = {
   description: "The Coca-Cola website",
 };
 
-export default function RootLayout({
+import { GetHomePageData } from "@/src/lib/strapi";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const data = await GetHomePageData();
+
+  // Safely access data whether it's flat or nested in attributes
+  const footerData = data?.footer || data?.attributes?.footer;
+  const socialLinksData = data?.socialLinks || data?.attributes?.socialLinks;
+
   return (
     <html lang="en">
       <body
@@ -32,7 +40,10 @@ export default function RootLayout({
       >
         <NavbarServer />
         {children}
-        <Footer />
+        <Footer
+          footerData={footerData}
+          socialLinks={socialLinksData}
+        />
       </body>
     </html>
   );
