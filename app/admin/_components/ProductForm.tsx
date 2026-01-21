@@ -197,7 +197,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
                     {formData.image ? (
                         <div className="flex items-center gap-4">
                             <div className="relative w-20 h-20 bg-gray-50 border rounded overflow-hidden">
-                                <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + formData.image} alt="prev" fill className="object-contain" />
+                                <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + formData.image} alt="prev" fill className="object-contain" />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <GcoreUpload

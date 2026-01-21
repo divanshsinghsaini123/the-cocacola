@@ -273,7 +273,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {formData.images.map((url: string, index: number) => (
                                 <div key={index} className="relative group aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                                    <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + url} alt={`Gallery ${index}`} fill className="object-cover" />
+                                    <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + url} alt={`Gallery ${index}`} fill className="object-cover" />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <button
                                             type="button"

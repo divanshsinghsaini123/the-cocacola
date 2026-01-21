@@ -74,7 +74,7 @@ export default async function DashboardPage() {
                         <div className="relative flex items-center justify-center w-full h-48 p-6 bg-gray-50 group-hover:bg-gray-100 transition-colors">
                             <div className="relative w-full h-full">
                                 <Image
-                                    src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + brand.logo}
+                                    src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
                                     alt={brand.name}
                                     fill
                                     className="object-contain transition-transform duration-300 group-hover:scale-105"
