@@ -21,7 +21,7 @@ export default async function ExploreBrands() {
                         >
                             <div className="relative w-[100%] h-[100%]">
                                 <Image
-                                    src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + brand.logo}
+                                    src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
                                     alt={brand.name}
                                     fill
                                     className="object-contain"
