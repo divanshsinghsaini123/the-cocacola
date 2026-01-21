@@ -1,3 +1,4 @@
+import { deleteFromGcore } from "../gcore_upload/route";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import { Product } from "@/src/models/Product";
@@ -82,6 +83,7 @@ export async function PUT(request: Request) {
     }
 }
 
+
 // DELETE → delete product
 export async function DELETE(request: Request) {
     try {
@@ -89,10 +91,24 @@ export async function DELETE(request: Request) {
 
         const body = await request.json();
 
-        const product = await Product.findByIdAndDelete(body.id);
+        // Find product first
+        const product = await Product.findById(body.id);
 
-        return NextResponse.json({ product }, { status: 200 });
+        if (!product) {
+            return NextResponse.json({ error: "Product not found" }, { status: 404 });
+        }
+
+        // Delete image from Gcore
+        if (product.image) {
+            await deleteFromGcore(product.image);
+        }
+
+        // Delete product record
+        await Product.findByIdAndDelete(body.id);
+
+        return NextResponse.json({ message: "Product and image deleted successfully" }, { status: 200 });
     } catch (error) {
+        console.error(error);
         return NextResponse.json(
             { error: "Failed to delete product" },
             { status: 500 }

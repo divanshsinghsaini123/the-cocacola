@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import BunnyUpload from "./BunnyUpload";
+import GcoreUpload from "./GcoreUpload";
 
 interface BrandFormProps {
     initialData?: any;
@@ -186,10 +186,10 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                         {formData.logo ? (
                             <div className="flex items-center gap-4">
                                 <div className="relative w-24 h-24 bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm p-2">
-                                    <Image src={formData.logo} alt="Logo" fill className="object-contain" />
+                                    <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + formData.logo} alt="Logo" fill className="object-contain" />
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <BunnyUpload
+                                    <GcoreUpload
                                         folder="brands"
                                         maxSizeMB={0.2}
                                         onSuccess={(url) => {
@@ -206,7 +206,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                                 {isLoading ? "Uploading..." : "Change Logo"}
                                             </button>
                                         )}
-                                    </BunnyUpload>
+                                    </GcoreUpload>
                                     <button
                                         type="button"
                                         onClick={() => handleChange({ target: { name: 'logo', value: "" } } as any)}
@@ -217,7 +217,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                 </div>
                             </div>
                         ) : (
-                            <BunnyUpload
+                            <GcoreUpload
                                 folder="brands"
                                 maxSizeMB={0.2}
                                 onSuccess={(url) => {
@@ -237,7 +237,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                         </span>
                                     </button>
                                 )}
-                            </BunnyUpload>
+                            </GcoreUpload>
                         )}
                     </div>
                 </div>
@@ -245,7 +245,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                 <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700 flex justify-between items-center">
                         Brand Images (Gallery)
-                        <BunnyUpload
+                        <GcoreUpload
                             folder="brands"
                             multiple={true}
                             maxSizeMB={0.5}
@@ -266,14 +266,14 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                     {isLoading ? "Uploading..." : "+ Add New Image (1440*810)"}
                                 </button>
                             )}
-                        </BunnyUpload>
+                        </GcoreUpload>
                     </label>
 
                     {formData.images.length > 0 ? (
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {formData.images.map((url: string, index: number) => (
                                 <div key={index} className="relative group aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                                    <Image src={url} alt={`Gallery ${index}`} fill className="object-cover" />
+                                    <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + url} alt={`Gallery ${index}`} fill className="object-cover" />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <button
                                             type="button"

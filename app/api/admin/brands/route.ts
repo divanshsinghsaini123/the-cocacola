@@ -74,16 +74,37 @@ export async function PUT(request: Request) {
     }
 }
 
+import { deleteFromGcore, deleteFilesFromGcore } from "../gcore_upload/route";
+
 // DELETE brand
 export async function DELETE(request: Request) {
     try {
         await connectDB();
         const body = await request.json();
 
-        const brand = await Brand.findByIdAndDelete(body.id);
+        // Find the brand first to get image paths
+        const brand = await Brand.findById(body.id);
 
-        return NextResponse.json({ brand }, { status: 200 });
+        if (!brand) {
+            return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+        }
+
+        // Delete logo
+        if (brand.logo) {
+            await deleteFromGcore(brand.logo);
+        }
+
+        // Delete gallery images
+        if (brand.images && brand.images.length > 0) {
+            await deleteFilesFromGcore(brand.images);
+        }
+
+        // Delete the brand record
+        await Brand.findByIdAndDelete(body.id);
+
+        return NextResponse.json({ message: "Brand and associated images deleted successfully" }, { status: 200 });
     } catch (error) {
+        console.error("Delete Brand Error:", error);
         return NextResponse.json(
             { error: "Failed to delete brand" },
             { status: 500 }

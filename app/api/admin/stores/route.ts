@@ -1,3 +1,4 @@
+import { deleteFromGcore } from "../gcore_upload/route";
 import { NextResponse } from "next/server";
 import { Store } from '@/src/models/store';
 import { StoreSchema } from '@/src/lib/validation';
@@ -62,14 +63,28 @@ export async function PUT(request: Request) {
     }
 }
 
+
 //delete a store 
 export async function DELETE(request: Request) {
     try {
         await connectDB();
         const body = await request.json();
         const id = body.id;
+
+        // Find store first
+        const store = await Store.findById(id);
+
+        if (!store) {
+            return NextResponse.json({ error: "Store not found" }, { status: 404 });
+        }
+
+        // Delete image from Gcore
+        if (store.image) {
+            await deleteFromGcore(store.image);
+        }
+
         await Store.deleteOne({ _id: id });
-        return NextResponse.json({ message: "Store deleted successfully" }, { status: 200 });
+        return NextResponse.json({ message: "Store and image deleted successfully" }, { status: 200 });
     }
     catch (error) {
         console.error(error);

@@ -5,11 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "sg.storage.bunnycdn.com",
-      },
-      {
-        protocol: "https",
-        hostname: "coco-cola-pullzone.b-cdn.net",
+        hostname: "cdn.birbot.tech", // Add GCORE_CDN_HOSTNAME to your .env
       },
       {
         protocol: "https",

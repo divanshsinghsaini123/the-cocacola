@@ -57,7 +57,7 @@ export default async function StoresPage() {
                         <div className="relative w-full h-48 bg-gray-50 group-hover:bg-gray-100 transition-colors overflow-hidden">
                             {store.image ? (
                                 <Image
-                                    src={store.image}
+                                    src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + store.image}
                                     alt={store.name}
                                     fill
                                     className="object-cover transition-transform duration-300 group-hover:scale-105"
