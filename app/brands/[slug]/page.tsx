@@ -35,7 +35,7 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
             <div className="w-full bg-white py-6 border-b border-gray-100 flex justify-center">
                 <div className="relative w-[48px] h-[48px]">
                     <Image
-                        src={brand.logo}
+                        src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
                         alt={`${brand.name} logo`}
                         fill
                         className="object-contain"
