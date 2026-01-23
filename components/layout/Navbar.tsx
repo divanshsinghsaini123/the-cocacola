@@ -9,7 +9,7 @@ interface NavbarProps {
     navbarImage: any
 }
 export default function Navbar({ stores, navbarImage }: NavbarProps) {
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_BASE_URL || "http://localhost:1337";
+    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const [activeDropdown, setActiveDropdown] = useState<string>("");
@@ -56,6 +56,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
                             <Image
                                 // src="/assets/Home/Coke-company-logo-black.svg"
                                 src={!isLocal ? navbarImage : `${STRAPI_BASE_URL}${navbarImage}`}
+                                // src={navbarImage}
                                 alt="The Coca-Cola Company"
                                 width={125}
                                 height={20}

@@ -61,7 +61,7 @@ interface FooterProps {
 }
 
 export default function Footer(props: FooterProps) {
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_BASE_URL || "http://localhost:1337";
+    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const isLocal = STRAPI_BASE_URL.includes("localhost");
     const pathname = usePathname();
     const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
@@ -156,6 +156,7 @@ export default function Footer(props: FooterProps) {
                             unoptimized={isLocal}
 
                         />
+
                     </Link>
                 </div>
 
