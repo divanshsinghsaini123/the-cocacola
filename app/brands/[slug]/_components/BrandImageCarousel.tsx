@@ -77,7 +77,7 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
                     {extendedImages.map((imageSrc, index) => (
                         <div
                             key={index}
-                            className="w-full md:w-[1150px] shrink-0 snap-center rounded-[20px] overflow-hidden"
+                            className={`w-full md:w-[1150px] shrink-0 snap-center rounded-[20px] overflow-hidden ${images.length === 1 ? 'mx-auto' : ''}`}
                         >
                             <div className="relative w-full aspect-[2/1]">
                                 <Image
