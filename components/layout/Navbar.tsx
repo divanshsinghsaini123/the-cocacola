@@ -6,13 +6,16 @@ import { useState, Fragment } from "react";
 import { usePathname } from "next/navigation";
 interface NavbarProps {
     stores: any[]
+    navbarImage: any
 }
-export default function Navbar({ stores }: NavbarProps) {
+export default function Navbar({ stores, navbarImage }: NavbarProps) {
+    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_BASE_URL || "http://localhost:1337";
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const [activeDropdown, setActiveDropdown] = useState<string>("");
     const [activeMobileDropdown, setActiveMobileDropdown] = useState<string>("");
     const isAdmin = pathname?.startsWith('/admin');
+    const isLocal = STRAPI_BASE_URL.includes("localhost");
 
     if (isAdmin) return null;
 
@@ -51,12 +54,14 @@ export default function Navbar({ stores }: NavbarProps) {
                     <div className="flex-shrink-0 flex items-center">
                         <Link href="/" className="flex items-center">
                             <Image
-                                src="/assets/Home/Coke-company-logo-black.svg"
+                                // src="/assets/Home/Coke-company-logo-black.svg"
+                                src={!isLocal ? navbarImage : `${STRAPI_BASE_URL}${navbarImage}`}
                                 alt="The Coca-Cola Company"
                                 width={125}
                                 height={20}
                                 className="h-[43px] w-[125px]"
                                 priority
+                                unoptimized={isLocal}
                             />
                         </Link>
                     </div>

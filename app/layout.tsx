@@ -31,14 +31,14 @@ export default async function RootLayout({
   // Safely access data whether it's flat or nested in attributes
   const footerData = data?.footer || data?.attributes?.footer;
   const socialLinksData = data?.socialLinks || data?.attributes?.socialLinks;
-
+  const navbarImage = data?.NavbarImage?.url || data?.attributes?.NavbarImage?.url;
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning={true}
       >
-        <NavbarServer />
+        <NavbarServer navbarImage={navbarImage} />
         {children}
         <Footer
           footerData={footerData}

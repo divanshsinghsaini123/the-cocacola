@@ -36,6 +36,9 @@ interface FooterData {
     Section1: FooterSection;
     Section2: FooterSection;
     Section3: FooterSection;
+    FooterImage: {
+        url: string;
+    };
 }
 
 interface SocialLink {
@@ -58,6 +61,8 @@ interface FooterProps {
 }
 
 export default function Footer(props: FooterProps) {
+    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_BASE_URL || "http://localhost:1337";
+    const isLocal = STRAPI_BASE_URL.includes("localhost");
     const pathname = usePathname();
     const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
@@ -129,6 +134,7 @@ export default function Footer(props: FooterProps) {
     const section1Links = getLinks(footerData?.Section1);
     const section2Links = getLinks(footerData?.Section2);
     const section3Links = getLinks(footerData?.Section3);
+    const FooterImageUrl = footerData?.FooterImage?.url as string;
 
     const section1Name = footerData?.Section1?.LinkSectionName || "Help";
     const section2Name = footerData?.Section2?.LinkSectionName || "Shop & Visit";
@@ -141,11 +147,14 @@ export default function Footer(props: FooterProps) {
                 <div className="mb-9">
                     <Link href="/">
                         <Image
-                            src="/assets/Home/logo-white-large.svg"
+                            // src="/assets/Home/logo-white-large.svg"
+                            src={!isLocal ? FooterImageUrl : `${STRAPI_BASE_URL}${FooterImageUrl}`}
                             alt="The Coca-Cola Company"
                             width={249}
                             height={40}
                             className="h-[40px] w-[249px]"
+                            unoptimized={isLocal}
+
                         />
                     </Link>
                 </div>
