@@ -53,7 +53,7 @@ export default function StoreCarousel({ stores }: StoreCarouselProps) {
                             <div className="relative w-full h-[120px] md:h-[200px] flex items-center justify-center">
                                 <div className="relative w-full h-full">
                                     <Image
-                                        src={store.image}
+                                        src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + store.image}
                                         alt={store.name}
                                         fill
                                         className="object-cover"

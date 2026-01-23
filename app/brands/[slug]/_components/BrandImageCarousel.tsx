@@ -81,7 +81,7 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
                         >
                             <div className="relative w-full aspect-[2/1]">
                                 <Image
-                                    src={imageSrc}
+                                    src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + imageSrc}
                                     alt={`Brand banner ${index + 1}`}
                                     fill
                                     className="object-cover"

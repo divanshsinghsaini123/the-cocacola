@@ -62,7 +62,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
                         <div className="relative w-full h-full transition-transform duration-500 hover:scale-105">
                             <Image
-                                src={product.image}
+                                src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image}
                                 alt={product.name}
                                 fill
                                 className="object-contain rounded-[20px]"
