@@ -29,7 +29,6 @@ export default async function AddProductPage({ searchParams }: PageProps) {
     try {
         brand = await Brand.findById(brandId);
         stores = await Store.find({}).where({ isActive: true }).lean();
-        console.log(stores);
     }
     catch (e) {
         console.log(e);

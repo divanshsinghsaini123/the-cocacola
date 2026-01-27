@@ -56,7 +56,7 @@ export async function PUT(req: Request) {
         });
 
         const url = `${process.env.BUNNY_PULL_ZONE}/${filePath}`;
-        console.log(url);
+        // console.log(url);
         return NextResponse.json({ success: true, url });
 
     } catch (err) {
