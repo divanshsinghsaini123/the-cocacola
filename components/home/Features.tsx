@@ -8,26 +8,7 @@ interface FeaturesProps {
 export default function Features({ data }: FeaturesProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const isLocal = STRAPI_BASE_URL.includes("localhost");
-    const defaultfeatures = [
-        {
-            id: 1,
-            image: "/assets/Home/sprite-squad-december-dt.png",
-            title: "Anta Claus + Winter Spiced Cranberry",
-            description: "Enter for your chance to win a signed Anthony Edwards backboard used in his video shoot, or a Sprite Winter Spiced Cranberry 12-pack and cooler.",
-            buttonText: "Learn More",
-            link: "#",
-            alignment: "left" // Image on left, Card on right
-        },
-        {
-            id: 2,
-            image: "/assets/Home/Features2.webp",
-            title: "Sprite Vanilla Frost",
-            description: "Step out of the ordinary with Sprite Vanilla Frost, here for a limited time only, exclusively at the Kroger Family of Stores.",
-            buttonText: "Secure Yours",
-            link: "#",
-            alignment: "right" // Image on right, Card on left
-        }
-    ];
+
     const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: any, index: number) => {
         //sbse phle nikalenge url 
         const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.formats.large.url}` : item.image.formats.large.url;
@@ -40,7 +21,7 @@ export default function Features({ data }: FeaturesProps) {
             link: item.buttonLink || "#",
             alignment: index % 2 === 0 ? "left" : "right"
         }
-    }) : defaultfeatures;
+    }) : ""
 
     interface featuree {
         id: number,
