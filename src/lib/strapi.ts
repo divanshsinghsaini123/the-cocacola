@@ -5,7 +5,7 @@ if (!STRAPI_URLHomepage) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
-const STRAPI_URLAboutUs = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/about-us-page?populate[hero][populate]=image&populate[promosAndOffers][populate][items][populate]=image&populate[features][populate][items][populate]=image&populate[moreFromCocaCola][populate][items][populate]=image&populate[socialLinks][populate][Instagram]=*&populate[socialLinks][populate][Youtube]=*&populate[socialLinks][populate][X]=*&populate[socialLinks][populate][Facebook]=*&populate[footer][populate][Section1][populate][links]=*&populate[footer][populate][Section2][populate][links]=*&populate[footer][populate][Section3][populate][links]=*&populate[footer][populate][FooterImage]=true&populate[NavbarImage]=true";
+const STRAPI_URLAboutUs = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/about-page?populate[Hero][populate]=HeroBanner&populate[MainPageCards][populate][items][populate]=image&populate[RelatedSectionCards][populate][items][populate]=image";
 if (!STRAPI_URLAboutUs) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
