@@ -1,18 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function ContactUs() {
     const [topic, setTopic] = useState("question");
+    const [agreed, setAgreed] = useState(false);
 
     return (
         <div className="min-h-screen bg-[#F4F4F4]">
-            <main className="max-w-4xl mx-auto px-4 py-12 md:py-20 text-black">
+            <main className="max-w-2xl mx-auto px-4 py-12 md:py-20 text-black">
                 {/* Header Section */}
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 font-sans">Contact Us</h1>
+                    <h1 className="text-2xl md:text-4xl font-bold mb-4 font-sans">Contact Us</h1>
                     <p className="max-w-2xl mx-auto text-gray-700 text-lg">
-                        Have a question that isn't answered by our <a href="#" className="font-bold underline">FAQ section</a>? Send
+                        Have a question that isn't answered by our <Link href="/aboutus/faq" className="font-bold underline">FAQ section</Link>? Send
                         us your question using the form below.
                     </p>
                 </div>
@@ -61,6 +63,32 @@ export default function ContactUs() {
                         {/* Issue Logic: Specific Fields */}
                         {topic === "issue" && (
                             <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
+
+                                <div className="space-y-2">
+                                    <label htmlFor="drink-size" className="block text-sm font-medium text-gray-900">
+                                        Do you still have the affected product?*
+                                    </label>
+                                    <div className="relative">
+                                        <select
+                                            id="drink-size"
+                                            name="drinkSize"
+                                            required
+                                            className="w-full p-4 pr-10 border border-black/20 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-black/50 text-gray-600"
+                                            defaultValue=""
+                                        >
+                                            <option value="" disabled>Do you still have the affected product?</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                        <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-black">
+                                    We may need to retrieve the product from you. If ‘YES’ is selected: Please keep your product stored cooled until further notice / until you have been in contact with one of our colleagues.                                </p>
                                 {/* Drink Size */}
                                 <div className="space-y-2">
                                     <label htmlFor="drink-size" className="block text-sm font-medium text-gray-900">
@@ -69,6 +97,8 @@ export default function ContactUs() {
                                     <div className="relative">
                                         <select
                                             id="drink-size"
+                                            name="drinkSize"
+                                            required
                                             className="w-full p-4 pr-10 border border-black/20 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-black/50 text-gray-600"
                                             defaultValue=""
                                         >
@@ -94,6 +124,8 @@ export default function ContactUs() {
                                     <input
                                         type="number"
                                         id="count"
+                                        name="count"
+                                        required
                                         placeholder="Enter the number"
                                         className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50 placeholder:text-gray-500"
                                     />
@@ -108,6 +140,8 @@ export default function ContactUs() {
                                         <input
                                             type="text" // using text for custom placeholder control or date
                                             id="expiration"
+                                            name="expiration"
+                                            required
                                             placeholder="mm/dd/yyyy"
                                             onFocus={(e) => e.target.type = 'date'}
                                             onBlur={(e) => e.target.value === '' && (e.target.type = 'text')}
@@ -135,6 +169,7 @@ export default function ContactUs() {
                                     <input
                                         type="text"
                                         id="production-code"
+                                        name="productionCode"
                                         placeholder="Enter the code"
                                         className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50 placeholder:text-gray-500"
                                     />
@@ -152,6 +187,8 @@ export default function ContactUs() {
                             </label>
                             <textarea
                                 id="message"
+                                name="message"
+                                required
                                 rows={6}
                                 placeholder={topic === "question" ? "Your message please" : "Can you describe the issue in as much detail as possible?"}
                                 className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50 placeholder:text-gray-500 resize-none"
@@ -163,30 +200,39 @@ export default function ContactUs() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* First Name */}
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-bold text-gray-900">First Name*</label>
+                                    <label htmlFor="firstName" className="block text-sm font-bold text-gray-900">First Name*</label>
                                     <input
                                         type="text"
+                                        id="firstName"
+                                        name="firstName"
                                         placeholder="John"
+                                        required
                                         className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                     />
                                 </div>
                                 {/* Last Name */}
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-bold text-gray-900">Last Name*</label>
+                                    <label htmlFor="lastName" className="block text-sm font-bold text-gray-900">Last Name*</label>
                                     <input
                                         type="text"
+                                        id="lastName"
+                                        name="lastName"
                                         placeholder="Doe"
+                                        required
                                         className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                     />
                                 </div>
 
                                 {/* DOB */}
                                 <div className="space-y-2 md:col-span-2">
-                                    <label className="block text-sm font-bold text-gray-900">Date of Birth*</label>
+                                    <label htmlFor="dob" className="block text-sm font-bold text-gray-900">Date of Birth*</label>
                                     <div className="relative">
                                         <input
                                             type="text"
+                                            id="dob"
+                                            name="dob"
                                             placeholder="mm/dd/yyyy"
+                                            required
                                             onFocus={(e) => e.target.type = 'date'}
                                             onBlur={(e) => e.target.value === '' && (e.target.type = 'text')}
                                             className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
@@ -204,19 +250,24 @@ export default function ContactUs() {
 
                                 {/* Email */}
                                 <div className="space-y-2 md:col-span-2">
-                                    <label className="block text-sm font-bold text-gray-900">Email Address*</label>
+                                    <label htmlFor="email" className="block text-sm font-bold text-gray-900">Email Address*</label>
                                     <input
                                         type="email"
+                                        id="email"
+                                        name="email"
                                         placeholder="example@email.com"
+                                        required
                                         className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                     />
                                 </div>
 
                                 {/* Country Code & Phone */}
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-900">Country Code</label>
+                                    <label htmlFor="countryCode" className="block text-sm font-medium text-gray-900">Country Code</label>
                                     <div className="relative">
                                         <select
+                                            id="countryCode"
+                                            name="countryCode"
                                             className="w-full p-4 pr-10 border border-black/20 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                         >
                                             <option>India (+91)</option>
@@ -229,9 +280,11 @@ export default function ContactUs() {
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-900">Phone Number</label>
+                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-900">Phone Number</label>
                                     <input
                                         type="tel"
+                                        id="phone"
+                                        name="phone"
                                         placeholder="(XXX) XXX XXXX"
                                         className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                     />
@@ -239,9 +292,12 @@ export default function ContactUs() {
 
                                 {/* Pin Code */}
                                 <div className="space-y-2 md:col-span-2">
-                                    <label className="block text-sm font-bold text-gray-900">Pin Code*</label>
+                                    <label htmlFor="pincode" className="block text-sm font-bold text-gray-900">Pin Code*</label>
                                     <input
                                         type="text"
+                                        id="pincode"
+                                        name="pincode"
+                                        required
                                         className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                     />
                                 </div>
@@ -250,24 +306,30 @@ export default function ContactUs() {
                             {/* Address Remaining */}
                             <div className="mt-6 space-y-6">
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-900">Address</label>
+                                    <label htmlFor="address" className="block text-sm font-medium text-gray-900">Address</label>
                                     <input
                                         type="text"
+                                        id="address"
+                                        name="address"
                                         className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                     />
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="block text-sm font-medium text-gray-900">City</label>
+                                        <label htmlFor="city" className="block text-sm font-medium text-gray-900">City</label>
                                         <input
                                             type="text"
+                                            id="city"
+                                            name="city"
                                             className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-sm font-medium text-gray-900">State</label>
+                                        <label htmlFor="state" className="block text-sm font-medium text-gray-900">State</label>
                                         <input
                                             type="text"
+                                            id="state"
+                                            name="state"
                                             className="w-full p-4 border border-black/20 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black/50"
                                         />
                                     </div>
@@ -281,6 +343,8 @@ export default function ContactUs() {
                                 <input
                                     type="checkbox"
                                     id="agree"
+                                    onChange={(e) => setAgreed(e.target.checked)}
+                                    checked={agreed}
                                     className="mt-1 w-5 h-5 border-gray-300 rounded text-black focus:ring-black"
                                 />
                                 <label htmlFor="agree" className="text-gray-900">
@@ -292,6 +356,7 @@ export default function ContactUs() {
                                 <button
                                     type="submit"
                                     className="w-full md:w-auto px-12 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors text-lg"
+                                    disabled={!agreed}
                                 >
                                     Submit
                                 </button>
