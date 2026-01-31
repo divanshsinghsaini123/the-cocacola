@@ -10,7 +10,8 @@ export default async function ContactUs() {
     const [showTerms, setShowTerms] = useState(false);
     const [showPrivacy, setShowPrivacy] = useState(false);
     const data = await GetContactUsPageData();
-
+    const email = data.Contact_email;
+    const mobile = data.Contact_number;
     return (
         <div className="min-h-screen bg-[#F4F4F4]">
             <main className="max-w-2xl mx-auto px-4 py-12 md:py-20 text-black">
@@ -374,8 +375,8 @@ export default async function ContactUs() {
                             <div className="md:flex justify-between items-start">
                                 <div>
                                     <h4 className="text-2xl font-bold mb-2">Coca-Cola India</h4>
-                                    <p className="text-lg">For consumer related queries, please mail us at: <a href="mailto:indiahelpline@coca-cola.com" className="font-bold underline">indiahelpline@coca-cola.com</a></p>
-                                    <p className="text-lg mt-1">Or contact the consumer helpline at: <span className="font-bold">1800-208-2653</span></p>
+                                    <p className="text-lg">For consumer related queries, please mail us at: <a href={`mailto:${email}`} className="font-bold underline">{email}</a></p>
+                                    <p className="text-lg mt-1">Or contact the consumer helpline at: <span className="font-bold">{mobile}</span></p>
                                 </div>
                             </div>
                         </div>
