@@ -10,6 +10,11 @@ if (!STRAPI_URLAboutUs) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
+const STRAPI_URLContactUs = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/contactus-page?populate[FAQ][populate][question_answer]=*";
+if (!STRAPI_URLContactUs) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
+}
+
 export async function GetHomePageData() {
     try {
         const response = await fetch(STRAPI_URLHomepage
@@ -64,3 +69,29 @@ export async function GetAboutUsPageData() {
     }
 }
 
+export async function GetContactUsPageData() {
+    try {
+        const response = await fetch(STRAPI_URLContactUs
+            , {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        );
+
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_URLContactUs}`);
+            console.error(`Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error fetching home page data:", error);
+        return null;
+    }
+}
