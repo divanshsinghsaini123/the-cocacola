@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-export default function ContactUs() {
+import Modal from "../../components/ui/Modal";
+import { GetContactUsPageData } from "../../src/lib/strapi"
+export default async function ContactUs() {
     const [topic, setTopic] = useState("question");
     const [agreed, setAgreed] = useState(false);
+    const [showTerms, setShowTerms] = useState(false);
+    const [showPrivacy, setShowPrivacy] = useState(false);
+    const data = await GetContactUsPageData();
 
     return (
         <div className="min-h-screen bg-[#F4F4F4]">
@@ -348,7 +352,7 @@ export default function ContactUs() {
                                     className="mt-1 w-5 h-5 border-gray-300 rounded text-black focus:ring-black"
                                 />
                                 <label htmlFor="agree" className="text-gray-900">
-                                    I agree with <a href="#" className="font-bold underline">Terms of Use</a> and <a href="#" className="font-bold underline">Privacy Policy</a>.
+                                    I agree with <button type="button" onClick={() => setShowTerms(true)} className="font-bold underline hover:text-gray-700">Terms of Use</button> and <button type="button" onClick={() => setShowPrivacy(true)} className="font-bold underline hover:text-gray-700">Privacy Policy</button>.
                                 </label>
                             </div>
 
@@ -379,6 +383,34 @@ export default function ContactUs() {
                     </form>
                 </div>
             </main>
+
+            {/* Terms of Use Modal */}
+            <Modal isOpen={showTerms} onClose={() => setShowTerms(false)} title="Terms of Use">
+                <div className="space-y-4 text-gray-700">
+                    <p>Welcome to The Coca-Cola Company website. Please read these Terms of Use carefully before using this site.</p>
+                    <h4 className="font-bold text-black mt-4">1. Acceptance of Terms</h4>
+                    <p>By accessing and using this website, you agree to be bound by these Terms of Use and all applicable laws and regulations.</p>
+                    <h4 className="font-bold text-black mt-4">2. Use of Content</h4>
+                    <p>All content on this site, including text, graphics, logos, and images, is the property of The Coca-Cola Company and protected by copyright laws.</p>
+                    <h4 className="font-bold text-black mt-4">3. User Conduct</h4>
+                    <p>You agree not to use this website for any unlawful purpose or in any way that could damage, disable, or impair the site.</p>
+                    <p className="text-sm text-gray-500 italic mt-6">Last Updated: January 2026</p>
+                </div>
+            </Modal>
+
+            {/* Privacy Policy Modal */}
+            <Modal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} title="Privacy Policy">
+                <div className="space-y-4 text-gray-700">
+                    <p>Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information.</p>
+                    <h4 className="font-bold text-black mt-4">1. Information Collection</h4>
+                    <p>We collect information you provide directly to us, such as when you fill out a contact form, including your name, email address, and phone number.</p>
+                    <h4 className="font-bold text-black mt-4">2. Use of Information</h4>
+                    <p>We use the information we collect to respond to your inquiries, improve our services, and communicate with you about our products.</p>
+                    <h4 className="font-bold text-black mt-4">3. Data Protection</h4>
+                    <p>We implement appropriate security measures to protect your personal information against unauthorized access or disclosure.</p>
+                    <p className="text-sm text-gray-500 italic mt-6">Last Updated: January 2026</p>
+                </div>
+            </Modal>
         </div>
     );
 }
