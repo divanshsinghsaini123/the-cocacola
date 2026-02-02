@@ -15,8 +15,8 @@ export default function ContactusClient({ data }: ContactusProps) {
     const [agreed, setAgreed] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
     const [showPrivacy, setShowPrivacy] = useState(false);
-    const email = data.Contact_email;
-    const mobile = data.Contact_number;
+    const email = data?.Contact_email;
+    const mobile = data?.Contact_number;
 
     return (
         <div className="min-h-screen bg-[#F4F4F4]">
