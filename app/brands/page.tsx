@@ -36,7 +36,7 @@ export default async function BrandsPage() {
                                         alt={brand.name}
                                         fill
                                         className="object-contain"
-                                        unoptimized={true}
+                                    // unoptimized={true}
                                     />
                                 </div>
                             </Link>
