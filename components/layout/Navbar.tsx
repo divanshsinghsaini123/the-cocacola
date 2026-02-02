@@ -38,7 +38,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
     };
 
     if (navLinks["Shop"]) {
-        navLinks["Shop"].dropdownContent = stores.map((store) => {
+        navLinks["Shop"].dropdownContent = stores?.map((store) => {
             return {
                 name: store.name,
                 link: store.link,
