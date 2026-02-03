@@ -8,7 +8,7 @@ const QuestionSchema = new Schema(
         },
         LastName: {
             type: String,
-            required: true
+            required: false
         },
         Email: {
             type: String,
@@ -16,7 +16,7 @@ const QuestionSchema = new Schema(
         },
         PhoneNumber: {
             type: String,
-            required: true
+            required: false
         },
         PinCode: {
             type: String,
@@ -34,10 +34,9 @@ const QuestionSchema = new Schema(
             type: String,
             required: true
         },
-        Country: {
+        DOB: {
             type: String,
-            required: true,
-            default: "India"
+            required: false
         },
         QuestionMessage: {
             type: String,

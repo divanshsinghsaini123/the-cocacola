@@ -11,7 +11,7 @@ const IssueSchema = new Schema(
         },
         LastName: {
             type: String,
-            required: true
+            required: false
         },
         Email: {
             type: String,
@@ -19,7 +19,7 @@ const IssueSchema = new Schema(
         },
         PhoneNumber: {
             type: String,
-            required: true
+            required: false
         },
         PinCode: {
             type: String,
@@ -36,11 +36,6 @@ const IssueSchema = new Schema(
         State: {
             type: String,
             required: true
-        },
-        Country: {
-            type: String,
-            required: true,
-            default: "India"
         },
         ProductAvailability: {
             type: Boolean,

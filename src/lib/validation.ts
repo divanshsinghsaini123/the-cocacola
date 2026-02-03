@@ -59,3 +59,35 @@ export const StoreSchema = z.object({
     modeofstore: z.string().min(1, "Mode of store is required"),
     isActive: z.boolean().optional(),
 });
+
+export const IssueSchema = z.object({
+    FirstName: z.string().min(1, "First name is required"),
+    LastName: z.string().optional().or(z.literal('')),
+    Email: z.string().min(1, "Email is required"),
+    PhoneNumber: z.string().optional().or(z.literal('')),
+    PinCode: z.string().min(1, "Pin code is required"),
+    Address: z.string().min(1, "Address is required"),
+    City: z.string().min(1, "City is required"),
+    State: z.string().min(1, "State is required"),
+    ProductAvailability: z.boolean(),
+    DrinkSize: z.string().min(1, "Drink size is required"),
+    DefectiveQuantity: z.number().min(0, "Defective quantity must be positive"),
+    ExpirationDate: z.string().min(1, "Expiration date is required"),
+    ProductionCode: z.number().min(0, "Production code must be positive"),
+    IssueMessage: z.string().min(1, "Issue message is required"),
+    IsActive: z.boolean().optional(),
+});
+
+export const QuestionSchema = z.object({
+    FirstName: z.string().min(1, "First name is required"),
+    LastName: z.string().optional().or(z.literal('')),
+    Email: z.string().min(1, "Email is required"),
+    PhoneNumber: z.string().optional().or(z.literal('')),
+    PinCode: z.string().min(1, "Pin code is required"),
+    Address: z.string().min(1, "Address is required"),
+    City: z.string().min(1, "City is required"),
+    State: z.string().min(1, "State is required"),
+    DOB: z.string().optional().or(z.literal('')),
+    QuestionMessage: z.string().min(1, "Question message is required"),
+    IsActive: z.boolean().optional(),
+});
