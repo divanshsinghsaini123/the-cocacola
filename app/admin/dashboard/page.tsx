@@ -1,123 +1,85 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import { connectDB } from "@/src/lib/mongoose";
-import { Brand } from "@/src/models/Brand";
-import { Product } from "@/src/models/Product";
-import DeleteBrandButton from "./DeleteBrandButton";
 
-export const dynamic = "force-dynamic"; // Ensure fresh data on every visit
-async function deleteBrand(id: string) {
-    try {
-        await Brand.deleteOne({ _id: id });
-        await Product.deleteMany({ brand: id });
-        return true;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-}
-export default async function DashboardPage() {
-    await connectDB();
-    const brands = await Brand.find({}).sort({ createdAt: -1 }).lean();
+export default function DashboardPortalPage() {
     return (
-        <div className="space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Brands</h1>
-                    <p className="mt-1 md:mt-2 text-sm md:text-base text-gray-500">Manage your brands and their products.</p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                    <Link
-                        href="/admin/stores"
-                        className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow-md"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
-                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                            <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
-                            <path d="M2 7h20" />
-                            <path d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7" />
-                        </svg>
-                        Stores
-                    </Link>
-
-                    <Link
-                        href="/admin/brands/add"
-                        className="px-4 py-2 md:px-5 md:py-2.5 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow-md"
-                    >
-                        + Add New Brand
-                    </Link>
-
-                </div>
+        <div className="max-w-6xl mx-auto space-y-8">
+            <div className="text-left space-y-2">
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+                <p className="text-lg text-gray-500">Manage your brands, products, and store locations.</p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {brands.map((brand: any) => (
-                    <div
-                        key={brand._id.toString()}
-                        className="group relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-sm transition-all hover:shadow-lg hover:border-gray-300"
-                    >
-                        {/* Delete Button */}
-                        <DeleteBrandButton id={brand._id.toString()} />
+            <div className="grid md:grid-cols-2 gap-8">
+                {/* Brands Option */}
+                <Link
+                    href="/admin/brands"
+                    className="group relative flex flex-col p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-xl hover:border-red-200 transition-all duration-300 overflow-hidden"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                        {/* Image Area */}
-                        <div className="relative flex items-center justify-center w-full h-48 p-6 bg-gray-50 group-hover:bg-gray-100 transition-colors">
-                            <div className="relative w-full h-full">
-                                <Image
-                                    src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
-                                    alt={brand.name}
-                                    fill
-                                    className="object-contain transition-transform duration-300 group-hover:scale-105"
-                                />
+                    <div className="relative z-10 flex flex-col h-full gap-6">
+                        <div className="p-4 bg-red-50 rounded-2xl w-fit group-hover:bg-red-100 transition-colors shadow-sm">
+                            <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                            </svg>
+                        </div>
+
+                        <div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors">Brands & Products</h3>
+                            <p className="text-gray-500 text-base leading-relaxed">
+                                Create and manage your brand portfolio. Each brand contains its own set of products and details.
+                            </p>
+                        </div>
+
+                        <div className="mt-auto pt-4 flex items-center text-sm font-bold text-red-600 tracking-wide uppercase">
+                            <span>Manage Brands</span>
+                            <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </div>
+                    </div>
+                </Link>
+
+                {/* Stores Option */}
+                <div className="group relative flex flex-col p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                    <div className="relative z-10 flex flex-col h-full gap-6">
+                        <div className="flex justify-between items-start">
+                            <div className="p-4 bg-blue-50 rounded-2xl w-fit group-hover:bg-blue-100 transition-colors shadow-sm">
+                                <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
                             </div>
                         </div>
 
-                        {/* Content Area */}
-                        <div className="flex flex-col flex-1 p-5">
-                            <h3 className="text-xl font-bold text-gray-900 truncate pb-5" title={brand.name}>
-                                {brand.name}
-                            </h3>
-                            <div className="mt-4 flex gap-3 mt-auto">
-                                <Link
-                                    href={`/admin/brands/edit/${brand._id}`}
-                                    className="flex-1 px-4 py-2 text-sm font-semibold text-center text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-black transition-colors"
-                                >
-                                    Edit/Products
-                                </Link>
-                                <Link
-                                    href={`/brands/${brand.slug}`}
-                                    target="_blank"
-                                    className="flex-1 px-4 py-2 text-sm font-semibold text-center text-[#F40009] bg-red-50 border border-transparent rounded-lg hover:bg-red-100 transition-colors"
-                                >
-                                    Preview
-                                </Link>
+                        <div>
+                            <div className="flex items-center gap-3 mb-2">
+                                <h3 className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">Store Locations</h3>
                             </div>
+                            <p className="text-gray-500 text-base leading-relaxed">
+                                Manage physical store locations. Stores can successfully stock and sell various brands from your portfolio.
+                            </p>
+                        </div>
+
+                        <div className="mt-auto pt-4 flex gap-4">
+                            <Link
+                                href="/admin/stores"
+                                className="flex-1 px-4 py-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-300 hover:text-black transition-all text-center text-sm shadow-sm"
+                            >
+                                View Stores
+                            </Link>
+                            <Link
+                                href="/admin/stores/add"
+                                className="flex-1 px-4 py-3 bg-black text-white font-semibold rounded-xl hover:bg-gray-800 transition-all text-center text-sm shadow-md"
+                            >
+                                + Add New Store
+                            </Link>
                         </div>
                     </div>
-                ))}
-
-                {brands.length === 0 && (
-                    <div className="col-span-full flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50">
-                        <p className="text-lg font-medium text-gray-900">No brands found</p>
-                        <p className="mt-1 text-sm text-gray-500">Get started by creating your first brand.</p>
-                        <Link
-                            href="/admin/brands/add"
-                            className="mt-4 px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline"
-                        >
-                            Create Brand &rarr;
-                        </Link>
-                    </div>
-                )}
+                </div>
             </div>
         </div>
     );

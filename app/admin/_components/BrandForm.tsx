@@ -112,7 +112,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
 
             setSuccess("Data saved successfully!");
             if (!isEditMode) {
-                router.push("/admin/dashboard");
+                router.push("/admin/brands");
             }
         } catch (error) {
             console.error(error);
@@ -387,7 +387,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                 {/* Actions */}
                 <div className="flex items-center gap-3">
                     <Link
-                        href="/admin/dashboard"
+                        href="/admin/brands"
                         className="px-5 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                     >
                         Cancel
