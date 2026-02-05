@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import GcoreUpload from "./GcoreUpload";
+import Toast from "./Toast";
 
 interface BrandFormProps {
     initialData?: any;
@@ -112,7 +113,9 @@ export default function BrandForm({ initialData }: BrandFormProps) {
 
             setSuccess("Data saved successfully!");
             if (!isEditMode) {
-                router.push("/admin/brands");
+                setTimeout(() => {
+                    router.push("/admin/brands");
+                }, 1500);
             }
         } catch (error) {
             console.error(error);
@@ -134,11 +137,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                     <p className="text-sm text-gray-500 mt-1">Fill in the details below to configure the brand page.</p>
                 </div>
                 <div className="flex items-center gap-4">
-                    {success && (
-                        <div className="px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-lg animate-fade-in">
-                            ✓ {success}
-                        </div>
-                    )}
+                    {/* Success message moved to Toast */}
                     <div className="text-sm font-medium text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
                         <span className="text-red-500 font-bold text-lg leading-none align-middle mr-1">*</span>
                         <span className="align-middle">fields are mandatory</span>
@@ -401,6 +400,12 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                     </button>
                 </div>
             </div>
+            {success && (
+                <Toast
+                    message={success}
+                    onClose={() => setSuccess("")}
+                />
+            )}
         </form>
     );
 }
