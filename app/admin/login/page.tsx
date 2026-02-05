@@ -74,7 +74,7 @@ export default function AdminLoginPage() {
                 </div>
 
                 <div className="relative z-10 text-xs text-gray-500 font-medium tracking-wide">
-                    © 2025 THE COCA-COLA COMPANY
+                    © THE Cloud9 Beverages COMPANY
                 </div>
             </div>
 

@@ -253,7 +253,7 @@ export default function Footer(props: FooterProps) {
 
                 {/* Bottom Section */}
                 <div className="border-t border-white mt-16 pt-8 flex flex-col md:flex-row justify-end items-center text-xs">
-                    <p>© 2025 The Coca-Cola Company. All rights reserved.</p>
+                    <p>© 2025 The Cloud9 Beverages Company. All rights reserved.</p>
                 </div>
             </div>
         </footer>

@@ -29,7 +29,7 @@ export default function AdminNavbar() {
     return (
         <nav className="flex items-center justify-between px-4 py-3 md:px-8 md:py-4 bg-white border-b shadow-sm">
             <Link href="/admin/dashboard" className="text-xl md:text-2xl font-bold text-[#F40009] tracking-tight">
-                Coca-Cola Admin
+                Admin
             </Link>
             <div>
                 <button
