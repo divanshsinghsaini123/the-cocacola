@@ -33,7 +33,9 @@ export default async function EditBrandPage({ params }: EditBrandPageProps) {
         <div className="max-w-5xl mx-auto space-y-8">
             <div>
                 <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Edit Brand</h1>
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                        Edit Brand: <span className="text-red-600 underline decoration-red-200 underline-offset-4">{brand.name}</span>
+                    </h1>
                     <a
                         href="#products-section"
                         className="px-5 py-2.5 text-sm font-bold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-md flex items-center gap-2 hover:translate-y-[-1px]"
