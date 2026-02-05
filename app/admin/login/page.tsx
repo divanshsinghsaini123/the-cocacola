@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
             }
 
             // Success
-            router.push("/admin/dashboard");
+            router.push("/admin/portal");
             router.refresh();
         } catch (err: any) {
             setError(err.message);
