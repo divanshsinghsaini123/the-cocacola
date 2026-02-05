@@ -17,7 +17,7 @@ export default async function BrandsPage() {
                     <p className="mt-1 md:mt-2 text-sm md:text-base text-gray-500">Manage your brands and their products.</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                    <Link
+                    {/* <Link
                         href="/admin/stores"
                         className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 text-sm font-semibold text-white bg-black rounded-lg hover:bg-gray-800 transition-all shadow-sm hover:shadow-md"
                     >
@@ -39,7 +39,7 @@ export default async function BrandsPage() {
                             <path d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7" />
                         </svg>
                         Stores
-                    </Link>
+                    </Link> */}
 
                     <Link
                         href="/admin/brands/add"
