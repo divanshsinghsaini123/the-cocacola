@@ -21,6 +21,18 @@ export default function BrandVideoCarousel({ videos }: BrandVideoCarouselProps) 
     // Initial scroll positioning tracking
     const [isFormatted, setIsFormatted] = useState(false);
 
+    const [itemsPerPage, setItemsPerPage] = useState(1);
+
+    useEffect(() => {
+        const handleResize = () => {
+            // Videos are 2 per line on md (1112 width, 548px cards -> 2 items)
+            setItemsPerPage(window.innerWidth >= 768 ? 2 : 1);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const checkScroll = () => {
         if (!scrollContainerRef.current) return;
         const container = scrollContainerRef.current;
@@ -35,7 +47,10 @@ export default function BrandVideoCarousel({ videos }: BrandVideoCarouselProps) 
         // Calculate the "real" index relative to the original list
         const rawIndex = Math.round(scrollLeft / stride);
         const realIndex = rawIndex % videos.length;
-        setActiveIndex(realIndex);
+
+        // Convert item index to page index
+        const pageIndex = Math.floor(realIndex / itemsPerPage);
+        setActiveIndex(pageIndex);
     };
 
     // Initial centering setup
@@ -84,10 +99,35 @@ export default function BrandVideoCarousel({ videos }: BrandVideoCarouselProps) 
                 </div>
 
                 {/* Pagination Dots */}
-                {videos.length > 1 && (
+                {Math.ceil(videos.length / itemsPerPage) > 1 && (
                     <div className="flex justify-center items-center gap-2 mt-4">
-                        {videos.map((_, idx) => (
-                            <div key={idx} className={`h-2 rounded-full transition-all duration-300 ${idx === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'}`}></div>
+                        {Array.from({ length: Math.ceil(videos.length / itemsPerPage) }).map((_, idx) => (
+                            <div key={idx}
+                                onClick={() => {
+                                    if (!scrollContainerRef.current) return;
+                                    const container = scrollContainerRef.current;
+                                    const cardWidth = container.firstElementChild?.clientWidth || 0;
+                                    if (cardWidth === 0) return;
+
+                                    const gap = 16;
+                                    const stride = cardWidth + gap;
+                                    const setWidth = videos.length * stride;
+
+                                    // Calculate closest target in the current set or nearby
+                                    const currentScroll = container.scrollLeft;
+                                    const currentSet = Math.round(currentScroll / setWidth);
+
+                                    // Target specific item (first item of the page)
+                                    const targetItemIndex = idx * itemsPerPage;
+
+                                    const targetScroll = (currentSet * videos.length + targetItemIndex) * stride;
+
+                                    container.scrollTo({
+                                        left: targetScroll,
+                                        behavior: 'smooth'
+                                    });
+                                }}
+                                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${idx === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'}`}></div>
                         ))}
                     </div>
                 )}

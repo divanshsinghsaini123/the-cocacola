@@ -57,10 +57,10 @@ export default function DashboardPortalPage() {
 
                         <div>
                             <div className="flex items-center gap-3 mb-2">
-                                <h3 className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">Store Locations</h3>
+                                <h3 className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">Stores</h3>
                             </div>
                             <p className="text-gray-500 text-base leading-relaxed">
-                                Manage physical store locations. Stores can successfully stock and sell various brands from your portfolio.
+                                Manage your global network of physical retailers and online partners. Ensure your products are accessible to customers across all distribution channels.
                             </p>
                         </div>
 

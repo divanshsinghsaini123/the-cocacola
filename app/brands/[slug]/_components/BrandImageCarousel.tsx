@@ -98,7 +98,27 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
                         {images.map((_, index) => (
                             <div
                                 key={index}
-                                className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'
+                                onClick={() => {
+                                    if (!scrollContainerRef.current) return;
+                                    const container = scrollContainerRef.current;
+                                    const cardWidth = container.firstElementChild?.clientWidth || 0;
+                                    if (cardWidth === 0) return;
+
+                                    const stride = cardWidth + 24; // gap-6
+                                    const setWidth = images.length * stride;
+
+                                    // Calculate closest target in the current set
+                                    const currentScroll = container.scrollLeft;
+                                    const currentSet = Math.round(currentScroll / setWidth);
+
+                                    const targetScroll = (currentSet * images.length + index) * stride;
+
+                                    container.scrollTo({
+                                        left: targetScroll,
+                                        behavior: 'smooth'
+                                    });
+                                }}
+                                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'
                                     }`}
                             ></div>
                         ))}

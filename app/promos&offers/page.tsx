@@ -1,12 +1,26 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 
 export default function PromosAndOffersPage() {
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    const [itemsPerPage, setItemsPerPage] = useState(1);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setItemsPerPage(window.innerWidth >= 768 ? 3 : 1);
+        };
+
+        // Initial check
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const checkScroll = () => {
         if (!scrollRef.current) return;
@@ -16,8 +30,8 @@ export default function PromosAndOffersPage() {
 
         // Add gap to card width (gap-6 = 24px)
         const stride = cardWidth + 24;
-        const newIndex = Math.round(container.scrollLeft / stride);
-        setActiveIndex(newIndex);
+        const newPage = Math.round(container.scrollLeft / (stride * itemsPerPage));
+        setActiveIndex(newPage);
     };
 
     const promoItems = [
@@ -348,14 +362,27 @@ export default function PromosAndOffersPage() {
                             ))}
                         </div>
                         {/* Pagination Dots */}
-                        <div className="flex justify-center items-center gap-2 mt-4">
-                            {promoItems.map((_, index) => (
-                                <div
-                                    key={index}
-                                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-300'}`}
-                                ></div>
-                            ))}
-                        </div>
+                        {Math.ceil(promoItems.length / itemsPerPage) > 1 && (
+                            <div className="flex justify-center items-center gap-2 mt-4">
+                                {Array.from({ length: Math.ceil(promoItems.length / itemsPerPage) }).map((_, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => {
+                                            if (!scrollRef.current) return;
+                                            const container = scrollRef.current;
+                                            const cardWidth = container.firstElementChild?.clientWidth || 0;
+                                            if (cardWidth === 0) return;
+                                            const stride = cardWidth + 24; // gap-6
+                                            container.scrollTo({
+                                                left: index * stride * itemsPerPage,
+                                                behavior: 'smooth'
+                                            });
+                                        }}
+                                        className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-300'}`}
+                                    ></div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
 

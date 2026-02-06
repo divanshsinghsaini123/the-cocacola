@@ -14,7 +14,7 @@ export default function AdminPortalPage() {
 
             <main className="relative z-10 w-full max-w-5xl px-6 flex flex-col items-center gap-12">
                 <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <div className="h-12 w-40 relative mx-auto mb-6">
+                    <div className="h-42 w-64 relative mx-auto mb-1">
                         {/* Assuming this asset exists as it was used in login page */}
                         <Image
                             src="/assets/Home/logo-white-large.svg"

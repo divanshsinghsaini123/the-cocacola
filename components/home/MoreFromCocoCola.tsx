@@ -78,6 +78,20 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+    const [itemsPerPage, setItemsPerPage] = useState(1);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setItemsPerPage(window.innerWidth >= 768 ? 3 : 1);
+        };
+
+        // Initial check
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const checkScroll = () => {
         if (!scrollContainerRef.current) return;
         const container = scrollContainerRef.current;
@@ -86,8 +100,8 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
 
         // Add gap to card width (gap-6 = 24px)
         const stride = cardWidth + 24;
-        const newIndex = Math.round(container.scrollLeft / stride);
-        setActiveIndex(newIndex);
+        const newPage = Math.round(container.scrollLeft / (stride * itemsPerPage));
+        setActiveIndex(newPage);
     };
 
     return (
@@ -133,15 +147,28 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
                 </div>
 
                 {/* Pagination Dots */}
-                <div className="flex justify-center items-center gap-2 mt-4">
-                    {finalItems.map((_: any, index: number) => (
-                        <div
-                            key={index}
-                            className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'
-                                }`}
-                        ></div>
-                    ))}
-                </div>
+                {Math.ceil(finalItems.length / itemsPerPage) > 1 && (
+                    <div className="flex justify-center items-center gap-2 mt-4">
+                        {Array.from({ length: Math.ceil(finalItems.length / itemsPerPage) }).map((_, index) => (
+                            <div
+                                key={index}
+                                onClick={() => {
+                                    if (!scrollContainerRef.current) return;
+                                    const container = scrollContainerRef.current;
+                                    const cardWidth = container.firstElementChild?.clientWidth || 0;
+                                    if (cardWidth === 0) return;
+                                    const stride = cardWidth + 24; // gap-6
+                                    container.scrollTo({
+                                        left: index * stride * itemsPerPage,
+                                        behavior: 'smooth'
+                                    });
+                                }}
+                                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'
+                                    }`}
+                            ></div>
+                        ))}
+                    </div>
+                )}
             </div>
         </section>
     );
