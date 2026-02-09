@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.972.0",
-    "@bunny.net/storage-sdk": "^0.3.0",
     "@strapi/blocks-react-renderer": "^1.0.2",
     "@types/jsonwebtoken": "^9.0.10",
     "bcrypt": "^6.0.0",
