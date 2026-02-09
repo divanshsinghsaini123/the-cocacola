@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-
+import sharp from "sharp";
 // Initialize S3 Client for Gcore
 const s3 = new S3Client({
     region: process.env.GCORE_REGION, // Default region if not specified
@@ -64,37 +64,56 @@ export async function PUT(req: Request) {
             return NextResponse.json({ error: "Missing data" }, { status: 400 });
         }
 
-        // 5MB Limit check (can be adjusted)
+        // 5MB limit (original file)
         const MAX_SIZE = 5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
-            return NextResponse.json({ error: "File size exceeds 5MB limit" }, { status: 400 });
+            return NextResponse.json(
+                { error: "File size exceeds 5MB limit" },
+                { status: 400 }
+            );
         }
 
-        // Validate allowed folders
+        // Validate folder
         if (!["brands", "products", "stores"].includes(folder)) {
             return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
         }
 
+        // Original buffer
         const buffer = Buffer.from(await file.arrayBuffer());
-        // Sanitize file name to avoid issues with special characters
-        const sanitizedFileName = file.name.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9.-]/g, "");
-        const filePath = `${folder}/${Date.now()}-${sanitizedFileName}`;
+
+        // 🔥 CONVERT TO WEBP HERE
+        const webpBuffer = await sharp(buffer)
+            .webp({ quality: 80 })
+            .toBuffer();
+
+        // Clean filename & force .webp
+        const baseName = file.name
+            .replace(/\s+/g, "-")
+            .replace(/[^a-zA-Z0-9.-]/g, "")
+            .replace(/\.[^.]+$/, "");
+
+        const filePath = `${folder}/${Date.now()}-${baseName}.webp`;
 
         const uploadParams = {
             Bucket: process.env.GCORE_BUCKET_NAME,
             Key: filePath,
-            Body: buffer,
-            ContentType: file.type,
+            Body: webpBuffer,
+            ContentType: "image/webp",
         };
 
         await s3.send(new PutObjectCommand(uploadParams));
 
-        const url = filePath;
-        return NextResponse.json({ success: true, url });
+        return NextResponse.json({
+            success: true,
+            url: filePath,
+        });
 
     } catch (err: any) {
         console.error("Gcore Upload Error:", err);
-        return NextResponse.json({ error: "Upload failed: " + err.message }, { status: 500 });
+        return NextResponse.json(
+            { error: "Upload failed: " + err.message },
+            { status: 500 }
+        );
     }
 }
 
