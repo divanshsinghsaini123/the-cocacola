@@ -425,6 +425,13 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                     >
                         {loading ? "Saving..." : isEditMode ? "Update Brand" : "Create Brand"}
                     </button>
+                    <Link
+                        href={`/brands/${formData.slug}`}
+                        target="_blank"
+                        className="px-5 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    >
+                        Preview
+                    </Link>
                 </div>
             </div>
             {success && (
