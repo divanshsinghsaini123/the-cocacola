@@ -16,9 +16,20 @@
 
 @theme {
   --font-sans: "TCCC-UnityText", Noto-regional, Noto-latin, sans-serif;
+  --color-background: var(--background);
+  --color-component: var(--component);
+  --color-foreground: var(--foreground);
+}
+
+:root {
+  --background: #eeeeee;
+  --component: #ffffff;
+  --foreground: #171717;
 }
 
 body {
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: var(--font-sans);
 }
 

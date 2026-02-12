@@ -8,7 +8,7 @@ export default async function ExploreBrands() {
     const brands = await Brand.find({ isActive: true }).lean();
 
     return (
-        <section className="w-full bg-[#EEEEEE] py-20 ">
+        <section className="w-full bg-[var(--background)] py-20 ">
             <div className="max-w-3xl mx-auto px-4 sm:px-6">
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-7 text-black">Explore Our Brands</h2>
 
@@ -17,7 +17,7 @@ export default async function ExploreBrands() {
                         <Link
                             href={`/brands/${brand.slug}`}
                             key={brand._id ? String(brand._id) : index}
-                            className="group bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 overflow-hidden block"
+                            className="group bg-[var(--component)] rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 overflow-hidden block"
                         >
                             <div className="relative w-[100%] h-[100%]">
                                 <Image

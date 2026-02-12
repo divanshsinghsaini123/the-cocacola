@@ -105,7 +105,7 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
     };
 
     return (
-        <section className="w-full bg-[#EEEEEE] -mb-5 pt-10">
+        <section className="w-full bg-[var(--background)] -mb-5 pt-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-13">
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-10 text-black px-4">{data.sectionTitle}</h2>
 
@@ -116,7 +116,7 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {finalItems.map((item: MoreFromCocaColaItem, index: number) => (
-                        <div key={`${item.id}-${index}`} className="w-[85vw] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-start bg-white rounded-[20px] overflow-hidden flex flex-col shadow-sm group">
+                        <div key={`${item.id}-${index}`} className="w-[85vw] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-start bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col shadow-sm group">
                             <div className="relative h-[200px] md:h-[250px] w-full">
                                 <Image
                                     src={item.image}

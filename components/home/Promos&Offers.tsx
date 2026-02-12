@@ -92,7 +92,7 @@ export default function PromosAndOffers({ data }: PromosAndOffersProps) {
     }
 
     return (
-        <section className="w-full bg-[#EEEEEE] py-10 lg:py-16">
+        <section className="w-full bg-[var(--background)] py-10 lg:py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6">
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-10 text-black">{data.sectionTitle}</h2>
 
@@ -108,7 +108,7 @@ export default function PromosAndOffers({ data }: PromosAndOffersProps) {
                     style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
                 >
                     {offers.map((offer: Offer) => (
-                        <div key={offer.id} className="min-w-[85%] sm:min-w-0 bg-white rounded-[20px] overflow-hidden flex flex-col snap-center shadow-sm select-none">
+                        <div key={offer.id} className="min-w-[85%] sm:min-w-0 bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col snap-center shadow-sm select-none">
                             <div className="relative h-[250px] md:h-[430px] sm:h-[350px] w-full">
                                 <Image
                                     src={offer.image}

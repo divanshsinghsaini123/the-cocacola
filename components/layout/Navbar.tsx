@@ -15,6 +15,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
     const [activeDropdown, setActiveDropdown] = useState<string>("");
     const [activeMobileDropdown, setActiveMobileDropdown] = useState<string>("");
     const isAdmin = pathname?.startsWith('/admin');
+    const isCofilling = pathname?.startsWith('/cofilling');
     const isLocal = STRAPI_BASE_URL.includes("localhost");
 
     if (isAdmin) return null;
@@ -47,7 +48,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
     }
 
     return (
-        <nav className="bg-white top-0 z-50">
+        <nav className="bg-[var(--component)] top-0 z-50">
             <div className="max-w-7xl mx-auto px-3 sm:px-3 lg:px-3">
                 <div className="flex items-center justify-between md:justify-start gap-14 h-20">
                     {/* Logo */}
@@ -104,7 +105,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
                                     </Link>
                                     {activeDropdown === link.name && link.dropdownContent && (
                                         <div
-                                            className="absolute top-full left-0 bg-white shadow-xl border border-gray-100 p-2 flex flex-col gap-1 min-w-[220px] rounded-lg animate-in fade-in slide-in-from-top-2 duration-200 z-50"
+                                            className="absolute top-full left-0 bg-[var(--component)] shadow-xl border border-gray-100 p-2 flex flex-col gap-1 min-w-[220px] rounded-lg animate-in fade-in slide-in-from-top-2 duration-200 z-50"
                                         >
                                             {link.dropdownContent.map((item) => (
                                                 <Link
@@ -172,7 +173,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="fixed inset-0 z-50 bg-white" id="mobile-menu">
+                <div className="fixed inset-0 z-50 bg-[var(--component)]" id="mobile-menu">
                     <div className="flex justify-end p-4">
                         <button
                             onClick={toggleMenu}

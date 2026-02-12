@@ -36,7 +36,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
             />
 
             {/* Modal Dialog */}
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+            <div className="relative bg-[var(--component)] rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-100">
                     <h3 className="text-xl font-bold text-gray-900">{title}</h3>
