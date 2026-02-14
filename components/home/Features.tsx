@@ -33,7 +33,7 @@ export default function Features({ data }: FeaturesProps) {
         alignment: string
     }
     return (
-        <section className="w-full bg-[#EEEEEE] pb-20 pt-0">
+        <section className="w-full bg-[var(--background)] pb-20 pt-0">
             <div className="max-w-7xl mx-auto px-0 lg:px-16">
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center lg:mb-25 text-black px-4">{data.sectionTitle}</h2>
 
@@ -54,7 +54,7 @@ export default function Features({ data }: FeaturesProps) {
                             {/* Content Card */}
                             <div className={`
                                 w-[88%] lg:w-[544px] lg:h-[552px] flex flex-col justify-between
-                                bg-white p-6 md:p-10 lg:p-14 rounded-[16px] shadow-lg
+                                bg-[var(--component)] p-6 md:p-10 lg:p-14 rounded-[16px] shadow-lg
                                 relative z-10
                                 -mt-20 lg:-mt-35 
                                 ${feature.alignment === 'right' ? 'lg:-mr-5' : 'lg:-ml-5'}

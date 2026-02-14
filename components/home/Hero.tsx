@@ -11,7 +11,7 @@ export default function Hero({ data }: HeroProps) {
         ? (isLocal ? `${STRAPI_BASE_URL}${data.image.formats.large.url}` : data.image.formats.large.url) : "";
     // console.log(imageUrl);
     return (
-        <section className="w-full bg-[#EEEEEE] pt-4 lg:pt-14 pb-4 lg:pb-14">
+        <section className="w-full bg-[var(--background)] pt-4 lg:pt-14 pb-4 lg:pb-14">
             <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-6">
                 <div className="relative w-full h-[570px] md:h-[540px] lg:h-[570px] rounded-[18px] overflow-hidden">
                     {/* Background Image */}
@@ -41,7 +41,7 @@ export default function Hero({ data }: HeroProps) {
                             <div className="pt-1 md:pt-4 w-full md:w-auto lg:w-auto flex justify-center md:block">
                                 {data.ShowButton && <Link
                                     href={data.ButttonLink || "#"}
-                                    className="pt-2 block w-[290px] h-[40px] lg:w-[327px] lg:h-[40px] md:inline-block bg-white text-black text-[18px] font-bold rounded-full hover:bg-gray-100 transition-colors duration-200 text-center"
+                                    className="pt-2 block w-[290px] h-[40px] lg:w-[327px] lg:h-[40px] md:inline-block bg-[var(--component)] text-black text-[18px] font-bold rounded-full hover:bg-gray-100 transition-colors duration-200 text-center"
                                 >
                                     {data.ButtonText}
                                 </Link>}
