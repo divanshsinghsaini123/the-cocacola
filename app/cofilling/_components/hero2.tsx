@@ -24,9 +24,9 @@ const Hero2 = () => {
     ];
 
     return (
-        <section className="relative w-full min-h-[950px] bg-[#1a1a1a] flex flex-col items-center justify-center py-20 px-4 md:px-8 overflow-hidden">
+        <section className="relative w-full min-h-[950px] flex flex-col items-center justify-center py-20 px-4 md:px-8 overflow-hidden">
             {/* Background Texture Overlay */}
-            <div className="absolute inset-0 w-full h-full z-0 opacity-10">
+            <div className="absolute inset-0 w-full h-full z-0">
                 <Image
                     src="/assets/Coffiling_page/annie-spratt-6a3nqQ1YwBw-unsplash-.png"
                     alt="Background Texture"
@@ -35,11 +35,12 @@ const Hero2 = () => {
                     priority
                     quality={90}
                 />
+
             </div>
 
             {/* Top Text Content */}
-            <div className="relative z-10 max-w-5xl mx-auto text-center text-white mb-20 space-y-4">
-                <p className="text-lg md:text-xl leading-relaxed opacity-90">
+            <div className="relative z-10 max-w-3xl mx-auto text-center text-white mb-20 space-y-4">
+                <p className="text-base md:text-20px opacity-90">
                     The HELL ENERGY factory complex in Szikszó (Hungary), is one of Europe’s most modern
                     beverage factories, offering premium-quality, prompt and reliable services at competitive
                     prices. The products are made on 8 filling lines and pass through more than 100 inspection
