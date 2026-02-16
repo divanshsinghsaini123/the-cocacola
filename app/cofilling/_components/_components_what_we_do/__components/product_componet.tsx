@@ -52,7 +52,7 @@ const ProductComponent: React.FC<ProductProps> = ({
 
                 {/* Product Image Side */}
                 <div className="w-full md:w-1/2 flex justify-center">
-                    <div className="relative w-[300px] md:w-[450px] aspect-[3/4] transition-transform duration-500 hover:scale-105">
+                    <div className="relative w-[300px] md:w-[450px] aspect-[3/4] transition-transform duration-500 ">
                         <Image
                             src={productImage}
                             alt={title}
