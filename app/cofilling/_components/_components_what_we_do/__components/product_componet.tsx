@@ -10,8 +10,10 @@ export interface ProductProps {
     layout: "left" | "right"; // image position
     backgroundImage: string;
     productImage: string;
+    totalColumns: 1 | 2;
     flavours: {
-        columns: 1 | 2;
+        title?: string;
+        columnsNumber: 1 | 2;
         items: string[];
     }[];
     features: {
@@ -30,34 +32,33 @@ const ProductComponent: React.FC<ProductProps> = ({
     layout,
     backgroundImage,
     productImage,
+    totalColumns,
     flavours,
     features,
     subFeatures
 }) => {
     return (
-        <section className="relative w-full min-h-[700px] flex items-center justify-center overflow-hidden py-16 bg-black">
+        <section className="relative w-full min-h-[750px] flex items-center justify-center overflow-hidden pt-16 pb-10 bg-black">
             {/* Background */}
-            <div className="absolute inset-0 w-full h-full z-0">
+            <div className={`absolute inset-0 w-full h-full z-0`}>
                 <Image
                     src={backgroundImage}
                     alt="Background"
                     fill
-                    className="object-cover opacity-80"
+                    className="object-cover"
                 />
-                {/* Gradient Overlay for better readability */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-0"></div>
             </div>
 
             <div className={`relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-30 ${layout === 'right' ? 'md:flex-row-reverse' : ''}`}>
 
                 {/* Product Image Side */}
                 <div className="w-full md:w-1/2 flex justify-center">
-                    <div className="relative w-[300px] md:w-[450px] aspect-[3/4] transition-transform duration-500 ">
+                    <div className="relative w-[300px] md:w-[450px] aspect-[3/4]">
                         <Image
                             src={productImage}
                             alt={title}
                             fill
-                            className="object-contain drop-shadow-2xl"
+                            className="object-contain"
                         />
                     </div>
                 </div>
@@ -75,22 +76,28 @@ const ProductComponent: React.FC<ProductProps> = ({
 
                     {/* Flavours */}
                     <div className="w-full mb-12">
-                        {flavours.map((group, groupIndex) => (
-                            <div key={groupIndex} className={`grid gap-x-2 gap-y-1 ${group.columns === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                                {group.items.map((item, i) => (
-                                    <div
-                                        key={i}
-                                        className="relative bg-[#a6192e] text-white py-1 px-8 font-bold text-sm hover:bg-[#c41e3a] transition-colors cursor-default flex items-center shadow-sm min-h-[36px]"
-                                        style={{
-                                            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 15px 50%)",
-                                            borderRadius: "0 20px 20px 0"
-                                        }}
-                                    >
-                                        <span className="block drop-shadow-sm ml-2">{item}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+                        {/* {flavours.map((group, groupIndex) => ( */}
+                        <div className={`grid gap-x-2 gap-y-1 ${totalColumns === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                            {flavours.map((group, groupIndex) => (
+                                <div key={groupIndex} className="flex flex-col gap-2">
+                                    {group.title && <h4>{group.title}</h4>}
+                                    {group.items.map((flavor, flavorIndex) => (
+
+                                        <div
+                                            key={flavorIndex}
+                                            className="relative bg-[#a6192e] text-white py-1 px-8 font-bold text-sm hover:bg-[#c41e3a] transition-colors cursor-default flex items-center shadow-sm min-h-[36px]"
+                                            style={{
+                                                clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 15px 50%)",
+                                                borderRadius: "0 20px 20px 0"
+                                            }}
+                                        >
+                                            <span className="block drop-shadow-sm ml-2">{flavor}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                        {/* ))} */}
                     </div>
 
                     {/* Features & Subfeatures */}
@@ -128,7 +135,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                                             </div>
                                         )}
                                     </div>
-                                    <span className="font-bold uppercase text-sm md:text-base opacity-90 group-hover:opacity-100 transition-opacity">
+                                    <span className="font-bold uppercase text-[1px] md:text-base opacity-90 group-hover:opacity-100 transition-opacity">
                                         {sub.text}
                                     </span>
                                 </div>

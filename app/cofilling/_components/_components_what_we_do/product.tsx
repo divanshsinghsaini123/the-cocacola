@@ -5,10 +5,10 @@ import Image from "next/image";
 import ProductComponent, { ProductProps } from "./__components/product_componet";
 
 interface ProductSectionProps {
-    productData: ProductProps;
+    products: ProductProps[];
 }
 
-const Product: React.FC<ProductSectionProps> = ({ productData }) => {
+const Product: React.FC<ProductSectionProps> = ({ products }) => {
     return (
         <div className="w-full flex flex-col items-center">
             {/* PRODUCT Header */}
@@ -18,24 +18,26 @@ const Product: React.FC<ProductSectionProps> = ({ productData }) => {
                 </h3>
             </div>
 
-            {/* Main Product Display */}
-            <ProductComponent {...productData} />
+            {/* Main Product Display Loop */}
+            {products.map((product, index) => (
+                <ProductComponent key={index} {...product} />
+            ))}
 
             {/* PRODUCT Footer */}
-            <div className="w-full h-[813px] relative py-20 mt-16 flex flex-col items-center justify-center text-center overflow-hidden">
+            <div className="w-full h-[813px] relative flex flex-col items-center justify-center text-center overflow-hidden">
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
                     <Image
                         src="/assets/Coffiling_page/zygra_ENERGY_DRINK_portfolio-1.png"
                         alt="Footer Background"
                         fill
-                        className="object-contain"
+                        className="object-cover"
                     />
                     <div className="absolute inset-0" /> {/* Overlay for text readability */}
                 </div>
 
-                <div className="relative z-10 flex flex-col items-center gap-6 px-4">
-                    <div className="flex flex-col gap-1">
+                <div className="relative z-10 flex flex-col items-center gap-10 px-4">
+                    <div className="flex flex-col gap-3">
                         <h3 className="text-white text-2xl md:text-3xl font-bold italic uppercase tracking-wider">
                             YOU DON'T HAVE A BRAND?
                         </h3>
@@ -52,10 +54,10 @@ const Product: React.FC<ProductSectionProps> = ({ productData }) => {
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-4 mt-4">
-                        <button className="px-8 py-3 bg-[#E51D29] text-white font-bold uppercase rounded hover:bg-red-700 transition-colors tracking-wide">
+                        <button className="px-5 py-2 bg-[#E51D29] text-white text-base font-bold uppercase rounded-lg transition-colors hover:bg-red-700">
                             GET IN TOUCH
                         </button>
-                        <button className="px-8 py-3 bg-white text-black font-bold uppercase rounded hover:bg-gray-200 transition-colors tracking-wide">
+                        <button className="px-5 py-2 bg-white text-black text-base font-bold uppercase rounded-lg transition-colors hover:bg-gray-200">
                             FIND OUT MORE
                         </button>
                     </div>
