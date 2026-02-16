@@ -16,7 +16,7 @@ export interface ProductLogisticsCardProps {
     }[];
 }
 
-const ProductLogisticsCard: React.FC<ProductLogisticsCardProps> = ({ title, sections }) => {
+const LogisticsCard: React.FC<ProductLogisticsCardProps> = ({ title, sections }) => {
     return (
         <div className="w-full max-w-5xl mx-auto bg-black border border-[#E51D29] rounded-3xl overflow-hidden shadow-2xl mt-16">
 
@@ -90,4 +90,4 @@ const ProductLogisticsCard: React.FC<ProductLogisticsCardProps> = ({ title, sect
     );
 };
 
-export default ProductLogisticsCard;
+export default LogisticsCard;

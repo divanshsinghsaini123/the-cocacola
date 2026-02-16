@@ -1,93 +1,114 @@
+
 "use client";
 
-import React from "react";
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
+import LogisticsCard, { ProductLogisticsCardProps } from "./__components/logistics_compnent";
 
-export interface ProductLogisticsCardProps {
-    title?: string; // "PRODUCT SIZE: 330 ML"
-    sections: {
-        id: string; // "can" | "pallet" | "tray" | "truck"
-        heading?: string; // "PALLET SIZE", "TRAY SIZE", "TRUCK SIZE"
-        stats: {
-            label: string; // "can / tray"
-            value: string; //"24"
-        }[];
-        diagram: string;
-    }[];
-}
+interface logisticprops {
+    logistics: ProductLogisticsCardProps[];
+};
 
-const ProductLogisticsCard: React.FC<ProductLogisticsCardProps> = ({ title, sections }) => {
+export default function LogisticsSection({ logistics }: logisticprops) {
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    // Auto-scroll logic: Move to next item every 3 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveIndex((current) => (current + 1) % logistics.length);
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [logistics.length]);
+
+    const getVisibleItems = () => {
+        if (logistics.length === 0) return [];
+        // If only 1 item, just return it as active
+        if (logistics.length === 1) return [{ ...logistics[0], key: 0 }];
+
+        const prevIndex = (activeIndex - 1 + logistics.length) % logistics.length;
+        const nextIndex = (activeIndex + 1) % logistics.length;
+
+        return [
+            { ...logistics[prevIndex], key: prevIndex },
+            { ...logistics[activeIndex], key: activeIndex },
+            { ...logistics[nextIndex], key: nextIndex }
+        ];
+    };
+
     return (
-        <div className="w-full max-w-5xl mx-auto bg-black border border-[#E51D29] rounded-3xl overflow-hidden shadow-2xl mt-16">
+        <div className="w-full flex flex-col items-center justify-center bg-zinc-900 pb-16 overflow-hidden">
+            {/* PRODUCT Header */}
+            <div className="w-full bg-[#E51D29] py-3 text-center mb-8">
+                <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
+                    LOGISTICS
+                </h3>
+            </div>
 
-            {/* Header */}
-            {title && (
-                <div className="w-full bg-[#E51D29] py-4 text-center">
-                    <h3 className="text-white text-3xl md:text-4xl font-black italic uppercase tracking-wider">
-                        {title}
-                    </h3>
-                </div>
-            )}
+            {/* Carousel Container */}
+            <div className="w-full max-w-[95%] md:max-w-7xl px-2 relative">
+                <div className="flex w-full justify-center items-center gap-4">
+                    {getVisibleItems().map((item, index) => {
+                        // Logic assumes 3 items are returned. If 1, handle separately or ensure data has >1.
+                        // Based on getVisibleItems, if length > 1 we return 3 items [prev, curr, next]. index 1 is current.
+                        // If length === 1, we return 1 item. index 0 is current.
 
-            {/* Grid Content */}
-            <div className="grid grid-cols-1 md:grid-cols-2">
-                {sections.map((section, index) => {
-                    // Determine borders based on index (2x2 grid logic)
-                    // index 0: Top Left (border-r, border-b)
-                    // index 1: Top Right (border-b)
-                    // index 2: Bottom Left (border-r)
-                    // index 3: Bottom Right (none)
+                        const isActive = logistics.length === 1 ? true : index === 1;
 
-                    const isRightColumn = index % 2 === 1;
-                    const isBottomRow = index >= 2;
+                        return (
+                            <div
+                                key={`${item.key}-${index}`}
+                                className={`transition-all duration-500 ease-in-out transform flex flex-col justify-center items-center
+                                    ${isActive
+                                        ? 'w-full md:w-[70%] opacity-100 scale-100 z-20 order-2'
+                                        : 'w-1/6 md:w-[15%] opacity-40 scale-75 z-10 hidden md:flex md:flex-col order-1'
+                                    }
+                                    ${!isActive && index === 2 ? 'order-3' : ''}
+                                `}
+                            >
+                                <div className="relative w-full">
+                                    {/* Arrows for Active Item */}
+                                    {isActive && logistics.length > 1 && (
+                                        <>
+                                            <button
+                                                onClick={() => setActiveIndex((current) => (current - 1 + logistics.length) % logistics.length)}
+                                                className="absolute left-[-20px] md:left-[-60px] top-1/2 -translate-y-1/2 z-30 p-2 hover:bg-white/10 rounded-full transition-colors hidden md:block"
+                                            >
+                                                <ChevronLeft className="w-8 h-8 md:w-12 md:h-12 text-white" />
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveIndex((current) => (current + 1) % logistics.length)}
+                                                className="absolute right-[-20px] md:right-[-60px] top-1/2 -translate-y-1/2 z-30 p-2 hover:bg-white/10 rounded-full transition-colors hidden md:block"
+                                            >
+                                                <ChevronRight className="w-8 h-8 md:w-12 md:h-12 text-white" />
+                                            </button>
+                                        </>
+                                    )}
 
-                    let borderClass = "border-[#E51D29]";
-                    if (!isRightColumn) borderClass += " md:border-r";
-                    if (!isBottomRow) borderClass += " border-b";
-
-                    return (
-                        <div key={section.id} className={`p-6 flex flex-col justify-between relative min-h-[250px] md:min-h-[280px] ${borderClass}`}>
-
-                            {/* Heading */}
-                            {section.heading && (
-                                <h4 className="text-[#E51D29] text-xl font-black uppercase mb-2 tracking-wide">
-                                    {section.heading}
-                                </h4>
-                            )}
-
-                            {/* Content Layout: Text Left, Image Right */}
-                            <div className="flex justify-between items-end h-full w-full">
-
-                                {/* Stats List */}
-                                <div className="flex flex-col gap-1 z-10 shrink-0">
-                                    {section.stats.map((stat, statIndex) => (
-                                        <div key={statIndex} className="flex items-baseline gap-2 text-white">
-                                            <span className="text-[#E51D29] text-2xl md:text-3xl font-black">
-                                                {stat.value}
-                                            </span>
-                                            <span className="text-sm md:text-base font-bold uppercase whitespace-nowrap opacity-90">
-                                                {stat.label}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* Diagram/Image */}
-                                <div className="relative w-32 h-32 md:w-48 md:h-48 shrink-0">
-                                    <Image
-                                        src={section.diagram}
-                                        alt={section.heading || section.id}
-                                        fill
-                                        className="object-contain object-bottom right-0"
-                                    />
+                                    {/* Card Content */}
+                                    {/* We override the margin-top inside LogisticsCard by wrapping it or modifying styles. 
+                                        Since LogisticsCard has mt-16 inside it, it might still push down. 
+                                        But visual is fine. */}
+                                    <div className="pointer-events-none md:pointer-events-auto">
+                                        <LogisticsCard
+                                            title={item.title}
+                                            sections={item.sections}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="w-[200px] md:w-[400px] h-2 bg-gray-700/50 relative rounded-full mt-12 overflow-hidden">
+                <div
+                    className="absolute left-0 top-0 h-full bg-[#E51D29] transition-all duration-500 ease-out"
+                    style={{ width: `${((activeIndex + 1) / logistics.length) * 100}%` }}
+                ></div>
             </div>
         </div>
     );
-};
-
-export default ProductLogisticsCard;
+}
