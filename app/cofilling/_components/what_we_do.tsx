@@ -15,17 +15,36 @@ const WhatWeDo = () => {
                     WHAT WE DO
                 </h2>
                 <div className="flex gap-8 text-white font-bold text-lg uppercase tracking-wider">
-                    <button className="hover:opacity-80 transition-opacity">PRODUCT</button>
-                    <button className="hover:opacity-80 transition-opacity">PACKAGING</button>
-                    <button className="hover:opacity-80 transition-opacity">LOGISTICS</button>
+                    <button
+                        onClick={() => document.getElementById('product-section')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="hover:opacity-80 transition-opacity"
+                    >
+                        PRODUCT
+                    </button>
+                    <button
+                        onClick={() => document.getElementById('packaging-section')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="hover:opacity-80 transition-opacity"
+                    >
+                        PACKAGING
+                    </button>
+                    <button
+                        onClick={() => document.getElementById('logistics-section')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="hover:opacity-80 transition-opacity"
+                    >
+                        LOGISTICS
+                    </button>
                 </div>
             </div>
 
-            <Product
-                products={productsData}
-            />
-            <Packaging />
-            <LogisticsSection logistics={logisticsData} />
+            <div id="product-section">
+                <Product products={productsData} />
+            </div>
+            <div id="packaging-section">
+                <Packaging />
+            </div>
+            <div id="logistics-section">
+                <LogisticsSection logistics={logisticsData} />
+            </div>
             {/* Placeholder for other products if needed later */}
         </section>
     );
