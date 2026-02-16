@@ -4,7 +4,7 @@ export const logisticsData = [
         title: "PRODUCT SIZE: 250 ML",
         sections: [
             {
-                id: "can",
+                id: "1",
                 heading: "",
                 stats: [
                     { value: "24", label: "can / tray" },
@@ -14,7 +14,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/250ml-CAN.png"
             },
             {
-                id: "pallet",
+                id: "2",
                 heading: "PALLET SIZE",
                 stats: [
                     { value: "10", label: "layer / pallet" }
@@ -22,7 +22,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/logistics-pictograms_250ml-PALLET_CHEP.png"
             },
             {
-                id: "tray",
+                id: "3",
                 heading: "TRAY SIZE",
                 stats: [
                     { value: "12", label: "tray / layer" },
@@ -31,7 +31,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/250ml-TRAY.png"
             },
             {
-                id: "truck",
+                id: "4",
                 heading: "TRUCK SIZE",
                 stats: [
                     { value: "28", label: "pallet / truck" }
@@ -44,7 +44,7 @@ export const logisticsData = [
         title: "PRODUCT SIZE: 330 ML",
         sections: [
             {
-                id: "can",
+                id: "1",
                 heading: "",
                 stats: [
                     { value: "24", label: "can / tray" },
@@ -54,7 +54,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/330ml-CAN.png"
             },
             {
-                id: "pallet",
+                id: "2",
                 heading: "PALLET SIZE",
                 stats: [
                     { value: "9", label: "layer / pallet" }
@@ -62,7 +62,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/330ml-PALLET.png"
             },
             {
-                id: "tray",
+                id: "3",
                 heading: "TRAY SIZE",
                 stats: [
                     { value: "10", label: "tray / layer" },
@@ -71,7 +71,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/330ml-TRAY.png"
             },
             {
-                id: "truck",
+                id: "4",
                 heading: "TRUCK SIZE",
                 stats: [
                     { value: "30", label: "pallet / truck" }
@@ -84,7 +84,7 @@ export const logisticsData = [
         title: "PRODUCT SIZE: 500 ML",
         sections: [
             {
-                id: "can",
+                id: "1",
                 heading: "",
                 stats: [
                     { value: "12", label: "can / tray" },
@@ -94,7 +94,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/500ml-CAN.png"
             },
             {
-                id: "pallet",
+                id: "2",
                 heading: "PALLET SIZE",
                 stats: [
                     { value: "7", label: "layer / pallet" }
@@ -102,7 +102,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/330ml-PALLET.png"
             },
             {
-                id: "tray",
+                id: "3",
                 heading: "TRAY SIZE",
                 stats: [
                     { value: "18", label: "tray / layer" },
@@ -111,7 +111,7 @@ export const logisticsData = [
                 diagram: "/assets/Coffiling_page/12x500ml_tray.png"
             },
             {
-                id: "truck",
+                id: "4",
                 heading: "TRUCK SIZE",
                 stats: [
                     { value: "29", label: "pallet / truck" }

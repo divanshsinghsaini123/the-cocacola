@@ -1,6 +1,7 @@
 
 "use client";
 
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import LogisticsCard, { ProductLogisticsCardProps } from "./__components/logistics_compnent";
@@ -16,10 +17,10 @@ export default function LogisticsSection({ logistics }: logisticprops) {
     useEffect(() => {
         const interval = setInterval(() => {
             setActiveIndex((current) => (current + 1) % logistics.length);
-        }, 3000);
+        }, 5000);
 
         return () => clearInterval(interval);
-    }, [logistics.length]);
+    }, [logistics.length, activeIndex]);
 
     const getVisibleItems = () => {
         if (logistics.length === 0) return [];
@@ -37,59 +38,73 @@ export default function LogisticsSection({ logistics }: logisticprops) {
     };
 
     return (
-        <div className="w-full flex flex-col items-center justify-center bg-zinc-900 pb-16 overflow-hidden">
+        <div className="w-full flex flex-col items-center justify-center bg-zinc-900 pb-16 overflow-hidden relative min-h-[800px]">
+            {/* Background Image */}
+            <div className="absolute inset-0 z-0">
+                <Image
+                    src="/assets/Coffiling_page/DJI_0145_black-white-1.png"
+                    alt="Background"
+                    fill
+                    className="w-full h-full object-cover"
+                />
+            </div>
+
             {/* PRODUCT Header */}
-            <div className="w-full bg-[#E51D29] py-3 text-center mb-8">
+            <div className="w-full bg-[#E51D29] py-3 text-center mb-8 relative z-10">
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
                     LOGISTICS
                 </h3>
             </div>
 
             {/* Carousel Container */}
-            <div className="w-full max-w-[95%] md:max-w-7xl px-2 relative">
-                <div className="flex w-full justify-center items-center gap-4">
-                    {getVisibleItems().map((item, index) => {
-                        // Logic assumes 3 items are returned. If 1, handle separately or ensure data has >1.
-                        // Based on getVisibleItems, if length > 1 we return 3 items [prev, curr, next]. index 1 is current.
-                        // If length === 1, we return 1 item. index 0 is current.
+            <div className="w-full max-w-[95%] md:max-w-7xl px-2 relative z-10 h-[600px] flex justify-center items-center">
 
-                        const isActive = logistics.length === 1 ? true : index === 1;
+                {/* Navigation Buttons (Static) */}
+                {logistics.length > 1 && (
+                    <>
+                        <button
+                            onClick={() => setActiveIndex((current) => (current - 1 + logistics.length) % logistics.length)}
+                            className="absolute left-[10px] md:left-[40px] top-1/2 -translate-y-1/2 z-50 p-2 hover:bg-white/10 rounded-full transition-colors hidden md:block"
+                        >
+                            <ChevronLeft className="w-8 h-8 md:w-16 md:h-16 text-white" />
+                        </button>
+                        <button
+                            onClick={() => setActiveIndex((current) => (current + 1) % logistics.length)}
+                            className="absolute right-[10px] md:right-[40px] top-1/2 -translate-y-1/2 z-50 p-2 hover:bg-white/10 rounded-full transition-colors hidden md:block"
+                        >
+                            <ChevronRight className="w-8 h-8 md:w-16 md:h-16 text-white" />
+                        </button>
+                    </>
+                )}
+
+                <div className="relative w-full h-full flex justify-center items-center">
+                    {getVisibleItems().map((item, index) => {
+                        const isSingle = logistics.length === 1;
+                        const isActive = isSingle ? true : index === 1;
+                        const isPrev = !isSingle && index === 0;
+                        const isNext = !isSingle && index === 2;
+
+                        let positionClass = "";
+                        if (isActive) {
+                            positionClass = "opacity-100 scale-100 z-30 -translate-x-1/2 translate-y-[-50%]";
+                        } else if (isPrev) {
+                            positionClass = "opacity-40 scale-75 z-20 -translate-x-[160%] translate-y-[-50%] cursor-pointer";
+                        } else if (isNext) {
+                            positionClass = "opacity-40 scale-75 z-20 translate-x-[60%] translate-y-[-50%] cursor-pointer";
+                        }
 
                         return (
                             <div
-                                key={`${item.key}-${index}`}
-                                className={`transition-all duration-500 ease-in-out transform flex flex-col justify-center items-center
-                                    ${isActive
-                                        ? 'w-full md:w-[70%] opacity-100 scale-100 z-20 order-2'
-                                        : 'w-1/6 md:w-[15%] opacity-40 scale-75 z-10 hidden md:flex md:flex-col order-1'
-                                    }
-                                    ${!isActive && index === 2 ? 'order-3' : ''}
-                                `}
+                                key={item.key} // Stable key for animation
+                                onClick={() => {
+                                    if (isPrev) setActiveIndex((current) => (current - 1 + logistics.length) % logistics.length);
+                                    if (isNext) setActiveIndex((current) => (current + 1) % logistics.length);
+                                }}
+                                className={`absolute top-1/2 left-1/2 w-full max-w-[600px] transition-all duration-700 ease-in-out transform ${positionClass}`}
                             >
                                 <div className="relative w-full">
-                                    {/* Arrows for Active Item */}
-                                    {isActive && logistics.length > 1 && (
-                                        <>
-                                            <button
-                                                onClick={() => setActiveIndex((current) => (current - 1 + logistics.length) % logistics.length)}
-                                                className="absolute left-[-20px] md:left-[-60px] top-1/2 -translate-y-1/2 z-30 p-2 hover:bg-white/10 rounded-full transition-colors hidden md:block"
-                                            >
-                                                <ChevronLeft className="w-8 h-8 md:w-12 md:h-12 text-white" />
-                                            </button>
-                                            <button
-                                                onClick={() => setActiveIndex((current) => (current + 1) % logistics.length)}
-                                                className="absolute right-[-20px] md:right-[-60px] top-1/2 -translate-y-1/2 z-30 p-2 hover:bg-white/10 rounded-full transition-colors hidden md:block"
-                                            >
-                                                <ChevronRight className="w-8 h-8 md:w-12 md:h-12 text-white" />
-                                            </button>
-                                        </>
-                                    )}
-
                                     {/* Card Content */}
-                                    {/* We override the margin-top inside LogisticsCard by wrapping it or modifying styles. 
-                                        Since LogisticsCard has mt-16 inside it, it might still push down. 
-                                        But visual is fine. */}
-                                    <div className="pointer-events-none md:pointer-events-auto">
+                                    <div className={`pointer-events-none md:pointer-events-auto ${isActive ? '' : 'pointer-events-none'}`}>
                                         <LogisticsCard
                                             title={item.title}
                                             sections={item.sections}
@@ -103,7 +118,7 @@ export default function LogisticsSection({ logistics }: logisticprops) {
             </div>
 
             {/* Progress Bar */}
-            <div className="w-[200px] md:w-[400px] h-2 bg-gray-700/50 relative rounded-full mt-12 overflow-hidden">
+            <div className="w-[200px] md:w-[400px] h-2 bg-gray-700/50 relative rounded-full mt-12 overflow-hidden z-10">
                 <div
                     className="absolute left-0 top-0 h-full bg-[#E51D29] transition-all duration-500 ease-out"
                     style={{ width: `${((activeIndex + 1) / logistics.length) * 100}%` }}
