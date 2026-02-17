@@ -83,7 +83,9 @@ const Hero2 = () => {
                 <button className="px-10 py-3 bg-[#E51D29] text-white text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-red-700 min-w-[200px]">
                     Get In Touch
                 </button>
-                <button className="px-10 py-3 bg-white text-black text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-gray-200 min-w-[200px]">
+                <button
+                    onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+                    className="px-10 py-3 bg-white text-black text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-gray-200 min-w-[200px]">
                     Find Out More
                 </button>
             </div>

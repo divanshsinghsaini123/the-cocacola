@@ -38,14 +38,14 @@ const ProductComponent: React.FC<ProductProps> = ({
     subFeatures
 }) => {
     return (
-        <section className="relative w-full min-h-[750px] flex items-center justify-center overflow-hidden pt-16 pb-10 bg-black">
+        <section className="relative w-full md:min-h-[750px] flex items-center justify-center overflow-hidden pt-16 pb-10 bg-black">
             {/* Background */}
             <div className={`absolute inset-0 w-full h-full z-0`}>
                 <Image
                     src={backgroundImage}
                     alt="Background"
                     fill
-                    className="object-cover"
+                    className="object-cover md:opacity-100 opacity-50"
                 />
             </div>
 
