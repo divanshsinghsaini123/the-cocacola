@@ -6,7 +6,25 @@ import { contactData } from '../_data/contact_data';
 
 export default function ContactUs() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const data = {
+            fullName: formData.get('fullName'),
+            email: formData.get('email'),
+            companyName: formData.get('companyName'),
+            companyWebsite: formData.get('companyWebsite'),
+            officeAddress: formData.get('officeAddress'),
+            country: formData.get('country'),
+            hasTrademark: formData.get('hasTrademark'),
+            productSize: formData.get('productSize'),
+            yearlyVolume: formData.get('yearlyVolume'),
+            message: formData.get('message'),
+            brandName: formData.get('brandName'),
+            agreedToPrivacy: formData.get('agreedToPrivacy'),
+            IsActive: true,
+        };
+    }
     return (
         <section className="w-full bg-black text-white " id="contact">
             <h2 className="w-full bg-[#E51D29] py-6 px-4 md:px-16 text-white text-3xl md:text-4xl font-black italic uppercase tracking-wider mb-4 md:mb-15">
@@ -56,14 +74,14 @@ export default function ContactUs() {
                         <h3 className="text-xl whitespace-pre-line">{contactData.enquirySubtitle}</h3>
                     </div>
 
-                    <form className="space-y-6">
+                    <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
 
                         {/* Contact Section */}
                         <div>
                             <h4 className="font-bold mb-2">Contact</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input type="text" placeholder="Your Name*" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" required />
-                                <input type="email" placeholder="Contact E-mail Address*" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" required />
+                                <input type="text" name="fullName" placeholder="Your Name*" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" required />
+                                <input type="email" name="email" placeholder="Contact E-mail Address*" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" required />
                             </div>
                         </div>
 
@@ -71,12 +89,12 @@ export default function ContactUs() {
                         <div>
                             <h4 className="font-bold mb-2">Company</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <input type="text" placeholder="Company Name*" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" required />
-                                <input type="text" placeholder="Company Website" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                                <input type="text" name="companyName" placeholder="Company Name*" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" required />
+                                <input type="text" name="companyWebsite" placeholder="Company Website" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input type="text" placeholder="Office address" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
-                                <input type="text" placeholder="Your country" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                                <input type="text" name="officeAddress" placeholder="Office address" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                                <input type="text" name="country" placeholder="Your country" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
                             </div>
                         </div>
 
@@ -85,14 +103,14 @@ export default function ContactUs() {
                             <h4 className="font-bold mb-2">Brand & Production</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                                 <div className="flex items-center gap-2">
-                                    <input type="checkbox" id="trademark" className="w-5 h-5 accent-red-600" />
+                                    <input type="checkbox" name="hasTrademark" id="trademark" className="w-5 h-5 accent-red-600" />
                                     <label htmlFor="trademark" className="text-sm cursor-pointer select-none">Do you have a trademark registration?</label>
                                 </div>
-                                <input type="text" placeholder="Your existing brand name" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                                <input type="text" name="brandName" placeholder="Your existing brand name" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input type="text" placeholder="Planned yearly volume in million cans" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
-                                <select className="w-full p-3 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-red-600 appearance-none" defaultValue="">
+                                <input type="text" name="yearlyVolume" placeholder="Planned yearly volume in million cans" className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                                <select name="productSize" className="w-full p-3 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-red-600 appearance-none" defaultValue="">
                                     <option value="" disabled>Product Size(s)</option>
                                     <option value="250ml">250 ml</option>
                                     <option value="330ml">330 ml</option>
@@ -105,6 +123,7 @@ export default function ContactUs() {
                         <div>
                             <h4 className="font-bold mb-2">Your Enquiry</h4>
                             <textarea
+                                name="message"
                                 rows={4}
                                 placeholder="Message"
                                 className="w-full p-3 rounded bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
@@ -113,7 +132,7 @@ export default function ContactUs() {
 
                         {/* Privacy Policy & Submit */}
                         <div className="flex items-center gap-2">
-                            <input type="checkbox" id="privacy" className="w-5 h-5 accent-red-600" required />
+                            <input type="checkbox" name="agreedToPrivacy" id="privacy" className="w-5 h-5 accent-red-600" required />
                             <label htmlFor="privacy" className="text-sm cursor-pointer select-none">
                                 {contactData.privacyPolicy.text}
                                 <button
@@ -127,7 +146,7 @@ export default function ContactUs() {
                         </div>
 
                         <div className="flex justify-end">
-                            <button className="bg-[#E51D29] text-white font-bold py-3 px-12 rounded uppercase hover:bg-red-700 transition-colors">
+                            <button type="submit" className="bg-[#E51D29] text-white font-bold py-3 px-12 rounded uppercase hover:bg-red-700 transition-colors">
                                 SUBMIT
                             </button>
                         </div>

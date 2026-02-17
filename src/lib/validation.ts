@@ -91,3 +91,24 @@ export const QuestionSchema = z.object({
     QuestionMessage: z.string().min(1, "Question message is required"),
     IsActive: z.boolean().optional(),
 });
+
+
+export const ContactusCoffilingSchema = z.object(
+    {
+        fullName: z.string().min(1, "Full name is required"),
+        email: z.string().min(1, "Email is required"),
+        companyName: z.string().min(1, "Company name is required"),
+        companyWebsite: z.string(),
+        officeAddress: z.string(),
+        country: z.string(),
+        hasTrademark: z.boolean(),
+        yearlyVolume: z.string(),
+        productSize: z.string(),
+        message: z.string(),
+        IsActive: z.boolean().optional(),
+        brandName: z.string(),
+        agreedToPrivacy: z.literal(true, {
+            error: "You must agree to the privacy policy",
+        }),
+    }
+)
