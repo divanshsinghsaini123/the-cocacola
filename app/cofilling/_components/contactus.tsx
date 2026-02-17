@@ -10,7 +10,7 @@ export default function ContactUs() {
     return (
         <section className="w-full bg-black text-white " id="contact">
             <h2 className="w-full bg-[#E51D29] py-6 px-4 md:px-16 text-white text-3xl md:text-4xl font-black italic uppercase tracking-wider mb-4 md:mb-15">
-                WHAT WE DO
+                Contact Us
             </h2>
             <div className="px-4 md:px-16 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16">
 
