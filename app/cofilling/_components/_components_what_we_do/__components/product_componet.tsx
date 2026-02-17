@@ -103,19 +103,21 @@ const ProductComponent: React.FC<ProductProps> = ({
                     {/* Features & Subfeatures */}
                     <div className="flex flex-col gap-10">
                         {/* Main Features */}
-                        <div className="flex gap-16 justify-start">
+                        <div className="flex gap-8 md:gap-16 justify-start flex-wrap">
                             {features.map((feature, i) => (
                                 <div key={i} className="flex flex-col items-center text-center gap-3 group">
                                     <div className="w-16 h-16 relative flex items-center justify-center border-2 border-white/20 rounded-xl p-3 bg-black/20 backdrop-blur-sm group-hover:border-[#E51D29] transition-colors">
                                         {typeof feature.icon === 'string' ? (
-                                            <Image src={feature.icon} alt={feature.text} fill className="object-contain invert" />
+                                            <div className="relative w-full h-full">
+                                                <Image src={feature.icon} alt={feature.text} fill className="object-contain invert" />
+                                            </div>
                                         ) : (
                                             <div className="text-white w-full h-full [&>svg]:w-full [&>svg]:h-full">
                                                 {feature.icon}
                                             </div>
                                         )}
                                     </div>
-                                    <span className="font-bold uppercase text-sm md:text-base max-w-[100px] leading-tight text-shadow-sm">
+                                    <span className="font-bold uppercase text-xs md:text-base max-w-[100px] leading-tight text-shadow-sm">
                                         {feature.text}
                                     </span>
                                 </div>
@@ -123,7 +125,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                         </div>
 
                         {/* Sub Features */}
-                        <div className="flex gap-12 border-t border-white/20 pt-8 w-full">
+                        <div className="flex gap-6 md:gap-12 border-t border-white/20 pt-8 w-full flex-wrap">
                             {subFeatures.map((sub, i) => (
                                 <div key={i} className="flex items-center gap-4 group">
                                     <div className="w-8 h-8 relative text-[#E51D29]">
@@ -135,7 +137,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                                             </div>
                                         )}
                                     </div>
-                                    <span className="font-bold uppercase text-[1px] md:text-base opacity-90 group-hover:opacity-100 transition-opacity">
+                                    <span className="font-bold uppercase text-xs md:text-base opacity-90 group-hover:opacity-100 transition-opacity">
                                         {sub.text}
                                     </span>
                                 </div>

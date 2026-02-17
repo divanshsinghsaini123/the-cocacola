@@ -59,7 +59,7 @@ const AboutUs = () => {
     };
 
     return (
-        <section className="relative w-full h-[923px] overflow-hidden bg-black font-sans flex flex-col justify-between">
+        <section className="relative w-full md:h-[923px] h-[700px] overflow-hidden bg-black font-sans flex flex-col justify-between">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0">
                 <Image
