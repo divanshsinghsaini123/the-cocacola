@@ -126,7 +126,9 @@ const AboutUs = () => {
                 </div>
 
                 {/* Get In Touch Button */}
-                <button className="px-5 py-2 bg-[#E51D29] text-white text-base font-bold uppercase rounded-lg transition-colors hover:bg-red-700">
+                <button
+                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="px-10 py-3 bg-[#E51D29] text-white text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-red-700 min-w-[200px]">
                     Get In Touch
                 </button>
 

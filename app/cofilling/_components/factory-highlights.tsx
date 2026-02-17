@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 
 const FactoryHighlights = () => {
     return (
@@ -49,7 +48,9 @@ const FactoryHighlights = () => {
 
             {/* CTA Button */}
             <div className="relative z-10">
-                <button className="px-4 py-3 bg-[#E51D29] text-white text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-red-700 min-w-[200px]">
+                <button
+                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="px-10 py-3 bg-[#E51D29] text-white text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-red-700 min-w-[200px]">
                     GET IN TOUCH
                 </button>
             </div>

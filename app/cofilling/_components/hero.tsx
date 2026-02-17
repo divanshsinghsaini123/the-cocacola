@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 
 const Hero = () => {
@@ -85,10 +84,16 @@ const Hero = () => {
 
                     {/* Buttons - Centered at Bottom */}
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pb-8">
-                        <button className="px-6 py-2 bg-[#E51D29] text-white text-base rounded-2xl font-bold uppercase tracking-wider rounded transition-colors hover:bg-red-700 w-full sm:w-auto min-w-[150px]">
+                        <button
+                            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="px-10 py-3 bg-[#E51D29] text-white text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-red-700 min-w-[200px]">
                             Get In Touch
                         </button>
-                        <button className="px-6 py-2 bg-white text-black text-base rounded-2xl font-bold uppercase tracking-wider rounded transition-colors hover:bg-gray-200 w-full sm:w-auto min-w-[150px]">
+                        <button
+                            onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+
+                            className="px-6 py-2 bg-white text-black text-base rounded-2xl font-bold uppercase tracking-wider rounded transition-colors hover:bg-gray-200 w-full sm:w-auto min-w-[150px]">
+
                             Find Out More
                         </button>
                     </div>

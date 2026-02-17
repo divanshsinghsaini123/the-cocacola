@@ -332,11 +332,15 @@ export default function Packaging() {
             </div>
 
             {/* Footer Buttons */}
-            <div className="flex flex-col md:flex-row gap-4 mt-12 mb-8 relative z-10 w-full justify-center">
-                <button className="px-6 py-2 bg-[#E51D29] text-white text-base font-bold uppercase rounded-lg transition-transform hover:scale-105 shadow-[0_0_15px_rgba(229,29,41,0.5)]">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-12 mb-8 relative z-10 w-full">
+                <button
+                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="px-10 py-3 bg-[#E51D29] text-white text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-red-700 min-w-[200px]">
                     GET IN TOUCH
                 </button>
-                <button className="px-6 py-2 bg-white text-black text-base font-bold uppercase rounded-lg transition-transform hover:scale-105 hover:bg-gray-200">
+                <button
+                    onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+                    className="px-10 py-3 bg-white text-black text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-gray-200 min-w-[200px]">
                     FIND OUT MORE
                 </button>
             </div>
