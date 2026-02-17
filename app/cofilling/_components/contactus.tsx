@@ -3,10 +3,14 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { contactData } from '../_data/contact_data';
+import { redirect } from "next/dist/server/api-utils";
 
 export default function ContactUs() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const formRef = React.useRef<HTMLFormElement>(null);
+
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = {
@@ -16,17 +20,52 @@ export default function ContactUs() {
             companyWebsite: formData.get('companyWebsite'),
             officeAddress: formData.get('officeAddress'),
             country: formData.get('country'),
-            hasTrademark: formData.get('hasTrademark'),
-            productSize: formData.get('productSize'),
+            hasTrademark: formData.get('hasTrademark') === 'on',
+            productSize: formData.get('productSize') || "",
             yearlyVolume: formData.get('yearlyVolume'),
             message: formData.get('message'),
             brandName: formData.get('brandName'),
-            agreedToPrivacy: formData.get('agreedToPrivacy'),
+            agreedToPrivacy: formData.get('agreedToPrivacy') === 'on',
             IsActive: true,
         };
+        const result = await fetch('/api/Contactus/Cofilling', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        const response = await result.json();
+        if (response.status == 400) {
+            alert(response.error);
+        }
+        else {
+            setIsSubmitted(true);
+            // e.currentTarget.reset();
+        }
+
+    }
+    const handleclose = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setIsSubmitted(false);
+        formRef.current?.reset();
     }
     return (
         <section className="w-full bg-black text-white " id="contact">
+            {isSubmitted && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg">
+                        <h2 className="text-2xl font-bold mb-4">Thank you for your message!</h2>
+                        <p className="text-gray-700 mb-6">We will get back to you as soon as possible.</p>
+                        <button
+                            onClick={(e) => handleclose(e)}
+                            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
             <h2 className="w-full bg-[#E51D29] py-6 px-4 md:px-16 text-white text-3xl md:text-4xl font-black italic uppercase tracking-wider mb-4 md:mb-15">
                 Contact Us
             </h2>
@@ -74,7 +113,7 @@ export default function ContactUs() {
                         <h3 className="text-xl whitespace-pre-line">{contactData.enquirySubtitle}</h3>
                     </div>
 
-                    <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
+                    <form ref={formRef} onSubmit={(e) => handleSubmit(e)} className="space-y-6">
 
                         {/* Contact Section */}
                         <div>
