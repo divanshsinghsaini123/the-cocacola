@@ -4,9 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, Fragment } from "react";
 import { usePathname } from "next/navigation";
+interface Store {
+    _id: string;
+    name: string;
+    link: string;
+}
+
 interface NavbarProps {
-    stores: any[]
-    navbarImage: any
+    stores: Store[];
+    navbarImage: string | undefined;
 }
 export default function Navbar({ stores, navbarImage }: NavbarProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
@@ -19,6 +25,11 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
     const isLocal = STRAPI_BASE_URL.includes("localhost");
 
     if (isAdmin) return null;
+
+    // Derived image URL
+    const imageUrl = navbarImage
+        ? (!isLocal ? navbarImage : `${STRAPI_BASE_URL}${navbarImage}`)
+        : "/assets/Home/Coke-company-logo-black.svg"; // Fallback
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -56,7 +67,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
                         <Link href="/" className="flex items-center">
                             <Image
                                 // src="/assets/Home/Coke-company-logo-black.svg"
-                                src={!isLocal ? navbarImage : `${STRAPI_BASE_URL}${navbarImage}`}
+                                src={imageUrl}
                                 // src={navbarImage}
                                 alt="The Coca-Cola Company"
                                 width={125}

@@ -19,6 +19,10 @@ if (!STRAPI_URLContactUs) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
+const STRAPI_URLExtra = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/extra";
+if (!STRAPI_URLExtra) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
+}
 import { HomePageData } from "@/types/home";
 
 export async function GetHomePageData(): Promise<HomePageData | null> {
@@ -89,6 +93,33 @@ export async function GetContactUsPageData() {
 
         if (!response.ok) {
             console.error(`Failed to fetch from: ${STRAPI_URLContactUs}`);
+            console.error(`Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error fetching home page data:", error);
+        return null;
+    }
+}
+
+export async function GetExtraData() {
+    try {
+        const response = await fetch(STRAPI_URLExtra
+            , {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        );
+
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_URLExtra}`);
             console.error(`Status: ${response.status} ${response.statusText}`);
             const errorText = await response.text();
             console.error(`Response: ${errorText}`);

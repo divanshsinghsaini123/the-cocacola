@@ -5,7 +5,13 @@ import { Brand } from "@/src/models/Brand";
 import DeleteBrandButton from "./DeleteBrandButton";
 
 export const dynamic = "force-dynamic"; // Ensure fresh data on every visit
-
+interface Brand {
+    _id: string;
+    name: string;
+    logo: string;
+    slug: string;
+    isActive: boolean;
+}
 export default async function BrandsPage() {
     await connectDB();
     const brands = await Brand.find({}).sort({ createdAt: -1 }).lean();
@@ -52,7 +58,7 @@ export default async function BrandsPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {brands.map((brand: any) => (
+                {brands.map((brand: Brand) => (
                     <div
                         key={brand._id.toString()}
                         className="group relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-sm transition-all hover:shadow-lg hover:border-gray-300"

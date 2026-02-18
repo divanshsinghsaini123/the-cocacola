@@ -79,6 +79,6 @@ export interface HomePageData {
     moreFromCocaCola: MoreFromCocaColaData;
     footer?: any;
     socialLinks?: any;
-    NavbarImage?: any;
-    attributes?: any; // For handling nested structure if API returns "attributes"
+    NavbarImage?: StrapiImage;
+    attributes?: HomePageData; // For handling nested structure if API returns "attributes"
 }

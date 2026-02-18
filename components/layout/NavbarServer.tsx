@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 import Loading from "@/app/loading";
 export const revalidate = 3600;
 interface NavbarServerProps {
-    navbarImage: any;
+    navbarImage: string | undefined;
 }
 export default async function NavbarServer({ navbarImage }: NavbarServerProps) {
     var serializedStores;
