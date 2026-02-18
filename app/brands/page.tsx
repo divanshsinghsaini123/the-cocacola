@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
+interface IBrand {
+    _id: string;
+    name: string;
+    slug: string;
+    logo: string;
+}
+
 export default async function BrandsPage() {
     await connectDB();
     const brands = await Brand.find({ isActive: true }).lean();
@@ -30,7 +37,7 @@ export default async function BrandsPage() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6">
-                        {brands.map((brand: any, index: number) => (
+                        {brands.map((brand: IBrand, index: number) => (
                             <Link
                                 href={`/brands/${brand.slug}`}
                                 key={brand._id ? String(brand._id) : index}

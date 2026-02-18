@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, useEffect, useCallback } from "react";
-import { MoreFromCocaColaData } from "@/types/home";
+import { MoreFromCocaColaData, SectionItem } from "@/types/home";
 
 interface MoreFromCocaColaItem {
     id: number;
@@ -62,7 +62,7 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
             buttonLink: "#"
         }
     ];
-    const StrapiItems = (data?.items && data.items.length > 0) ? data.items.map((item: any) => {
+    const StrapiItems = (data?.items && data.items.length > 0) ? data.items.map((item: SectionItem) => {
         //sbse phle nikalenge url
         // @ts-ignore
         const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.small?.url || item.image.formats.small.url}` : item.image.data?.attributes?.formats?.small?.url || item.image.formats.small.url;

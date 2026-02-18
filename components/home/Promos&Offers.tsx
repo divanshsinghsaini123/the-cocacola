@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { PromosAndOffersData } from "@/types/home";
+import { PromosAndOffersData, SectionItem } from "@/types/home";
 
 interface PromosAndOffersProps {
     data: PromosAndOffersData;
@@ -31,7 +31,7 @@ export default function PromosAndOffers({ data }: PromosAndOffersProps) {
         }
     ];
 
-    const offers = (data?.items && data.items.length > 0) ? data.items.slice(0, 2).map((item: any) => {
+    const offers = (data?.items && data.items.length > 0) ? data.items.slice(0, 2).map((item: SectionItem) => {
         // @ts-ignore
         const imageUrl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url}` : item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url;
 

@@ -1,13 +1,14 @@
-import ProductForm from "../../_components/ProductForm";
+import ProductForm, { Store as IStore } from "../../_components/ProductForm";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
 import { Store } from "@/src/models/store";
 import { notFound } from "next/navigation";
+import { Brand as IBrand } from "../../_components/BrandForm";
 
 export const dynamic = "force-dynamic";
 
 interface PageProps {
-    searchParams: { [key: string]: string | string[] | undefined };
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function AddProductPage({ searchParams }: PageProps) {
@@ -23,12 +24,12 @@ export default async function AddProductPage({ searchParams }: PageProps) {
     }
 
     await connectDB();
-    let brand: any;
-    let stores: any[] = [];
+    let brand: IBrand | null = null;
+    let stores: IStore[] = [];
 
     try {
         brand = await Brand.findById(brandId);
-        stores = await Store.find({}).where({ isActive: true }).lean();
+        stores = await Store.find({}).where({ isActive: true }).lean() as unknown as IStore[];
     }
     catch (e) {
         console.log(e);

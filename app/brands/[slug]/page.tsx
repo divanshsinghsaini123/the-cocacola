@@ -11,6 +11,13 @@ import BrandVideoCarousel from "./_components/BrandVideoCarousel";
 
 export const dynamic = "force-dynamic";
 
+interface IProduct {
+    _id: string;
+    slug: string;
+    name: string;
+    image: string;
+}
+
 interface BrandPageProps {
     params: Promise<{
         slug: string;
@@ -90,7 +97,7 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
                     <div className="space-y-6">
                         <h2 className="text-[36px] font-bold text-center tracking-tight">Products</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 justify-center max-w-[800px] mx-auto">
-                            {products.map((product: any) => (
+                            {products.map((product: IProduct) => (
                                 <Link
                                     href={`/brands/${slug}/${product.slug}`}
                                     key={String(product._id)}

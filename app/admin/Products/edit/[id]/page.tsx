@@ -1,12 +1,13 @@
-import ProductForm from "../../../_components/ProductForm";
+import ProductForm, { Product as IProduct, Store as IStore } from "../../../_components/ProductForm";
 import { connectDB } from "@/src/lib/mongoose";
 import { Product } from "@/src/models/Product";
 import { notFound } from "next/navigation";
 import { Store } from "@/src/models/store";
+
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export default async function EditProductPage({ params }: PageProps) {
@@ -14,11 +15,11 @@ export default async function EditProductPage({ params }: PageProps) {
     await connectDB();
 
     // Lean allows us to get a POJO, but we need to convert ObjectIds manually for client
-    let product: any;
-    let stores: any[] = [];
+    let product: IProduct | null = null;
+    let stores: IStore[] = [];
     try {
-        product = await Product.findById(id).lean();
-        stores = await Store.find({}).where({ isActive: true }).lean();
+        product = await Product.findById(id).lean() as unknown as IProduct;
+        stores = await Store.find({}).where({ isActive: true }).lean() as unknown as IStore[];
     } catch (e) {
         return notFound();
     }
@@ -26,8 +27,8 @@ export default async function EditProductPage({ params }: PageProps) {
     if (!product) return notFound();
 
     // Serialize IDs
-    product._id = product._id.toString();
-    product.brand = product.brand.toString();
+    if (product._id) product._id = product._id.toString();
+    if (product.brand) product.brand = product.brand.toString();
     if (product.nutrition && product.nutrition.nutritionfacts) {
         product.nutrition.nutritionfacts = product.nutrition.nutritionfacts.map((e: any) => ({
             ...e,

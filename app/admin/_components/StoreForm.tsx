@@ -3,8 +3,20 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import GcoreUpload from "./GcoreUpload";
-
-export default function StoreForm({ store }: any) {
+interface Store {
+    _id: string;
+    name: string;
+    image: string;
+    link: string;
+    address: string;
+    phone: string;
+    modeofstore: string;
+    isActive: boolean;
+}
+interface StoreProps {
+    store?: Store // optional for "add" mode
+}
+export default function StoreForm({ store }: StoreProps) {
     const isEditmode = !!store;
     const router = useRouter();
     const [loading, setLoading] = useState(false);

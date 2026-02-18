@@ -5,10 +5,44 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import GcoreUpload from "./GcoreUpload";
 
+export interface Store {
+    _id: string;
+    name: string;
+    address?: string;
+}
+
+export interface NutritionFact {
+    key: {
+        name: string;
+        amount: string;
+    };
+}
+
+export interface Nutrition {
+    quantity: string;
+    diet: string;
+    ingredients: string;
+    nutritionfacts: NutritionFact[];
+}
+
+export interface Product {
+    _id?: string;
+    brand: string;
+    stores: string[];
+    name: string;
+    slug: string;
+    image: string;
+    description: string;
+    summary: string;
+    sizesAvailable: string[];
+    nutrition: Nutrition;
+    isActive?: boolean;
+}
+
 interface ProductFormProps {
-    initialData?: any;
+    initialData?: Product;
     brandId?: string; // required valid ID
-    stores?: any[];
+    stores?: Store[];
 }
 
 export default function ProductForm({ initialData, brandId, stores = [] }: ProductFormProps) {
@@ -90,7 +124,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
             ...prev,
             nutrition: {
                 ...prev.nutrition,
-                nutritionfacts: prev.nutrition.nutritionfacts.filter((_: any, i: number) => i !== index),
+                nutritionfacts: prev.nutrition.nutritionfacts.filter((_: NutritionFact, i: number) => i !== index),
             },
         }));
     };
@@ -112,7 +146,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
     const handleRemoveSize = (index: number) => {
         setFormData((prev) => ({
             ...prev,
-            sizesAvailable: prev.sizesAvailable.filter((_: any, i: number) => i !== index),
+            sizesAvailable: prev.sizesAvailable.filter((_: string, i: number) => i !== index),
         }));
     };
 
@@ -268,7 +302,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
 
                 {stores && stores.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                        {stores.map((store: any) => (
+                        {stores.map((store: Store) => (
                             <label key={store._id} className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-black transition-colors shadow-sm">
                                 <div className="relative flex items-center">
                                     <input
@@ -352,7 +386,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
                         <button type="button" onClick={handleAddExtra} className="text-xs bg-black text-white px-2 py-1 rounded hover:bg-gray-800">+ Add Nutrient</button>
                     </div>
                     <div className="space-y-3">
-                        {formData.nutrition.nutritionfacts.map((extra: any, i: number) => (
+                        {formData.nutrition.nutritionfacts.map((extra: NutritionFact, i: number) => (
                             <div key={i} className="flex gap-2 items-center">
                                 {/* <input placeholder="Type (e.g. Fat)" value={extra.key.type} onChange={(e) => handleExtraChange(i, "type", e.target.value)} className="input-field text-sm flex-1" /> */}
                                 <input placeholder="Nutrient Name(e.g. Fat)" value={extra.key.name} onChange={(e) => handleExtraChange(i, "name", e.target.value)} className="input-field text-sm w-20" />

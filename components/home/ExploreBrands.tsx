@@ -3,6 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
+interface IBrand {
+    _id: string;
+    slug: string;
+    logo: string;
+    name: string;
+}
+
 export default async function ExploreBrands() {
     await connectDB();
     const brands = await Brand.find({ isActive: true }).lean();
@@ -13,7 +20,7 @@ export default async function ExploreBrands() {
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-7 text-black">Explore Our Brands</h2>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6">
-                    {brands.map((brand: any, index: number) => (
+                    {brands.map((brand: IBrand, index: number) => (
                         <Link
                             href={`/brands/${brand.slug}`}
                             key={brand._id ? String(brand._id) : index}

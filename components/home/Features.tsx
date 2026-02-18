@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FeaturesData } from "@/types/home";
+import { FeaturesData, SectionItem } from "@/types/home";
 
 interface FeaturesProps {
     data: FeaturesData;
@@ -10,7 +10,7 @@ export default function Features({ data }: FeaturesProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const isLocal = STRAPI_BASE_URL.includes("localhost");
 
-    const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: any, index: number) => {
+    const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: SectionItem, index: number) => {
         //sbse phle nikalenge url 
         // @ts-ignore
         const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url}` : item.image.data?.attributes?.formats?.large?.url || item.image.formats.large?.url || item.image?.url;

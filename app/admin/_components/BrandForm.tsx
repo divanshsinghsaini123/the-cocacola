@@ -7,8 +7,33 @@ import Image from "next/image";
 import GcoreUpload from "./GcoreUpload";
 import Toast from "./Toast";
 
+export interface BrandDescriptions {
+    d1: string;
+    d2: string;
+    d3: string;
+}
+
+export interface BrandSocialLinks {
+    facebook: string;
+    x: string;
+    instagram: string;
+    youtube: string;
+}
+
+export interface Brand {
+    _id?: string;
+    name: string;
+    slug: string;
+    logo: string;
+    images: string[];
+    descriptions: BrandDescriptions;
+    socialLinks: BrandSocialLinks;
+    youtubeVideos: string[];
+    isActive: boolean;
+}
+
 interface BrandFormProps {
-    initialData?: any;
+    initialData?: Brand;
 }
 
 export default function BrandForm({ initialData }: BrandFormProps) {
@@ -76,7 +101,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
     const handleArrayRemove = (field: "images" | "youtubeVideos", index: number) => {
         setFormData((prev) => ({
             ...prev,
-            [field]: prev[field].filter((_: any, i: number) => i !== index),
+            [field]: prev[field].filter((_: string, i: number) => i !== index),
         }));
     };
 
@@ -197,7 +222,8 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                             folder="brands"
                                             maxSizeMB={0.2}
                                             onSuccess={(url) => {
-                                                handleChange({ target: { name: 'logo', value: url } } as any);
+                                                const eventLine = { target: { name: 'logo', value: url } } as React.ChangeEvent<HTMLInputElement>;
+                                                handleChange(eventLine);
                                             }}
                                         >
                                             {({ open, isLoading }) => (
@@ -213,7 +239,10 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                         </GcoreUpload>
                                         <button
                                             type="button"
-                                            onClick={() => handleChange({ target: { name: 'logo', value: "" } } as any)}
+                                            onClick={() => {
+                                                const eventLine = { target: { name: 'logo', value: "" } } as React.ChangeEvent<HTMLInputElement>;
+                                                handleChange(eventLine);
+                                            }}
                                             className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 rounded-md hover:bg-red-100 text-left"
                                         >
                                             Remove
@@ -225,7 +254,8 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                     folder="brands"
                                     maxSizeMB={0.2}
                                     onSuccess={(url) => {
-                                        handleChange({ target: { name: 'logo', value: url } } as any);
+                                        const eventLine = { target: { name: 'logo', value: url } } as React.ChangeEvent<HTMLInputElement>;
+                                        handleChange(eventLine);
                                     }}
                                 >
                                     {({ open, isLoading }) => (
@@ -379,7 +409,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                         <div key={num} className="space-y-2">
                             <label className="text-sm font-semibold text-gray-700">Paragraph {num} <span className="text-gray-400 font-normal text-xs ml-2">(1-2 Lines)</span></label>
                             <textarea
-                                value={(formData.descriptions as any)[`d${num}`]}
+                                value={formData.descriptions[`d${num}` as keyof BrandDescriptions]}
                                 onChange={(e) => handleNestedChange("descriptions", `d${num}`, e.target.value)}
                                 rows={3}
                                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all resize-none text-sm leading-relaxed"

@@ -7,9 +7,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Modal from "../../components/ui/Modal";
 
-interface ContactusProps {
-    data: any;
+interface ContactData {
+    Contact_email: string;
+    Contact_number: string;
+    Terms_of_use?: any; // BlocksContent type from Strapi, keeping as any for now or specific block type if available
+    Privacy_policy_page?: any; // BlocksContent type from Strapi
 }
+
+interface ContactusProps {
+    data: ContactData;
+}
+
 
 export default function ContactusClient({ data }: ContactusProps) {
     const [topic, setTopic] = useState("question");

@@ -3,12 +3,22 @@ import Image from "next/image";
 import Link from "next/link";
 import Mainpage_aboutus from "./_components/Mainpage_aboutus";
 import type { Metadata } from "next";
-
+import { SectionItem } from "@/types/home";
 export const metadata: Metadata = {
     title: "About Us",
     description: "Learn about The Cloud9 Beverages Company, our history, and our mission to refresh the world.",
 };
 
+
+interface Feature {
+    id: number,
+    image: string,
+    title: string,
+    description: string,
+    buttonText: string,
+    link: string,
+    alignment: string
+}
 
 
 
@@ -23,7 +33,7 @@ export default async function AboutUs() {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const isLocal = STRAPI_BASE_URL.includes("localhost");
     const herodata_main = strapioutput.MainPageCards;
-    const featuresdata = (herodata_main?.items && herodata_main.items.length > 0) ? herodata_main.items.map((item: any, index: number) => {
+    const featuresdata = (herodata_main?.items && herodata_main.items.length > 0) ? herodata_main.items.map((item: SectionItem, index: number) => {
         //sbse phle nikalenge url 
         const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image?.formats?.large?.url}` : item.image?.formats?.large?.url || item.image?.url;
         return {
@@ -38,7 +48,7 @@ export default async function AboutUs() {
     }) : ""
 
     const relatedSection = strapioutput.RelatedSectionCards;
-    const relatedItems = (relatedSection?.items && relatedSection.items.length > 0) ? relatedSection.items.slice(0, 3).map((item: any) => {
+    const relatedItems = (relatedSection?.items && relatedSection.items.length > 0) ? relatedSection.items.slice(0, 3).map((item: SectionItem) => {
         const itemImg = item.image;
         const imgUrlRaw = itemImg?.formats?.medium?.url || itemImg?.formats?.small?.url || itemImg?.url;
         const imgUrl = isLocal ? `${STRAPI_BASE_URL}${imgUrlRaw}` : imgUrlRaw;
@@ -47,7 +57,7 @@ export default async function AboutUs() {
             id: item.id,
             image: imgUrl,
             title: item.title,
-            link: item.buttonLink || item.link || "#"
+            link: item.buttonLink || "#"
         }
     }) : [];
     return (
@@ -82,7 +92,7 @@ export default async function AboutUs() {
             {/* Features Section */}
             <section className="bg-[#EEEEEE] py-12 md:py-20 px-6 md:px-12">
                 <div className="max-w-6xl mx-auto space-y-16 md:space-y-32 text-black font-bold text-[18px] md:text-[26px] leading-[1.1] md:leading-[1.2]">
-                    {featuresdata && featuresdata.map((feature: any) => (
+                    {featuresdata && featuresdata.map((feature: Feature) => (
                         <Mainpage_aboutus key={feature.id} feature={feature} />
                     ))}
                 </div>
