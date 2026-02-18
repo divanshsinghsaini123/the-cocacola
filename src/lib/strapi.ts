@@ -19,7 +19,9 @@ if (!STRAPI_URLContactUs) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
-export async function GetHomePageData() {
+import { HomePageData } from "@/types/home";
+
+export async function GetHomePageData(): Promise<HomePageData | null> {
     try {
         const response = await fetch(STRAPI_URLHomepage
             , {

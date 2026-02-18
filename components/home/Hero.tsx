@@ -1,14 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
+import { HeroData } from "@/types/home";
+
 interface HeroProps {
-    data: any;
+    data: HeroData;
 }
 const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL!;
 
 export default function Hero({ data }: HeroProps) {
     const isLocal = STRAPI_BASE_URL.includes("localhost");
-    const imageUrl = data?.image?.formats?.large?.url
-        ? (isLocal ? `${STRAPI_BASE_URL}${data.image.formats.large.url}` : data.image.formats.large.url) : "";
+    // const imageUrl = data?.image?.data?.attributes?.formats?.large?.url
+    const imageUrl = data?.image?.data?.attributes?.formats?.large?.url
+        ? (isLocal ? `${STRAPI_BASE_URL}${data.image.data.attributes.formats.large.url}` : data.image.data.attributes.formats.large.url) :
+        (data?.image?.formats?.large?.url ? (isLocal ? `${STRAPI_BASE_URL}${data.image.formats.large.url}` : data.image.formats.large.url) : "");
     // console.log(imageUrl);
     return (
         <section className="w-full bg-[var(--background)] pt-4 lg:pt-14 pb-4 lg:pb-14">

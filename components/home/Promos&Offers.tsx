@@ -3,8 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { PromosAndOffersData } from "@/types/home";
+
 interface PromosAndOffersProps {
-    data: any;
+    data: PromosAndOffersData;
 }
 export default function PromosAndOffers({ data }: PromosAndOffersProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
@@ -16,19 +18,22 @@ export default function PromosAndOffers({ data }: PromosAndOffersProps) {
             image: "/assets/Home/pro&offer1.webp",
             title: "Enter for a chance to win groceries for a year",
             description: "There's nothing more comforting than a stocked kitchen. We'll take care of that all year.",
-            link: "#"
+            link: "#",
+            buttonText: "Enter Now"
         },
         {
             id: 2,
             image: "/assets/Home/nascar-home-tile.png",
             title: "Coca-Cola® DAYTONA 500® Flyaway Sweepstakes",
             description: "Enter for your chance to win a NASCAR® VIP experience that will get your heart racing.",
-            link: "#"
+            link: "#",
+            buttonText: "Enter Now"
         }
     ];
 
     const offers = (data?.items && data.items.length > 0) ? data.items.slice(0, 2).map((item: any) => {
-        const imageUrl = isLocal ? `${STRAPI_BASE_URL}${item.image.formats.large.url}` : item.image.formats.large.url;
+        // @ts-ignore
+        const imageUrl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url}` : item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url;
 
         return {
             id: item.id,

@@ -1,9 +1,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { FeaturesData } from "@/types/home";
 
 interface FeaturesProps {
-    data: any;
+    data: FeaturesData;
 }
 export default function Features({ data }: FeaturesProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
@@ -11,7 +12,8 @@ export default function Features({ data }: FeaturesProps) {
 
     const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: any, index: number) => {
         //sbse phle nikalenge url 
-        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.formats.large.url}` : item.image.formats.large?.url || item.image?.url;
+        // @ts-ignore
+        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url}` : item.image.data?.attributes?.formats?.large?.url || item.image.formats.large?.url || item.image?.url;
         return {
             id: item.id,
             image: imgurl,
@@ -21,7 +23,7 @@ export default function Features({ data }: FeaturesProps) {
             link: item.buttonLink || "#",
             alignment: index % 2 === 0 ? "left" : "right"
         }
-    }) : ""
+    }) : []
 
     interface featuree {
         id: number,

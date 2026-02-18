@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, useEffect, useCallback } from "react";
+import { MoreFromCocaColaData } from "@/types/home";
 
 interface MoreFromCocaColaItem {
     id: number;
@@ -13,7 +14,7 @@ interface MoreFromCocaColaItem {
     buttonLink: string;
 }
 interface MoreFromCocaColaProps {
-    data: any;
+    data: MoreFromCocaColaData;
 }
 export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
@@ -63,7 +64,8 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
     ];
     const StrapiItems = (data?.items && data.items.length > 0) ? data.items.map((item: any) => {
         //sbse phle nikalenge url
-        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.formats.small.url}` : item.image.formats.small.url;
+        // @ts-ignore
+        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.small?.url || item.image.formats.small.url}` : item.image.data?.attributes?.formats?.small?.url || item.image.formats.small.url;
         return {
             id: item.id,
             image: imgurl,
