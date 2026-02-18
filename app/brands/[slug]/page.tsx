@@ -1,4 +1,5 @@
 
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { connectDB } from "@/src/lib/mongoose";
@@ -14,6 +15,29 @@ interface BrandPageProps {
     params: Promise<{
         slug: string;
     }>;
+}
+
+export async function generateMetadata(
+    { params }: BrandPageProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const { slug } = await params
+    await connectDB();
+
+    const brand = await Brand.findOne({ slug, isActive: true }).lean();
+
+    if (!brand) return { title: "Brand Not Found" };
+
+    // optionally access and extend (rather than replace) parent metadata
+    const previousImages = (await parent).openGraph?.images || []
+
+    return {
+        title: brand.name,
+        description: brand.descriptions?.d1 || `Discover details about ${brand.name}.`,
+        openGraph: {
+            images: [process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo, ...previousImages],
+        },
+    }
 }
 
 export default async function BrandDetailPage({ params }: BrandPageProps) {

@@ -1,4 +1,5 @@
 
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { connectDB } from "@/src/lib/mongoose";
@@ -14,6 +15,36 @@ interface ProductPageProps {
         slug: string;
         productSlug: string;
     }>;
+}
+
+export async function generateMetadata(
+    { params }: ProductPageProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const { slug, productSlug } = await params
+    await connectDB();
+
+    // We need brand id for product query
+    const brand = await Brand.findOne({ slug, isActive: true }).select("_id name").lean();
+    if (!brand) return { title: "Product Not Found" };
+
+    const product = await Product.findOne({
+        slug: productSlug,
+        brand: brand._id,
+        isActive: true
+    }).select("name description image").lean();
+
+    if (!product) return { title: "Product Not Found" };
+
+    const previousImages = (await parent).openGraph?.images || []
+
+    return {
+        title: `${product.name} | ${brand.name}`,
+        description: product.description || `Discover ${product.name} from ${brand.name}.`,
+        openGraph: {
+            images: [process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image, ...previousImages],
+        },
+    }
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {

@@ -2,6 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Our Brands",
+    description: "Explore our portfolio of world-class beverage brands, including Coca-Cola, Sprite, and more.",
+};
 
 export const dynamic = "force-dynamic";
 

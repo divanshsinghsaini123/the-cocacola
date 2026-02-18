@@ -2,6 +2,12 @@ import { GetAboutUsPageData } from "@/src/lib/strapi";
 import Image from "next/image";
 import Link from "next/link";
 import Mainpage_aboutus from "./_components/Mainpage_aboutus";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "About Us",
+    description: "Learn about The Cloud9 Beverages Company, our history, and our mission to refresh the world.",
+};
 
 
 
