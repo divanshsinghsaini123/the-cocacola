@@ -3,33 +3,42 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import { time } from "console";
 
 const AboutUs = () => {
     // Carousel Items Data based on the screenshot
     const carouselItems = [
         {
-            title: "3 WATER-BASED",
-            subtitle: "filling factories with 6 production lines in total"
+            title: "AUTOMATED WAREHOUSE",
+            subtitle: "real-time inventory & dispatch control"
         },
         {
-            title: "1 MILK-BASED",
-            subtitle: "filling factory with 2 production lines in total"
+            title: "27/7 OPERATIONS",
+            subtitle: "continuous large-volume production"
         },
         {
-            title: "TOTAL CAPACITY",
-            subtitle: "of 6 billion cans / year"
+            title: "FSSC CERTIFIED",
+            subtitle: "international food safety compliance"
         },
         {
-            title: "1 PET",
-            subtitle: "production line"
+            title: "120+",
+            subtitle: "Quality Checkpoints"
         },
         {
-            title: "HIGH-TECH",
-            subtitle: "laboratory for constant quality monitoring"
+            title: "8 Full LINES",
+            subtitle: "Up to 750,000 cans/hour"
         },
         {
-            title: "3 ALUMINIUM",
-            subtitle: "empty can lines"
+            title: "6 BILLION+",
+            subtitle: "annual Can Production Capacity"
+        },
+        {
+            title: "99.9%",
+            subtitle: "precision-controlled production systems"
+        },
+        {
+            title: "3 IN-HOUSE CAN LINES",
+            subtitle: "integrated aluminum"
         }
     ];
 

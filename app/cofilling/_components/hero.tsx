@@ -40,14 +40,11 @@ const Hero = () => {
                     <div className="text-white text-center lg:text-left space-y-6">
                         <div className="space-y-4">
                             <h1 className="text-3xl lg:text-4xl font-bold uppercase tracking-wider leading-tight">
-                                The World's Largest State-of-the-Art Megafactory,
-                            </h1>
+                                The Best Advanced Automated Beverage Production Facility </h1>
                             <p className="text-lg lg:text-xl font-semibold uppercase tracking-wide opacity-90">
-                                By a same-owned corporate group,
-                            </p>
+                                Built by the team behind established energy drinks,                            </p>
                             <p className="text-lg lg:text-lg font-medium uppercase tracking-wide opacity-80">
-                                Manufacturing and filling aluminium beverage cans at one location.
-                            </p>
+                                packaged water, and carbonated beverages, our co-filling runs on systems already proven at scale.                            </p>
                         </div>
                     </div>
                 </div>

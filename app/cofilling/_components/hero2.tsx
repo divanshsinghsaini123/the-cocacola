@@ -7,19 +7,19 @@ const Hero2 = () => {
     const cards = [
         {
             image: "/assets/Coffiling_page/HELL_CLASSIC_2024_KV_A0_fekvo_prw-2.png",
-            title: "PROVEN BRAND SUCCESS",
+            title: "PROVEN BRAND PORTFOLIO",
         },
         {
             image: "/assets/Coffiling_page/DJI_0117.png",
-            title: "STATE-OF-THE-ART BEVERAGE CAN FACTORY",
+            title: "STATE-OF-THE-ART High-Speed Filling Lines",
         },
         {
             image: "/assets/Coffiling_page/DJI_0141.png",
-            title: "MOST MODERN FILLING FACTORIES",
+            title: "Automated Warehousing & Own Logistics Network",
         },
         {
             image: "/assets/Coffiling_page/DJI_0168.png",
-            title: "AUTOMATED WAREHOUSE AND OWN LOGISTIC FLEET",
+            title: "Custom Formulation Support",
         },
     ];
 
@@ -41,13 +41,7 @@ const Hero2 = () => {
             {/* Top Text Content */}
             <div className="relative z-10 max-w-3xl mx-auto text-center text-white mb-20 space-y-4">
                 <p className="text-base md:text-20px opacity-90">
-                    The HELL ENERGY factory complex in Szikszó (Hungary), is one of Europe’s most modern
-                    beverage factories, offering premium-quality, prompt and reliable services at competitive
-                    prices. The products are made on 8 filling lines and pass through more than 100 inspection
-                    points during productions. The ultramodern filling factories are supported by its own
-                    aluminium beverage can factory – Quality Pack – which is equipped with state-of-the-art
-                    technology. The plant boasts FSSC 22000 certification, the strictest food safety certification in
-                    Europe. Let these facilities fortify your brand!
+                    The Cloud9 manufacturing complex is one of the region’s most advanced integrated beverage production facilities. The plant operates on 8 high-speed filling lines with a total annual capacity exceeding 6 billion units. Every product passes through more than 100 automated inspection and quality control checkpoints during production. As active beverage brand owners with established products in the market, Cloud9 operates on infrastructure proven by real commercial demand.
                 </p>
             </div>
 
