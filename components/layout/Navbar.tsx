@@ -60,7 +60,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
             }
         });
     }
-    // console.log('DEBUG: stickyNav', stickyNav);
+    console.log('DEBUG: stickyNav', stickyNav);
     return (
         <>
             {stickyNav && <div className="h-20" />}

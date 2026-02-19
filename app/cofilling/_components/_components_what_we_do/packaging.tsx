@@ -3,12 +3,15 @@
 
 import React from "react";
 import Image from "next/image";
+import { useGetExtraDataQuery } from "@/src/store/slices/api";
 
 export default function Packaging() {
+    const { data, error } = useGetExtraDataQuery();
+    const stickyNav = data?.data?.StickyNavbar;
     return (
-        <div className="w-full relative flex flex-col items-center bg-black pb-20 overflow-hidden">
+        <div className="w-full relative flex flex-col items-center bg-black pb-20">
             {/* Section Background */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 overflow-hidden">
                 <Image
                     src="/assets/Coffiling_page/BG1-4.png"
                     alt="Packaging Background"
@@ -18,7 +21,10 @@ export default function Packaging() {
             </div>
 
             {/* Header */}
-            <div className="w-full bg-[#8B0000] py-3 text-center mb-12 relative z-10">
+            <div
+                className="w-full bg-[#8B0000] py-3 text-center mb-12 sticky md:relative z-30 shadow-md md:shadow-none transition-all duration-300"
+                style={{ top: stickyNav ? '80px' : '0px' }}
+            >
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
                     PACKAGING
                 </h3>

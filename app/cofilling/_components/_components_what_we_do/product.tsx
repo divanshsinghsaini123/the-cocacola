@@ -3,16 +3,22 @@
 import React from "react";
 import Image from "next/image";
 import ProductComponent, { ProductProps } from "./__components/product_componet";
+import { useGetExtraDataQuery } from "@/src/store/slices/api";
 
 interface ProductSectionProps {
     products: ProductProps[];
 }
 
 const Product: React.FC<ProductSectionProps> = ({ products }) => {
+    const { data, error } = useGetExtraDataQuery();
+    const stickyNav = data?.data?.StickyNavbar;
     return (
         <div className="w-full flex flex-col items-center">
             {/* PRODUCT Header */}
-            <div className="w-full bg-[#8B0000] py-3 text-center">
+            <div
+                className="w-full bg-[#8B0000] py-3 text-center sticky md:relative z-30 shadow-md md:shadow-none transition-all duration-300"
+                style={{ top: stickyNav ? '80px' : '0px' }}
+            >
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
                     PRODUCTS
                 </h3>

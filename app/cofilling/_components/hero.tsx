@@ -89,7 +89,7 @@ const Hero = () => {
                         <button
                             onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
 
-                            className="px-6 py-2 bg-white text-black text-base rounded-2xl font-bold uppercase tracking-wider rounded transition-colors hover:bg-gray-200 w-full sm:w-auto min-w-[150px]">
+                            className="px-10 py-3 bg-white text-black text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-gray-200 min-w-[200px]">
 
                             Find Out More
                         </button>

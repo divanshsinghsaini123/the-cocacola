@@ -5,12 +5,15 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import LogisticsCard, { ProductLogisticsCardProps } from "./__components/logistics_compnent";
+import { useGetExtraDataQuery } from "@/src/store/slices/api";
 
 interface logisticprops {
     logistics: ProductLogisticsCardProps[];
 };
 
 export default function LogisticsSection({ logistics }: logisticprops) {
+    const { data, error } = useGetExtraDataQuery();
+    const stickyNav = data?.data?.StickyNavbar;
     const [activeIndex, setActiveIndex] = useState(0);
 
     // Auto-scroll logic: Move to next item every 3 seconds
@@ -49,8 +52,8 @@ export default function LogisticsSection({ logistics }: logisticprops) {
                 />
             </div>
 
-            {/* PRODUCT Header */}
-            <div className="w-full bg-[#E51D29] py-3 text-center mb-8 relative z-10">
+            {/* LOGISTICS Header */}
+            <div className={`w-full bg-[#E51D29] py-3 text-center mb-8 sticky md:relative ${stickyNav === true ? 'top-[80px]' : 'top-0'} md:top-0 z-30 shadow-md md:shadow-none`}>
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
                     LOGISTICS
                 </h3>
@@ -64,13 +67,13 @@ export default function LogisticsSection({ logistics }: logisticprops) {
                     <>
                         <button
                             onClick={() => setActiveIndex((current) => (current - 1 + logistics.length) % logistics.length)}
-                            className="absolute left-[10px] md:left-[40px] top-1/2 -translate-y-1/2 z-50 p-2 hover:bg-white/10 rounded-full transition-colors hidden md:block"
+                            className="absolute left-[5px] md:left-[40px] top-1/2 -translate-y-1/2 z-50 p-1 md:p-2 hover:bg-white/10 rounded-full transition-colors"
                         >
                             <ChevronLeft className="w-8 h-8 md:w-16 md:h-16 text-white" />
                         </button>
                         <button
                             onClick={() => setActiveIndex((current) => (current + 1) % logistics.length)}
-                            className="absolute right-[10px] md:right-[40px] top-1/2 -translate-y-1/2 z-50 p-2 hover:bg-white/10 rounded-full transition-colors hidden md:block"
+                            className="absolute right-[5px] md:right-[40px] top-1/2 -translate-y-1/2 z-50 p-1 md:p-2 hover:bg-white/10 rounded-full transition-colors"
                         >
                             <ChevronRight className="w-8 h-8 md:w-16 md:h-16 text-white" />
                         </button>
