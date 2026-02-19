@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-
+import { useGetExtraDataQuery } from "@/src/store/slices/api";
 const ChevronDown = ({ isOpen }: { isOpen: boolean }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ export default function Footer(props: FooterProps) {
     const isLocal = STRAPI_BASE_URL.includes("localhost");
     const pathname = usePathname();
     const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
-
+    const { data, error } = useGetExtraDataQuery();
     if (pathname?.startsWith('/admin')) return null;
 
     const toggleSection = (section: string) => {
@@ -253,7 +253,7 @@ export default function Footer(props: FooterProps) {
 
                 {/* Bottom Section */}
                 <div className="border-t border-white mt-16 pt-8 flex flex-col md:flex-row justify-end items-center text-xs">
-                    <p>© 2025 The Cloud9 Beverages Company. All rights reserved.</p>
+                    <p>{data?.data?.Copyright}</p>
                 </div>
             </div>
         </footer>

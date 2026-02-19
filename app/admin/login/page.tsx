@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useGetExtraDataQuery } from "@/src/store/slices/api";
 
 export default function AdminLoginPage() {
     const router = useRouter();
@@ -11,7 +12,7 @@ export default function AdminLoginPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [mounted, setMounted] = useState(false);
-
+    const { data } = useGetExtraDataQuery();
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -74,7 +75,7 @@ export default function AdminLoginPage() {
                 </div>
 
                 <div className="relative z-10 text-xs text-gray-500 font-medium tracking-wide">
-                    © THE Cloud9 Beverages COMPANY
+                    {data?.data?.Copyright}
                 </div>
             </div>
 

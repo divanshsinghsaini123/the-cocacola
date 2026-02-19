@@ -6,7 +6,6 @@ import MoreFromCocaCola from "../components/home/MoreFromCocoCola";
 import ExploreBrands from "../components/home/ExploreBrands";
 import { GetHomePageData } from "@/src/lib/strapi";
 import { notFound } from "next/navigation";
-
 export const metadata: Metadata = {
   title: "Home",
   description: "Experience the refreshing taste of our world-class beverages. Discover our brands, latest products, and our commitment to sustainability.",

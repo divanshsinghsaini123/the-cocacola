@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, Fragment } from "react";
 import { usePathname } from "next/navigation";
+import { useGetExtraDataQuery } from "@/src/store/slices/api";
+
 interface Store {
     _id: string;
     name: string;
@@ -23,7 +25,8 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
     const isAdmin = pathname?.startsWith('/admin');
     const isCofilling = pathname?.startsWith('/cofilling');
     const isLocal = STRAPI_BASE_URL.includes("localhost");
-
+    const { data, error } = useGetExtraDataQuery();
+    const stickyNav = data?.data?.StickyNavbar;
     if (isAdmin) return null;
 
     // Derived image URL
@@ -57,9 +60,9 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
             }
         });
     }
-
+    // console.log('DEBUG: stickyNav', stickyNav);
     return (
-        <nav className="bg-[var(--component)] top-0 z-50">
+        <nav className={`bg-[var(--component)] z-50 transition-all duration-300 ${stickyNav ? "fixed top-0 left-0 w-full shadow-md" : "relative"}`}>
             <div className="max-w-7xl mx-auto px-3 sm:px-3 lg:px-3">
                 <div className="flex items-center justify-between md:justify-start gap-14 h-20">
                     {/* Logo */}
