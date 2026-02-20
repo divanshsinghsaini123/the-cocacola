@@ -4,8 +4,6 @@ Welcome to the comprehensive setup guide for this project. This documentation ex
 
 Before starting, ensure you have Node.js and a package manager (npm) installed on your machine.
 
-and RUN 
-NP
 ---
 
 ## Environment Variables (`.env`)
