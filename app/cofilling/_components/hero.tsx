@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Hero = () => {
     return (
-        <section className="relative w-full h-[150vh] min-h-[800px] overflow-hidden bg-black">
+        <section className="relative w-full min-h-screen lg:min-h-[800px] lg:h-[120vh] overflow-hidden bg-black flex flex-col">
             {/* Background Video */}
             <video
                 autoPlay
@@ -18,7 +18,7 @@ const Hero = () => {
             </video>
 
             {/* Content Overlay */}
-            <div className="relative z-10 w-full h-full max-w-[1400px] mx-auto px-6 lg:px-12 flex flex-col pt-32 pb-12">
+            <div className="relative z-10 w-full h-full max-w-[1400px] mx-auto px-6 lg:px-12 flex flex-col justify-center pt-24 lg:pt-32 pb-16 lg:pb-12 space-y-12 lg:space-y-0">
 
                 {/* Main Grid: Logo Left, Text Right */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -50,7 +50,7 @@ const Hero = () => {
                 </div>
 
                 {/* Bottom Content Wrapper */}
-                <div className="mt-20 flex flex-col gap-30 w-full">
+                <div className="mt-12 lg:mt-20 flex flex-col gap-12 lg:gap-20 w-full">
                     {/* Stats */}
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-white text-center border-t border-white/20 pt-8">
 

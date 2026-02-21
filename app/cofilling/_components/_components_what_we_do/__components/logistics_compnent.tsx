@@ -68,7 +68,7 @@ const LogisticsCard: React.FC<ProductLogisticsCardProps> = ({ title, sections })
                                 </div>
 
                                 {/* Diagram/Image */}
-                                <div className={section.id === "4" ? "w-full h-24 relative mt-auto" : "absolute right-[-10px] bottom-[-10px] w-36 h-36"}>
+                                <div className={section.id === "4" ? "w-full h-24 relative mt-auto" : "absolute right-[-10px] bottom-[-10px] md:w-36 md:h-36 w-24 h-24"}>
                                     <Image
                                         src={section.diagram}
                                         alt={section.heading || section.id}

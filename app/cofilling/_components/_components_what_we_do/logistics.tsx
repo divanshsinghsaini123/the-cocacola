@@ -14,31 +14,22 @@ interface logisticprops {
 export default function LogisticsSection({ logistics }: logisticprops) {
     const { data, error } = useGetExtraDataQuery();
     const stickyNav = data?.data?.StickyNavbar;
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Auto-scroll logic: Move to next item every 3 seconds
+    // Auto-scroll logic: Move to next item every 5 seconds
     useEffect(() => {
+        if (logistics.length <= 1) return;
         const interval = setInterval(() => {
-            setActiveIndex((current) => (current + 1) % logistics.length);
+            setCurrentIndex((current) => current + 1);
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [logistics.length, activeIndex]);
+    }, [logistics.length]);
 
-    const getVisibleItems = () => {
-        if (logistics.length === 0) return [];
-        // If only 1 item, just return it as active
-        if (logistics.length === 1) return [{ ...logistics[0], key: 0 }];
+    const handlePrev = () => setCurrentIndex(c => c - 1);
+    const handleNext = () => setCurrentIndex(c => c + 1);
 
-        const prevIndex = (activeIndex - 1 + logistics.length) % logistics.length;
-        const nextIndex = (activeIndex + 1) % logistics.length;
-
-        return [
-            { ...logistics[prevIndex], key: prevIndex },
-            { ...logistics[activeIndex], key: activeIndex },
-            { ...logistics[nextIndex], key: nextIndex }
-        ];
-    };
+    const actualActiveIndex = ((currentIndex % logistics.length) + logistics.length) % logistics.length;
 
     return (
         <div className="w-full flex flex-col items-center justify-center bg-zinc-900 pb-16 overflow-hidden relative min-h-[800px]">
@@ -53,7 +44,7 @@ export default function LogisticsSection({ logistics }: logisticprops) {
             </div>
 
             {/* LOGISTICS Header */}
-            <div className={`w-full bg-[#E51D29] py-3 text-center mb-8 sticky md:relative ${stickyNav === true ? 'top-[80px]' : 'top-0'} md:top-0 z-30 shadow-md md:shadow-none`}>
+            <div className={`w-full bg-[#8B0000] py-3 text-center mb-8 sticky md:relative top-0 md:top-0 z-30 shadow-md md:shadow-none`}>
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
                     LOGISTICS
                 </h3>
@@ -66,13 +57,13 @@ export default function LogisticsSection({ logistics }: logisticprops) {
                 {logistics.length > 1 && (
                     <>
                         <button
-                            onClick={() => setActiveIndex((current) => (current - 1 + logistics.length) % logistics.length)}
+                            onClick={handlePrev}
                             className="absolute left-[5px] md:left-[40px] top-1/2 -translate-y-1/2 z-50 p-1 md:p-2 hover:bg-white/10 rounded-full transition-colors"
                         >
                             <ChevronLeft className="w-8 h-8 md:w-16 md:h-16 text-white" />
                         </button>
                         <button
-                            onClick={() => setActiveIndex((current) => (current + 1) % logistics.length)}
+                            onClick={handleNext}
                             className="absolute right-[5px] md:right-[40px] top-1/2 -translate-y-1/2 z-50 p-1 md:p-2 hover:bg-white/10 rounded-full transition-colors"
                         >
                             <ChevronRight className="w-8 h-8 md:w-16 md:h-16 text-white" />
@@ -80,43 +71,50 @@ export default function LogisticsSection({ logistics }: logisticprops) {
                     </>
                 )}
 
-                <div className="relative w-full h-full flex justify-center items-center">
-                    {getVisibleItems().map((item, index) => {
-                        const isSingle = logistics.length === 1;
-                        const isActive = isSingle ? true : index === 1;
-                        const isPrev = !isSingle && index === 0;
-                        const isNext = !isSingle && index === 2;
+                <div className="relative w-full h-full flex justify-center items-center overflow-hidden">
+                    {logistics.length === 1 ? (
+                        <div className="absolute top-1/2 left-1/2 w-full max-w-[600px] transition-all duration-700 ease-in-out transform opacity-100 scale-100 z-30 -translate-x-1/2 translate-y-[-50%]">
+                            <div className="relative w-full">
+                                <LogisticsCard title={logistics[0].title} sections={logistics[0].sections} />
+                            </div>
+                        </div>
+                    ) : (
+                        [-2, -1, 0, 1, 2].map((offset) => {
+                            const vIndex = currentIndex + offset;
+                            const dataIndex = ((vIndex % logistics.length) + logistics.length) % logistics.length;
+                            const item = logistics[dataIndex];
 
-                        let positionClass = "";
-                        if (isActive) {
-                            positionClass = "opacity-100 scale-100 z-30 -translate-x-1/2 translate-y-[-50%]";
-                        } else if (isPrev) {
-                            positionClass = "opacity-40 scale-75 z-20 -translate-x-[160%] translate-y-[-50%] cursor-pointer";
-                        } else if (isNext) {
-                            positionClass = "opacity-40 scale-75 z-20 translate-x-[60%] translate-y-[-50%] cursor-pointer";
-                        }
+                            let positionClass = "";
+                            if (offset === 0) {
+                                positionClass = "opacity-100 scale-100 z-30 -translate-x-1/2 translate-y-[-50%]";
+                            } else if (offset === -1) {
+                                positionClass = "opacity-40 scale-75 z-20 -translate-x-[160%] translate-y-[-50%] cursor-pointer";
+                            } else if (offset === 1) {
+                                positionClass = "opacity-40 scale-75 z-20 translate-x-[60%] translate-y-[-50%] cursor-pointer";
+                            } else if (offset < -1) {
+                                positionClass = "opacity-0 scale-50 z-10 -translate-x-[250%] translate-y-[-50%] pointer-events-none";
+                            } else if (offset > 1) {
+                                positionClass = "opacity-0 scale-50 z-10 translate-x-[150%] translate-y-[-50%] pointer-events-none";
+                            }
 
-                        return (
-                            <div
-                                key={item.key} // Stable key for animation
-                                onClick={() => {
-                                    if (isPrev) setActiveIndex((current) => (current - 1 + logistics.length) % logistics.length);
-                                    if (isNext) setActiveIndex((current) => (current + 1) % logistics.length);
-                                }}
-                                className={`absolute top-1/2 left-1/2 w-full max-w-[600px] transition-all duration-700 ease-in-out transform ${positionClass}`}
-                            >
-                                <div className="relative w-full">
-                                    {/* Card Content */}
-                                    <div className={`pointer-events-none md:pointer-events-auto ${isActive ? '' : 'pointer-events-none'}`}>
-                                        <LogisticsCard
-                                            title={item.title}
-                                            sections={item.sections}
-                                        />
+                            return (
+                                <div
+                                    key={vIndex}
+                                    onClick={() => {
+                                        if (offset === -1) handlePrev();
+                                        if (offset === 1) handleNext();
+                                    }}
+                                    className={`absolute top-1/2 left-1/2 w-full max-w-[600px] transition-all duration-700 ease-in-out transform ${positionClass}`}
+                                >
+                                    <div className="relative w-full">
+                                        <div className={`pointer-events-none md:pointer-events-auto ${offset === 0 ? '' : 'pointer-events-none'}`}>
+                                            <LogisticsCard title={item.title} sections={item.sections} />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })
+                    )}
                 </div>
             </div>
 
@@ -124,7 +122,7 @@ export default function LogisticsSection({ logistics }: logisticprops) {
             <div className="w-[200px] md:w-[400px] h-2 bg-gray-700/50 relative rounded-full mt-12 overflow-hidden z-10">
                 <div
                     className="absolute left-0 top-0 h-full bg-[#E51D29] transition-all duration-500 ease-out"
-                    style={{ width: `${((activeIndex + 1) / logistics.length) * 100}%` }}
+                    style={{ width: `${((actualActiveIndex + 1) / logistics.length) * 100}%` }}
                 ></div>
             </div>
         </div>

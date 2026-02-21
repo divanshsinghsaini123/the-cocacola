@@ -49,7 +49,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                 />
             </div>
 
-            <div className={`relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-30 ${layout === 'right' ? 'md:flex-row-reverse' : ''}`}>
+            <div className={`relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center md:gap-30 gap-10 ${layout === 'right' ? 'md:flex-row-reverse' : ''}`}>
 
                 {/* Product Image Side */}
                 <div className="w-full md:w-1/2 flex justify-center">
@@ -103,21 +103,21 @@ const ProductComponent: React.FC<ProductProps> = ({
                     {/* Features & Subfeatures */}
                     <div className="flex flex-col gap-10">
                         {/* Main Features */}
-                        <div className="flex gap-8 md:gap-16 justify-start flex-wrap">
+                        <div className="flex gap-6 md:gap-12 justify-start flex-wrap">
                             {features.map((feature, i) => (
-                                <div key={i} className="flex flex-col items-center text-center gap-3 group">
+                                <div key={i} className="flex flex-col items-center text-center md:gap-3 gap-0 group">
                                     <div className="w-16 h-16 relative flex items-center justify-center border-2 border-white/20 rounded-xl p-3 bg-black/20 backdrop-blur-sm group-hover:border-[#E51D29] transition-colors">
                                         {typeof feature.icon === 'string' ? (
-                                            <div className="relative w-full h-full">
+                                            <div className="relative md:w-full md:h-full w-[50%] h-[50%]">
                                                 <Image src={feature.icon} alt={feature.text} fill className="object-contain invert" />
                                             </div>
                                         ) : (
-                                            <div className="text-white w-full h-full [&>svg]:w-full [&>svg]:h-full">
+                                            <div className="text-white md:w-full md:h-full w-[70%] h-[70%] [&>svg]:w-full [&>svg]:h-full">
                                                 {feature.icon}
                                             </div>
                                         )}
                                     </div>
-                                    <span className="font-bold uppercase text-xs md:text-base max-w-[100px] leading-tight text-shadow-sm">
+                                    <span className="font-bold text-[10px] md:text-base max-w-[100px] leading-tight text-shadow-sm">
                                         {feature.text}
                                     </span>
                                 </div>

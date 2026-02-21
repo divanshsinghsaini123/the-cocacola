@@ -22,7 +22,7 @@ export default function Packaging() {
 
             {/* Header */}
             <div
-                className="w-full bg-[#8B0000] py-3 text-center mb-12 sticky md:relative z-30 shadow-md md:shadow-none transition-all duration-300"
+                className="w-full bg-[#8B0000] py-3 text-center mb-12 sticky z-30 shadow-md md:shadow-none transition-all duration-300"
                 style={{ top: stickyNav ? '80px' : '0px' }}
             >
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
