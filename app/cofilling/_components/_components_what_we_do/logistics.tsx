@@ -15,6 +15,8 @@ export default function LogisticsSection({ logistics }: logisticprops) {
     const { data, error } = useGetExtraDataQuery();
     const stickyNav = data?.data?.StickyNavbar;
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [touchStart, setTouchStart] = useState<number | null>(null);
+    const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
     // Auto-scroll logic: Move to next item every 5 seconds
     useEffect(() => {
@@ -28,6 +30,31 @@ export default function LogisticsSection({ logistics }: logisticprops) {
 
     const handlePrev = () => setCurrentIndex(c => c - 1);
     const handleNext = () => setCurrentIndex(c => c + 1);
+
+    const minSwipeDistance = 50;
+
+    const onTouchStart = (e: React.TouchEvent) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const onTouchEndEvent = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe) {
+            handleNext();
+        }
+        if (isRightSwipe) {
+            handlePrev();
+        }
+    };
 
     const actualActiveIndex = ((currentIndex % logistics.length) + logistics.length) % logistics.length;
 
@@ -51,7 +78,12 @@ export default function LogisticsSection({ logistics }: logisticprops) {
             </div>
 
             {/* Carousel Container */}
-            <div className="w-full max-w-[95%] md:max-w-7xl px-2 relative z-10 h-[600px] flex justify-center items-center">
+            <div
+                className="w-full max-w-[95%] md:max-w-7xl px-2 relative z-10 h-[600px] flex justify-center items-center"
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEndEvent}
+            >
 
                 {/* Navigation Buttons (Static) */}
                 {logistics.length > 1 && (
