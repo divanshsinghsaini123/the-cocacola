@@ -24,7 +24,7 @@ if (!STRAPI_URLExtra) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
-const STRAPI_URLManufacturing = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/manufacturing";
+const STRAPI_URLManufacturing = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/manufacturing-list?populate[Section_table][populate][Section_Table_Row]=*";
 if (!STRAPI_URLManufacturing) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
