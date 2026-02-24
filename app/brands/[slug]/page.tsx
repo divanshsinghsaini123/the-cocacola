@@ -101,16 +101,19 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
                                 <Link
                                     href={`/brands/${slug}/${product.slug}`}
                                     key={String(product._id)}
-                                    className="group bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 hover:scale-[1.02] flex flex-col items-center justify-center p-6 aspect-square"
+                                    className="group flex flex-col items-center gap-3"
                                 >
-                                    <div className="relative w-full h-full">
-                                        <Image
-                                            src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image}
-                                            alt={product.name}
-                                            fill
-                                            className="object-contain"
-                                        />
+                                    <div className="w-full bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 group-hover:scale-[1.02] flex flex-col items-center justify-center p-6 aspect-square">
+                                        <div className="relative w-full h-full">
+                                            <Image
+                                                src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image}
+                                                alt={product.name}
+                                                fill
+                                                className="object-contain"
+                                            />
+                                        </div>
                                     </div>
+                                    <span className="text-lg font-medium text-center text-gray-900 group-hover:text-black transition-colors">{product.name}</span>
                                 </Link>
                             ))}
                         </div>

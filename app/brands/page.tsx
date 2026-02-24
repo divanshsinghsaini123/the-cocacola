@@ -41,17 +41,20 @@ export default async function BrandsPage() {
                             <Link
                                 href={`/brands/${brand.slug}`}
                                 key={brand._id ? String(brand._id) : index}
-                                className="group bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 overflow-hidden block"
+                                className="group flex flex-col items-center gap-3"
                             >
-                                <div className="relative w-[100%] h-[100%]">
-                                    <Image
-                                        src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
-                                        alt={brand.name}
-                                        fill
-                                        className="object-contain"
-                                    // unoptimized={true}
-                                    />
+                                <div className="w-full bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] group-hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 group-hover:scale-105 overflow-hidden block">
+                                    <div className="relative w-[100%] h-[100%]">
+                                        <Image
+                                            src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
+                                            alt={brand.name}
+                                            fill
+                                            className="object-contain"
+                                        // unoptimized={true}
+                                        />
+                                    </div>
                                 </div>
+                                <span className="text-xl font-bold text-center text-gray-900 group-hover:text-black transition-colors">{brand.name}</span>
                             </Link>
                         ))}
                     </div>
