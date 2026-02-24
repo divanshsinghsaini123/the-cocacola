@@ -84,7 +84,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
             {/* Main Content Container 1120px width */}
             <div className="max-w-[1120px] mx-auto px-4 md:px-0 py-12">
-                <h2 className="text-[38px] font-bold text-center mb-8 text-black">Products</h2>
+                <h2 className="text-[38px] font-bold text-center mb-8 text-black"> {product.name}</h2>
 
                 <div className="flex flex-col lg:flex-row justify-between gap-12 lg:gap-10">
 
@@ -104,9 +104,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
                     {/* Right Column: Content 480px width */}
                     <div className="w-full lg:w-[450px] flex flex-col pt-2 md:mr-6">
-                        <h1 className="text-[30px] font-bold text-black mb-1 leading-tight">
+                        {/* <h1 className="text-[30px] font-bold text-black mb-1 leading-tight">
                             {product.name}
-                        </h1>
+                        </h1> */}
 
                         <div className="text-base text-gray-800 leading-normal mb-6 space-y-2">
                             <p>{product.description || product.summary}</p>
