@@ -17,7 +17,7 @@ const Product: React.FC<ProductSectionProps> = ({ products }) => {
             {/* PRODUCT Header */}
             <div
                 className="w-full bg-[#8B0000] py-3 text-center sticky md:relative z-30 shadow-md md:shadow-none transition-all duration-300"
-                style={{ top: stickyNav ? '80px' : '0px' }}
+            // style={{ top: stickyNav ? '80px' : '0px' }}
             >
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
                     PRODUCTS
