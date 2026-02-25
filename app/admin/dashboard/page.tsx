@@ -75,7 +75,7 @@ export default function DashboardPortalPage() {
                                 href="/admin/stores/add"
                                 className="flex-1 px-4 py-3 bg-black text-white font-semibold rounded-xl hover:bg-gray-800 transition-all text-center text-sm shadow-md"
                             >
-                                + Add New Store
+                                + New Store
                             </Link>
                         </div>
                     </div>
