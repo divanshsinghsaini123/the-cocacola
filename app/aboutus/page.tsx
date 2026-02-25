@@ -69,7 +69,7 @@ export default async function AboutUs() {
                         src={bannerUrl}
                         alt="Our Company Data"
                         fill
-                        className="object-fit"
+                        className="object-cover md:object-fit"
                         priority
                         unoptimized={true}
                     />
