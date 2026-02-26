@@ -29,6 +29,10 @@ if (!STRAPI_URLManufacturing) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
+const STRAPI_URLEvents = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/event-page?populate[Event][populate][Image][populate]=*";
+if (!STRAPI_URLEvents) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
+}
 export async function GetHomePageData(): Promise<HomePageData | null> {
     try {
         const response = await fetch(STRAPI_URLHomepage
@@ -151,6 +155,34 @@ export async function GetManufacturingData() {
         )
         if (!response.ok) {
             console.error(`Failed to fetch from: ${STRAPI_URLManufacturing}`);
+            console.error(`Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    }
+    catch (error) {
+        console.error("Error fetching home page data:", error);
+        return null;
+    }
+}
+
+export async function GetEventsData() {
+    try {
+        const response = await fetch(
+            STRAPI_URLEvents,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        )
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_URLEvents}`);
             console.error(`Status: ${response.status} ${response.statusText}`);
             const errorText = await response.text();
             console.error(`Response: ${errorText}`);
