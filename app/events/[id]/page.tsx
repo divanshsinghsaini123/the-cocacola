@@ -54,7 +54,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                                 return (
                                     <div
                                         key={img.id}
-                                        className="sticky group relative rounded-3xl overflow-hidden bg-component shadow-2xl border border-foreground/10 w-full h-[75vh]"
+                                        className="sticky group relative rounded-3xl overflow-hidden bg-component shadow-2xl border border-foreground/10 w-full h-[105vh]"
                                         style={{ top: stickOffset, zIndex: index }}
                                     >
                                         <img
