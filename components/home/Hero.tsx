@@ -21,7 +21,7 @@ export default function Hero({ data }: HeroProps) {
                     {/* Background Image */}
                     <div className="absolute inset-0 ">
                         <Image
-                            src={imageUrl}
+                            src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imageUrl}
                             alt="Winter Adventure in Sweden"
                             fill
                             className="object-cover object-center"

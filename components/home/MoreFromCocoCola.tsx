@@ -121,7 +121,7 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
                         <div key={`${item.id}-${index}`} className="w-[85vw] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-start bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col shadow-sm group">
                             <div className="relative h-[200px] md:h-[250px] w-full">
                                 <Image
-                                    src={item.image}
+                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + item.image}
                                     alt={item.title}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-105"
