@@ -116,7 +116,7 @@ export default function PromosAndOffers({ data }: PromosAndOffersProps) {
                         <div key={offer.id} className="min-w-[85%] sm:min-w-0 bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col snap-center shadow-sm select-none">
                             <div className="relative h-[250px] md:h-[430px] sm:h-[350px] w-full">
                                 <Image
-                                    src={offer.image}
+                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + offer.image}
                                     alt={offer.title}
                                     fill
                                     className="object-cover pointer-events-none"

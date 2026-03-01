@@ -148,7 +148,7 @@ export default function Footer(props: FooterProps) {
                     <Link href="/">
                         <Image
                             // src="/assets/Home/logo-white-large.svg"
-                            src={!isLocal ? FooterImageUrl : `${STRAPI_BASE_URL}${FooterImageUrl}`}
+                            src={!isLocal ? process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + FooterImageUrl : `${STRAPI_BASE_URL}${FooterImageUrl}`}
                             alt="The Coca-Cola Company"
                             width={249}
                             height={40}

@@ -72,7 +72,7 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
                             <Link href="/" className="flex items-center">
                                 <Image
                                     // src="/assets/Home/Coke-company-logo-black.svg"
-                                    src={imageUrl}
+                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imageUrl}
                                     // src={navbarImage}
                                     alt="The Coca-Cola Company"
                                     width={125}
