@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "active-nurture-c4d476a309.media.strapiapp.com"
+      },
+      {
+        protocol: "https",
+        hostname: "strapicloud9-k6ghp.ondigitalocean.app"
       }
     ]
   }
