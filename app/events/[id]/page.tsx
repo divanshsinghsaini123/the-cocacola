@@ -58,7 +58,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                                         style={{ top: stickOffset, zIndex: index }}
                                     >
                                         <img
-                                            src={imgUrl}
+                                            src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl}
                                             alt={img.AltText || `${event.EventName} - Image ${index + 1}`}
                                             className="w-full h-full object-cover transition-all duration-700 group-hover:brightness-90"
                                             loading="lazy"

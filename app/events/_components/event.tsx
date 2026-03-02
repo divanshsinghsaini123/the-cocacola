@@ -28,7 +28,7 @@ export default function Event({ event }: EventProps) {
             {imgUrl && (
                 <div className="relative aspect-video w-full overflow-hidden bg-background">
                     <img
-                        src={imgUrl}
+                        src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl}
                         alt={firstImg.AltText}
                         className="object-cover w-full h-full"
                     />
