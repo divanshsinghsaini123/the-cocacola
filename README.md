@@ -19,7 +19,10 @@ JWT_SECRET="your_secure_jwt_secret"
 
 # STRAPI CONFIGURATION
 # Local Development: NEXT_PUBLIC_STRAPI_URL="http://localhost:1337"
-NEXT_PUBLIC_STRAPI_URL="your_strapi_cloud_url"
+NEXT_PUBLIC_STRAPI_URL="your_strapi_cloud_url"  
+
+#The below url must be null if we want to use , strapi cloud , its only for custom hosting 
+NEXT_PUBLIC_STRAPICONTENT_PREFIX="https://strapicloud9-k6ghp.ondigitalocean.app"
 
 # GCORE CDN & S3 STORAGE SETTINGS
 GCORE_ACCESS_KEY_ID="your_gcore_access_key"
