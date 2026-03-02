@@ -24,7 +24,7 @@ export default function Mainpage_aboutus({ feature }: Props) {
             {/* Image Container */}
             <div className="w-full lg:w-[660px] h-[400px] lg:h-[540px] relative rounded-none lg:rounded-[16px] overflow-hidden shadow-sm mb-2">
                 <Image
-                    src={feature.image}
+                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + feature.image}
                     alt={feature.title}
                     fill
                     className="object-fill"

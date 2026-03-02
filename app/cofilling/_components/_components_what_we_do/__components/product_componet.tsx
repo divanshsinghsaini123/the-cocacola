@@ -42,7 +42,7 @@ const ProductComponent: React.FC<ProductProps> = ({
             {/* Background */}
             <div className={`absolute inset-0 w-full h-full z-0`}>
                 <Image
-                    src={backgroundImage}
+                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + backgroundImage}
                     alt="Background"
                     fill
                     className="object-cover md:opacity-100 opacity-50"
@@ -55,7 +55,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                 <div className="w-full md:w-1/2 flex justify-center">
                     <div className="relative w-[300px] md:w-[450px] aspect-[3/4]">
                         <Image
-                            src={productImage}
+                            src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + productImage}
                             alt={title}
                             fill
                             className="object-contain"
@@ -109,7 +109,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                                     <div className="w-16 h-16 relative flex items-center justify-center border-2 border-white/20 rounded-xl p-3 bg-black/20 backdrop-blur-sm group-hover:border-[#E51D29] transition-colors">
                                         {typeof feature.icon === 'string' ? (
                                             <div className="relative md:w-full md:h-full w-[50%] h-[50%]">
-                                                <Image src={feature.icon} alt={feature.text} fill className="object-contain invert" />
+                                                <Image src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + feature.icon} alt={feature.text} fill className="object-contain invert" />
                                             </div>
                                         ) : (
                                             <div className="text-white md:w-full md:h-full w-[70%] h-[70%] [&>svg]:w-full [&>svg]:h-full">
@@ -130,7 +130,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                                 <div key={i} className="flex items-center gap-4 group">
                                     <div className="w-8 h-8 relative text-[#E51D29]">
                                         {typeof sub.icon === 'string' ? (
-                                            <Image src={sub.icon} alt={sub.text} fill className="object-contain" />
+                                            <Image src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + sub.icon} alt={sub.text} fill className="object-contain" />
                                         ) : (
                                             <div className="w-full h-full [&>svg]:w-full [&>svg]:h-full">
                                                 {sub.icon}

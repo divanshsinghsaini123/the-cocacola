@@ -47,7 +47,7 @@ export default function VideoCard({ videoUrl, index }: VideoCardProps) {
             onClick={() => setIsPlaying(true)}
         >
             <Image
-                src={thumbnailUrl}
+                src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + thumbnailUrl}
                 alt="Video Thumbnail"
                 fill
                 className="object-cover"

@@ -66,7 +66,7 @@ export default async function AboutUs() {
             <section className="relative w-full h-[400px] md:h-[400px] lg:h-[500px] overflow-hidden">
                 {bannerUrl && (
                     <Image
-                        src={bannerUrl}
+                        src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + bannerUrl}
                         alt="Our Company Data"
                         fill
                         className="object-cover md:object-fit"
@@ -112,7 +112,7 @@ export default async function AboutUs() {
                                     <div key={item.id} className="bg-white rounded-[16px] overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
                                         <div className="relative h-[200px] w-full bg-gray-100">
                                             <Image
-                                                src={item.image}
+                                                src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + item.image}
                                                 alt={item.title}
                                                 fill
                                                 className="object-cover"

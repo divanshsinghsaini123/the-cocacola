@@ -70,7 +70,7 @@ const LogisticsCard: React.FC<ProductLogisticsCardProps> = ({ title, sections })
                                 {/* Diagram/Image */}
                                 <div className={section.id === "4" ? "w-full h-24 relative mt-auto" : "absolute right-[-10px] bottom-[-10px] md:w-36 md:h-36 w-24 h-24"}>
                                     <Image
-                                        src={section.diagram}
+                                        src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + section.diagram}
                                         alt={section.heading || section.id}
                                         fill
                                         className={section.id === "4" ? "object-contain object-bottom" : "object-contain object-bottom right-0"}
