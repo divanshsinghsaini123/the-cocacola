@@ -60,12 +60,21 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
     const actualActiveIndex = ((currentIndex % images.length) + images.length) % images.length;
 
     return (
-        <div className="w-full flex flex-col items-center justify-center relative py-12 overflow-hidden">
-            <h2 className="text-3xl font-bold text-foreground mb-8 md:mb-12 ">Event Gallery</h2>
+        <div className="w-full flex flex-col items-center justify-center relative py-6 md:py-8 overflow-hidden">
+            <div className="flex flex-col items-center w-full max-w-[95%] md:max-w-[1400px] px-2 md:px-0 text-center">
+                <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-1 md:mb-8">Event Gallery</h2>
+                {images.length > 1 && (
+                    <div className="flex md:hidden items-center justify-center self-center text-foreground/50 text-sm mb-6 w-full animate-pulse">
+                        <ChevronLeft className="w-4 h-4 mr-2" />
+                        <span>Swipe to explore</span>
+                        <ChevronRight className="w-4 h-4 ml-2" />
+                    </div>
+                )}
+            </div>
 
             {/* Carousel Container */}
             <div
-                className="w-full max-w-[95%] md:max-w-[1400px] px-2 relative z-10 h-[400px] md:h-[650px] flex justify-center items-center group"
+                className="w-full max-w-[95%] md:max-w-[1400px] px-2 relative z-10 h-[300px] md:h-[650px] flex justify-center items-center group"
                 onTouchStart={onTouchStart}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEndEvent}
@@ -119,7 +128,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                         if (offset === -1) handlePrev();
                                         if (offset === 1) handleNext();
                                     }}
-                                    className={`absolute top-1/2 left-1/2 w-full max-w-[80%] md:max-w-[1100px] h-[400px] md:h-[650px] transition-all duration-700 ease-in-out transform ${positionClass}`}
+                                    className={`absolute top-1/2 left-1/2 w-full max-w-[100%] md:max-w-[1100px] h-[250px] md:h-[600px] transition-all duration-700 ease-in-out transform ${positionClass}`}
                                 >
                                     <div className={`relative w-full h-full pointer-events-none md:pointer-events-auto ${offset === 0 ? '' : 'pointer-events-none'}`}>
                                         <CarouselCard img={item} index={dataIndex} eventName={eventName} />
@@ -151,7 +160,7 @@ function CarouselCard({ img, index, eventName }: { img: any; index: number; even
             <img
                 src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl}
                 alt={img.AltText || `${eventName} - Image ${index + 1}`}
-                className="w-full h-full object-cover transition-all duration-700"
+                className="w-full h-full object-fit transition-all duration-700"
                 loading="lazy"
             />
             {img.AltText && (
