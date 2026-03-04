@@ -1,6 +1,7 @@
 import { GetEventsData } from "@/src/lib/strapi";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import EventGalleryCarousel from "../_components/EventGalleryCarousel";
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = await params;
@@ -41,40 +42,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 </div>
 
                 {event.Image && event.Image.length > 0 && (
-                    <div className="p-8 md:p-12 bg-background flex flex-col items-center">
-                        <h2 className="text-3xl font-bold text-foreground mb-12 self-start">Event Gallery</h2>
-                        <div className="flex flex-col gap-24 w-full max-w-[1200px] mb-24">
-                            {event.Image.map((img: any, index: number) => {
-                                const imgUrl = img.Picture?.url || img.Picture?.formats?.large?.url;
-                                if (!imgUrl) return null;
-
-                                // Each card gets a slightly higher top offset so they stack like a deck of cards (parallax stack effect)
-                                const stickOffset = `calc(6rem + ${index * 1.5}rem)`;
-
-                                return (
-                                    <div
-                                        key={img.id}
-                                        className="sticky group relative rounded-3xl overflow-hidden bg-component shadow-2xl border border-foreground/10 w-full h-[105vh]"
-                                        style={{ top: stickOffset, zIndex: index }}
-                                    >
-                                        <img
-                                            src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl}
-                                            alt={img.AltText || `${event.EventName} - Image ${index + 1}`}
-                                            className="w-full h-full object-cover transition-all duration-700 group-hover:brightness-90"
-                                            loading="lazy"
-                                        />
-                                        {img.AltText && (
-                                            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out flex items-end pointer-events-none">
-                                                <span className="text-white text-2xl md:text-3xl font-semibold p-8 md:p-12 w-full translate-y-8 group-hover:translate-y-0 transition-transform duration-700 ease-out tracking-wide">
-                                                    {img.AltText}
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
+                    <EventGalleryCarousel images={event.Image} eventName={event.EventName} />
                 )}
             </div>
         </div>
