@@ -1,5 +1,6 @@
 import { GetEventsData } from "@/src/lib/strapi";
-import EventsCarousel from "./_components/EventsCarousel";
+import Event from "./_components/event";
+
 export default async function EventsPage() {
     const data = await GetEventsData();
     const heading = data?.Heading;
@@ -17,7 +18,11 @@ export default async function EventsPage() {
                 </p>
             </div>
 
-            <EventsCarousel events={events || []} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {events?.map((event: any, index: number) => (
+                    <Event key={event.id} event={event} />
+                ))}
+            </div>
         </div>
     );
 }
