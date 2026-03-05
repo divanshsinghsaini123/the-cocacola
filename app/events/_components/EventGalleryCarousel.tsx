@@ -23,7 +23,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
         if (images.length <= 1 || viewMode !== "carousel") return;
         const interval = setInterval(() => {
             setCurrentIndex((current) => current + 1);
-        }, 5000);
+        }, 10000);
 
         return () => clearInterval(interval);
     }, [images.length, viewMode]);
