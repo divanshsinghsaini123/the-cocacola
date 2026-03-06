@@ -178,7 +178,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                 />
                             )}
                             {images[actualActiveIndex]?.AltText && (
-                                <div className="absolute bottom-4 w-full text-center p-4 pointer-events-none">
+                                <div className="absolute -top-4 w-full text-center pointer-events-none">
                                     <span className="text-white text-base md:text-lg font-medium drop-shadow-md">{images[actualActiveIndex].AltText}</span>
                                 </div>
                             )}
