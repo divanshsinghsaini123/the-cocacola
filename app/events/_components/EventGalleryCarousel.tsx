@@ -238,7 +238,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                     <video
                                         src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl}
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        autoPlay muted loop playsInline
+                                        muted loop playsInline
                                     />
                                 ) : (
                                     <img
