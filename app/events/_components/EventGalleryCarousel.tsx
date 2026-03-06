@@ -178,7 +178,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                     key={`main-vid-${actualActiveIndex}`}
                                     src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture?.url)}
                                     className="w-full h-full object-contain drop-shadow-2xl max-h-full"
-                                    controls autoPlay playsInline
+                                    autoPlay playsInline
                                     onLoadedMetadata={(e) => {
                                         // Set auto-scroll duration to match the video length (plus a 500ms safety buffer)
                                         setCurrentSlideDuration((e.currentTarget.duration * 1000) + 500);
