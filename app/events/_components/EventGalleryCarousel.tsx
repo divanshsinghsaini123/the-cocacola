@@ -2,12 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import { boolean } from "zod";
 
-function isVideo(file: any) {
-    if (file?.mime?.startsWith('video/')) return true;
-    if (typeof file?.url === 'string' && file.url.match(/\.(mp4|webm|ogg|mov)$/i)) return true;
-    return false;
-}
+
+
 
 interface EventGalleryCarouselProps {
     images: {
@@ -23,13 +21,26 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
     const [viewMode, setViewMode] = useState<"grid" | "carousel">("grid");
     const [touchStart, setTouchStart] = useState<number | null>(null);
     const [touchEnd, setTouchEnd] = useState<number | null>(null);
+    // const [currentVideo, setCurrentVideo] = useState(false);
+    const [currentSlideDuration, setCurrentSlideDuration] = useState(10000); // Default 10 seconds
+    function isVideo(file: any) {
+        let videohai = false
+        if (file?.mime?.startsWith('video/')) {
+            videohai = true
+        }
 
+        if (typeof file?.url === 'string' && file.url.match(/\.(mp4|webm|ogg|mov)$/i)) {
+            videohai = true
+        }
+        return videohai;
+    }
     // Auto-scroll logic: Move to next item every 5 seconds (only in carousel mode)
     useEffect(() => {
         if (images.length <= 1 || viewMode !== "carousel") return;
+
         const interval = setInterval(() => {
             setCurrentIndex((current) => current + 1);
-        }, 10000);
+        }, currentSlideDuration);
 
         return () => clearInterval(interval);
     }, [images.length, viewMode, currentIndex]);
@@ -167,7 +178,16 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                     key={`main-vid-${actualActiveIndex}`}
                                     src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture?.url)}
                                     className="w-full h-full object-contain drop-shadow-2xl max-h-full"
-                                    controls autoPlay playsInline loop
+                                    controls autoPlay playsInline
+                                    onLoadedMetadata={(e) => {
+                                        // Set auto-scroll duration to match the video length (plus a 500ms safety buffer)
+                                        setCurrentSlideDuration((e.currentTarget.duration * 1000) + 500);
+                                    }}
+                                    onEnded={() => {
+                                        if (images.length > 1) {
+                                            handleNext();
+                                        }
+                                    }}
                                 />
                             ) : (
                                 <img
