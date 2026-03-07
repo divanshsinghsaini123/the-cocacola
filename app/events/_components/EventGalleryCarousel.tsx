@@ -205,7 +205,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                         </div>
 
                         {/* Instagram-style Thumbnails Strip at the bottom */}
-                        <div className="absolute bottom-6 left-0 w-full flex justify-center items-center gap-3 md:gap-5 z-20 px-4">
+                        <div className="absolute bottom-3 left-0 w-full flex justify-center items-center gap-3 md:gap-5 z-20 px-4">
                             {images.length > 1 && [-1, 0, 1].map((offset) => {
                                 const vIndex = currentIndex + offset;
                                 const dataIndex = ((vIndex % images.length) + images.length) % images.length;
@@ -221,7 +221,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                             if (offset === -1) handlePrev();
                                             if (offset === 1) handleNext();
                                         }}
-                                        className={`relative rounded-lg md:rounded-xl overflow-hidden shadow-2xl transition-all duration-300 cursor-pointer border-[2px] md:border-[3px] ${offset === 0 ? 'w-16 h-24 md:w-20 md:h-28 border-white scale-110 z-10 box-content' : 'w-14 h-20 md:w-16 md:h-24 border-white/20 opacity-50 hover:opacity-100 hover:border-white/60 box-content'}`}
+                                        className={`relative rounded-lg md:rounded-xl overflow-hidden shadow-2xl transition-all duration-300 cursor-pointer border-[2px] md:border-[3px] ${offset === 0 ? 'w-12 h-16 md:w-16 md:h-24 border-white scale-110 z-10 box-content' : 'w-10 h-14 md:w-14 md:h-22 border-white/20 opacity-50 hover:opacity-100 hover:border-white/60 box-content'}`}
                                     >
                                         {isVideo(item.Picture) ? (
                                             <video src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl} className="w-full h-full object-cover" autoPlay muted loop playsInline />
