@@ -20,9 +20,6 @@ interface Feature {
     alignment: string
 }
 
-
-
-
 export default async function AboutUs() {
     const strapioutput = await GetAboutUsPageData();
 
