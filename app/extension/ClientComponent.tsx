@@ -70,7 +70,7 @@ export default function ClientComponent({ rows }: ComponentProps) {
                             <Phone className="w-5 h-5" />
                             <span className="text-sm font-bold tracking-widest uppercase">Directory</span>
                         </div>
-                        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
+                        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
                             Corporate Extensions
                         </h1>
                     </div>
@@ -100,7 +100,7 @@ export default function ClientComponent({ rows }: ComponentProps) {
                                         {getInitials(row.Name)}
                                     </div>
                                     <div className="overflow-hidden">
-                                        <h3 className="text-lg font-bold group-hover:text-red-700 transition-colors truncate">
+                                        <h3 className="text-sm md:text-lg font-bold group-hover:text-red-700 transition-colors">
                                             {row.Name || 'Unknown'}
                                         </h3>
                                         {/* Show department below name only on mobile */}
@@ -120,9 +120,9 @@ export default function ClientComponent({ rows }: ComponentProps) {
                                 {/* Extension Section */}
                                 <div className="col-span-12 md:col-span-3 flex md:justify-end mt-2 md:mt-0">
                                     <div className="flex items-center space-x-3 w-full md:w-auto bg-gray-100/50 md:bg-transparent p-3 md:p-0 rounded-lg">
-                                        <div className="flex flex-col md:flex-row md:items-center w-full md:w-auto">
-                                            <span className="md:hidden text-xs font-bold uppercase tracking-wider opacity-60">Ext No</span>
-                                            <span className="font-extrabold text-xl md:text-xl">
+                                        <div className="flex md:flex-row md:items-center w-full md:w-auto gap-3">
+                                            <span className="md:hidden text-sm md:text-xs font-bold upperx`xcase tracking-wider md:opacity-60">Ext No :</span>
+                                            <span className="font-extrabold text-sm md:text-xl">
                                                 {row.ExtensionNumber}
                                             </span>
                                         </div>
