@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Search, Compass, Palette, Rocket } from "lucide-react";
+import { Search, Compass, Palette, Rocket, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 const stages = [
     {
@@ -77,7 +77,7 @@ function FadeIn({ children, delay = 0, direction = "up" }: { children: React.Rea
 export default function CoBrandingPage() {
     const router = useRouter();
     return (
-        <main className="min-h-screen bg-[#FAFAFA] relative overflow-hidden font-sans">
+        <main className="min-h-screen bg-background relative overflow-hidden font-sans">
             {/* Background decorative gradients */}
             <div className="absolute top-0 left-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-blue-300/20 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
             <div className="absolute bottom-40 right-0 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-purple-300/20 rounded-full blur-[120px] translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
@@ -92,7 +92,7 @@ export default function CoBrandingPage() {
                                 Process
                             </span>
                         </div>
-                        <h1 className="text-[44px] sm:text-[56px] md:text-[76px] font-extrabold text-gray-900 tracking-tight leading-[1.1] mb-8">
+                        <h1 className="text-[44px] sm:text-[56px] md:text-[76px] font-extrabold text-foreground tracking-tight leading-[1.1] mb-8">
                             Our process builds <br className="hidden md:block" />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">
                                 successful brands.
@@ -121,7 +121,7 @@ export default function CoBrandingPage() {
                                     <div className="md:hidden absolute left-[28px] top-[70px] bottom-[-40px] w-[2px] border-l-2 border-dashed border-gray-300 z-0"></div>
 
                                     {/* Center Icon (Desktop) */}
-                                    <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[80px] h-[80px] rounded-full bg-[#FAFAFA] items-center justify-center">
+                                    <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[80px] h-[80px] rounded-full bg-background items-center justify-center">
                                         <div className={`w-[60px] h-[60px] rounded-full bg-gradient-to-br ${stage.color} flex items-center justify-center text-white shadow-xl ${stage.shadow} transition-transform duration-500 hover:scale-110`}>
                                             <Icon className="w-7 h-7" />
                                         </div>
@@ -130,7 +130,7 @@ export default function CoBrandingPage() {
                                     {/* Left/Right Container */}
                                     <div className={`w-full md:w-1/2 flex relative z-10 pl-6 sm:pl-10 ${isEven ? 'md:justify-end md:pr-16 lg:pr-24' : 'md:justify-start md:pl-16 lg:pl-24 md:order-last'}`}>
                                         <FadeIn direction={isEven ? 'left' : 'right'} delay={100}>
-                                            <div className="bg-white/80 backdrop-blur-sm rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 md:p-12 shadow-[0_8px_40px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgb(0,0,0,0.08)] hover:bg-white transition-all duration-500 hover:-translate-y-2 border border-white/50 group w-full relative overflow-hidden">
+                                            <div className="bg-component/80 backdrop-blur-sm rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 md:p-12 shadow-[0_8px_40px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgb(0,0,0,0.08)] hover:bg-component transition-all duration-500 hover:-translate-y-2 border border-white/50 group w-full relative overflow-hidden">
 
                                                 {/* Decorative background glow inside card */}
                                                 <div className={`absolute -right-20 -top-20 w-40 h-40 bg-gradient-to-br ${stage.color} opacity-10 rounded-full blur-[40px] transition-all duration-500 group-hover:opacity-20`}></div>
@@ -146,7 +146,7 @@ export default function CoBrandingPage() {
                                                     </h3>
                                                 </div>
 
-                                                <h2 className="text-[24px] sm:text-[32px] md:text-[42px] font-extrabold text-[#111] mb-4 md:mb-5 leading-[1.15] tracking-tight">{stage.title}</h2>
+                                                <h2 className="text-[24px] sm:text-[32px] md:text-[42px] font-extrabold text-foreground mb-4 md:mb-5 leading-[1.15] tracking-tight">{stage.title}</h2>
 
                                                 <p className="text-gray-600 text-[15px] sm:text-[17px] md:text-[19px] leading-[1.6] md:leading-[1.7] font-medium">
                                                     {stage.description}
@@ -186,6 +186,50 @@ export default function CoBrandingPage() {
                                 </button>
                             </div>
                         </div>
+                    </FadeIn>
+                </div>
+
+                {/* Packaging Section */}
+                <div className="mt-6 md:mt-10 w-full max-w-[1200px] mx-auto pb-2">
+                    <div className="text-center pt-8">
+                        <h3 className="mb-4 md:mb-10 text-[24px] sm:text-[32px] md:text-[40px] font-extrabold text-foreground tracking-tight">
+                            Our Packaging
+                        </h3>
+                    </div>
+                    <FadeIn direction="up">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+                            {/* Card 1 */}
+                            <div className="flex flex-col items-center group">
+                                <div className="w-full bg-[#f4f4f4] rounded-[32px] p-6 sm:p-10 relative overflow-hidden aspect-[4/3] flex items-center justify-center mb-8 border border-gray-100 group-hover:shadow-[0_20px_50px_rgb(0,0,0,0.08)] transition-all duration-500">
+                                    <div className="absolute top-6 right-6 w-10 h-10 sm:w-12 sm:h-12 bg-[#8c9fcf] rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-indigo-600 transition-colors shadow-lg z-10 hover:scale-105 duration-300">
+                                        <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-2" />
+                                    </div>
+                                    <img src="/cola.png" alt="Tata Sampann" className="max-h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700" />
+                                </div>
+                                <h3 className="text-[28px] sm:text-[36px] font-serif tracking-wide text-[#8c9fcf] mb-2 font-medium">Tata Sampann</h3>
+                                <p className="text-gray-500 text-[13px] sm:text-[15px] font-medium tracking-wide mb-8">FMCG // Packaging Design</p>
+                                <button className="px-8 sm:px-10 py-2.5 sm:py-3 rounded-full border border-[#8c9fcf] text-[#8c9fcf] text-[13px] sm:text-sm font-semibold tracking-widest hover:bg-[#8c9fcf] hover:text-white transition-all duration-300 shadow-sm">
+                                    VIEW
+                                </button>
+                            </div>
+
+                            {/* Card 2 */}
+                            <div className="flex flex-col items-center group">
+                                <div className="w-full bg-[#e8e9eb] rounded-[32px] p-6 sm:p-10 relative overflow-hidden aspect-[4/3] flex items-center justify-center mb-8 border border-gray-100 group-hover:shadow-[0_20px_50px_rgb(0,0,0,0.08)] transition-all duration-500">
+                                    <div className="absolute top-6 right-6 w-10 h-10 sm:w-12 sm:h-12 bg-[#8c9fcf] rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-indigo-600 transition-colors shadow-lg z-10 hover:scale-105 duration-300">
+                                        <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-2" />
+                                    </div>
+                                    <img src="/assets/Home/drinkup.webp" alt="Gunjan Jewels" className="max-h-[80%] object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700" />
+                                </div>
+                                <h3 className="text-[28px] sm:text-[36px] font-serif tracking-wide text-[#8c9fcf] mb-2 font-medium">Gunjan Jewels</h3>
+                                <p className="text-gray-500 text-[13px] sm:text-[15px] font-medium tracking-wide mb-8">Jewellery // Brand Identity Design</p>
+                                <button className="px-8 sm:px-10 py-2.5 sm:py-3 rounded-full border border-[#8c9fcf] text-[#8c9fcf] text-[13px] sm:text-sm font-semibold tracking-widest hover:bg-[#8c9fcf] hover:text-white transition-all duration-300 shadow-sm">
+                                    VIEW
+                                </button>
+                            </div>
+                        </div>
+
+
                     </FadeIn>
                 </div>
 
