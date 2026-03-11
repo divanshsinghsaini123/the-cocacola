@@ -4,10 +4,16 @@ import Link from "next/link";
 import Mainpage_aboutus from "./_components/Mainpage_aboutus";
 import type { Metadata } from "next";
 import { SectionItem } from "@/types/home";
-export const metadata: Metadata = {
-    title: "About Us",
-    description: "Learn about The Cloud9 Beverages Company, our history, and our mission to refresh the world.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const strapioutput = await GetAboutUsPageData();
+    const seo = strapioutput?.seo;
+
+    return {
+        title: seo?.metaTitle || "About Us | Cloud9 Beverages",
+        description: seo?.metaDescription || "Learn about The Cloud9 Beverages Company, our history, and our mission to refresh the world.",
+        keywords: seo?.keywords || "about Cloud9, company history, our vision, corporate values, beverage industry",
+    };
+}
 
 
 interface Feature {
