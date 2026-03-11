@@ -1,5 +1,17 @@
 import { GetEventsData } from "@/src/lib/strapi";
+import type { Metadata } from "next";
 import Event from "./_components/event";
+
+export async function generateMetadata(): Promise<Metadata> {
+    const strapioutput = await GetEventsData();
+    const seo = strapioutput?.SEO || strapioutput?.seo;
+
+    return {
+        title: seo?.metaTitle || "Events | Cloud9 Beverages",
+        description: seo?.metaDescription || "Join us at Cloud9 Beverages events. Stay updated with our latest happenings and community engagements.",
+        keywords: seo?.keywords || "events, Cloud9, beverages, community, happenings",
+    };
+}
 
 export default async function EventsPage() {
     const data = await GetEventsData();

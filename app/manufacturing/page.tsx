@@ -3,6 +3,19 @@ import { GetManufacturingData } from "@/src/lib/strapi";
 import Table from "./_components/table";
 import Image from "next/image";
 
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+    const strapioutput = await GetManufacturingData();
+    const seo = strapioutput?.SEO;
+
+    return {
+        title: seo?.metaTitle || "Manufacturing | Cloud9 Beverages",
+        description: seo?.metaDescription || "Learn about our manufacturing processes, facilities, and the high standards we maintain at Cloud9 Beverages.",
+        keywords: seo?.keywords || "manufacturing, facilities, Cloud9, beverages, standards, production",
+    };
+}
+
 export interface TableData {
     id: number,
     Table_ComponentName: string,

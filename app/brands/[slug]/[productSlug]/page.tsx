@@ -39,8 +39,8 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || []
 
     return {
-        title: `${product.name} | ${brand.name}`,
-        description: product.description || `Discover ${product.name} from ${brand.name}.`,
+        title: `${product.name} | ${brand.name} | Cloud9 Beverages`,
+        description: product.description || `Discover ${product.name} from ${brand.name} at Cloud9 Beverages.`,
         openGraph: {
             images: [process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image, ...previousImages],
         },

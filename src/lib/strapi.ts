@@ -42,7 +42,7 @@ const STRAPI_URLCobranding = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/cobrandi
 if (!STRAPI_URLCobranding) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
-export async function GetHomePageData(): Promise<HomePageData | null> {
+export async function GetHomePageData() {
     try {
         const response = await fetch(STRAPI_URLHomepage
             , {

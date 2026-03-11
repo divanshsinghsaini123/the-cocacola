@@ -4,10 +4,16 @@ import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-    title: "Our Brands",
-    description: "Explore our portfolio of world-class beverage brands, including Coca-Cola, Sprite, and more.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+    await connectDB();
+    const topBrands = await Brand.find({ isActive: true }).limit(3).select("name").lean();
+    const brandNames = topBrands.map((b: any) => b.name).join(", ");
+
+    return {
+        title: "Our Brands | Cloud9 Beverages",
+        description: `Explore our portfolio of world-class beverage brands${brandNames ? `, including ${brandNames}, and more` : ''}.`,
+    };
+}
 
 export const dynamic = "force-dynamic";
 
