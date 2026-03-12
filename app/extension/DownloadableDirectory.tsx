@@ -9,15 +9,21 @@ interface Row {
 
 interface Props {
     rows: Row[];
+    sortBy?: string;
 }
 
-export default function DownloadableDirectory({ rows }: Props) {
+export default function DownloadableDirectory({ rows, sortBy }: Props) {
     return (
         <div className="bg-white p-4 w-[650px] text-black">
             {/* Header */}
             <div className="flex justify-between items-end border-b pb-2 mb-3 border-gray-300">
                 <div>
                     <h1 className="text-lg font-bold text-gray-900 leading-tight">Corporate Extensions</h1>
+                    {sortBy && (
+                        <div className="text-[10px] text-gray-500 mt-0.5 font-medium uppercase tracking-wider">
+                            Sorted by: {sortBy}
+                        </div>
+                    )}
                 </div>
                 <div className="text-xs text-gray-500 font-medium pb-0.5">Internal Use Only</div>
             </div>
@@ -26,9 +32,9 @@ export default function DownloadableDirectory({ rows }: Props) {
             <table className="w-full text-left border-collapse">
                 <thead>
                     <tr className="bg-gray-100 border-b border-gray-300">
-                        <th className="px-2 text-[10px] font-bold uppercase tracking-wider text-gray-700">Name</th>
-                        <th className="py-1 px-2 text-[10px] font-bold uppercase tracking-wider text-gray-700">Department</th>
-                        <th className="py-1 px-2 text-[10px] font-bold uppercase tracking-wider text-gray-700 text-right">Ext No</th>
+                        <th className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-700">Name</th>
+                        <th className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-700">Department</th>
+                        <th className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-700 text-right">Ext No</th>
                     </tr>
                 </thead>
                 <tbody>

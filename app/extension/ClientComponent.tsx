@@ -1,7 +1,7 @@
 'use client'
-import { Phone, Building2, Download } from "lucide-react";
+import { Phone, Building2, Download, Search, ArrowUpDown } from "lucide-react";
 import { toPng } from 'html-to-image';
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useState, useMemo } from 'react';
 import DownloadableDirectory from './DownloadableDirectory';
 interface ComponentProps {
     rows: Row[];
@@ -12,6 +12,8 @@ interface Row {
     Department: string;
     ExtensionNumber: string;
 }
+type SortOption = 'default' | 'number' | 'name' | 'department';
+
 const getInitials = (name: string) => {
     if (!name) return '?';
     const parts = name.split(' ').filter(p => p.length > 0);
@@ -24,6 +26,40 @@ const getInitials = (name: string) => {
 
 export default function ClientComponent({ rows }: ComponentProps) {
     const contentRef = useRef<HTMLDivElement>(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortBy, setSortBy] = useState<SortOption>('default');
+
+    const filteredAndSortedRows = useMemo(() => {
+        let result = [...rows];
+
+        // Search
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            result = result.filter(row =>
+                (row.Name?.toLowerCase().includes(query)) ||
+                (row.Department?.toLowerCase().includes(query)) ||
+                (String(row.ExtensionNumber ?? '').toLowerCase().includes(query))
+            );
+        }
+
+        // Sort
+        if (sortBy !== 'default') {
+            result.sort((a, b) => {
+                if (sortBy === 'name') {
+                    return (a.Name || '').localeCompare(b.Name || '');
+                } else if (sortBy === 'department') {
+                    return (a.Department || '').localeCompare(b.Department || '');
+                } else {
+                    // 'number'
+                    const numA = parseInt(a.ExtensionNumber, 10) || 0;
+                    const numB = parseInt(b.ExtensionNumber, 10) || 0;
+                    return numA - numB;
+                }
+            });
+        }
+
+        return result;
+    }, [rows, searchQuery, sortBy]);
 
     // 2. Download function yahan rakho
     const handleDownload = useCallback(() => {
@@ -47,7 +83,7 @@ export default function ClientComponent({ rows }: ComponentProps) {
             {/* Hidden component for download - positioned off-screen */}
             <div className="fixed left-[-9999px] top-[-9999px]">
                 <div ref={contentRef}>
-                    <DownloadableDirectory rows={rows} />
+                    <DownloadableDirectory rows={filteredAndSortedRows} sortBy={sortBy === 'default' ? undefined : sortBy} />
                 </div>
             </div>
 
@@ -74,9 +110,39 @@ export default function ClientComponent({ rows }: ComponentProps) {
                             Corporate Extensions
                         </h1>
                     </div>
-                    <p className="mt-4 md:mt-0 text-lg opacity-70">
-                        Find team member
-                    </p>
+
+                    <div className="mt-6 md:mt-0 flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                        {/* Search Input */}
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Search className="h-4 w-4 text-gray-400" />
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Search extensions..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="block w-full pl-9 pr-3 py-2 border border-gray-300 shadow-sm rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 bg-[var(--component)]"
+                            />
+                        </div>
+
+                        {/* Sort Dropdown */}
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <ArrowUpDown className="h-4 w-4 text-gray-400" />
+                            </div>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                                className="block w-full pl-9 pr-8 py-2 border border-gray-300 shadow-sm rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 appearance-none bg-[var(--component)]"
+                            >
+                                <option value="default">Default</option>
+                                <option value="number">Sort by Number</option>
+                                <option value="name">Sort by Name</option>
+                                <option value="department">Sort by Department</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 {/* List Header */}
@@ -88,11 +154,11 @@ export default function ClientComponent({ rows }: ComponentProps) {
 
                 {/* List Body */}
                 <div className="flex flex-col gap-3 md:gap-0 md:bg-[var(--component)] md:rounded-b-xl shadow-sm overflow-hidden">
-                    {rows.length > 0 ? (
-                        rows.map((row: Row, index: number) => (
+                    {filteredAndSortedRows.length > 0 ? (
+                        filteredAndSortedRows.map((row: Row, index: number) => (
                             <div
                                 key={row.id}
-                                className={`group grid grid-cols-1 md:grid-cols-12 gap-4 px-6 md:py-4 py-5 items-center bg-[var(--component)] md:bg-transparent rounded-xl md:rounded-none shadow-sm md:shadow-none hover:bg-red-50/10 transition-colors duration-200 border border-gray-200 md:border-t-0 md:border-b ${index !== rows.length - 1 ? 'md:border-gray-100' : 'md:border-transparent'}`}
+                                className={`group grid grid-cols-1 md:grid-cols-12 gap-4 px-6 md:py-4 py-5 items-center bg-[var(--component)] md:bg-transparent rounded-xl md:rounded-none shadow-sm md:shadow-none hover:bg-red-50/10 transition-colors duration-200 border border-gray-200 md:border-t-0 md:border-b ${index !== filteredAndSortedRows.length - 1 ? 'md:border-gray-100' : 'md:border-transparent'}`}
                             >
                                 {/* Name Section */}
                                 <div className="col-span-5 flex items-center space-x-4">
@@ -121,7 +187,7 @@ export default function ClientComponent({ rows }: ComponentProps) {
                                 <div className="col-span-12 md:col-span-3 flex md:justify-end mt-2 md:mt-0">
                                     <div className="flex items-center space-x-3 w-full md:w-auto bg-gray-100/50 md:bg-transparent p-3 md:p-0 rounded-lg">
                                         <div className="flex md:flex-row md:items-center w-full md:w-auto gap-3">
-                                            <span className="md:hidden text-sm md:text-xs font-bold upperx`xcase tracking-wider md:opacity-60">Ext No :</span>
+                                            <span className="md:hidden text-sm md:text-xs font-bold uppercase tracking-wider md:opacity-60">Ext No :</span>
                                             <span className="font-extrabold text-sm md:text-xl">
                                                 {row.ExtensionNumber}
                                             </span>
