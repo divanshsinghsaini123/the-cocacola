@@ -29,7 +29,7 @@ if (!STRAPI_URLManufacturing) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
-const STRAPI_URLEvents = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/event-page?populate[Event][populate][Image][populate]=*&populate[SEO][populate]=*";
+const STRAPI_URLEvents = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/event-page?populate[Event][populate][Media][populate]=*&populate[SEO][populate]=*";
 if (!STRAPI_URLEvents) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }

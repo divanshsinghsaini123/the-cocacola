@@ -8,7 +8,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     const { id } = resolvedParams;
     const data = await GetEventsData();
     const event = data?.Event?.find((e: any) => e.id.toString() === id);
-
+    // console.log(event);
     if (!event) {
         return notFound();
     }
@@ -41,8 +41,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                     </p>
                 </div>
 
-                {event.Image && event.Image.length > 0 && (
-                    <EventGalleryCarousel images={event.Image} eventName={event.EventName} />
+                {event.Media && event.Media.length > 0 && (
+                    <EventGalleryCarousel images={event.Media} eventName={event.EventName} />
                 )}
             </div>
         </div>

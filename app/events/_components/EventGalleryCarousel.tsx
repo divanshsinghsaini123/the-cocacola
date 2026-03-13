@@ -10,7 +10,7 @@ import { boolean } from "zod";
 interface EventGalleryCarouselProps {
     images: {
         id?: number;
-        Picture?: any;
+        Picture_video?: any;
         AltText?: string;
     }[];
     eventName: string;
@@ -43,7 +43,25 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
         }, currentSlideDuration);
 
         return () => clearInterval(interval);
-    }, [images.length, viewMode, currentIndex]);
+    }, [images.length, viewMode, currentIndex, currentSlideDuration]);
+
+    // Keyboard navigation logic
+    useEffect(() => {
+        if (viewMode !== "carousel") return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "ArrowRight") {
+                handleNext();
+            } else if (e.key === "ArrowLeft") {
+                handlePrev();
+            } else if (e.key === "Escape") {
+                setViewMode("grid");
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [viewMode]);
 
     const handlePrev = () => setCurrentIndex(c => c - 1);
     const handleNext = () => setCurrentIndex(c => c + 1);
@@ -137,15 +155,15 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                     >
                         {/* Blurred Background from active image */}
                         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                            {isVideo(images[actualActiveIndex]?.Picture) ? (
+                            {isVideo(images[actualActiveIndex]?.Picture_video) ? (
                                 <video
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture?.url || '')}
+                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || '')}
                                     className="w-full h-full object-cover opacity-40 blur-3xl scale-125 transition-all duration-700"
                                     autoPlay muted loop playsInline
                                 />
                             ) : (
                                 <img
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture?.url || '')}
+                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || '')}
                                     className="w-full h-full object-cover opacity-40 blur-3xl scale-125 transition-all duration-700"
                                     alt="Background blur"
                                 />
@@ -173,10 +191,10 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
 
                         {/* Main Image Container */}
                         <div className="relative w-full h-[calc(100%-120px)] mt-12 md:mt-0 flex justify-center items-center z-10 p-2 md:p-4 pb-0">
-                            {isVideo(images[actualActiveIndex]?.Picture) ? (
+                            {isVideo(images[actualActiveIndex]?.Picture_video) ? (
                                 <video
                                     key={`main-vid-${actualActiveIndex}`}
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture?.url)}
+                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url)}
                                     className="w-full h-full object-contain drop-shadow-2xl max-h-full"
                                     autoPlay playsInline
                                     onLoadedMetadata={(e) => {
@@ -192,7 +210,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                             ) : (
                                 <img
                                     key={`main-img-${actualActiveIndex}`}
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture?.url || images[actualActiveIndex]?.Picture?.formats?.large?.url)}
+                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || images[actualActiveIndex]?.Picture_video?.formats?.large?.url)}
                                     alt={images[actualActiveIndex]?.AltText || `${eventName} - Image`}
                                     className="w-full h-full object-contain drop-shadow-2xl max-h-full"
                                 />
@@ -210,7 +228,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                 const vIndex = currentIndex + offset;
                                 const dataIndex = ((vIndex % images.length) + images.length) % images.length;
                                 const item = images[dataIndex];
-                                const imgUrl = item.Picture?.url || item.Picture?.formats?.small?.url || item.Picture?.formats?.large?.url;
+                                const imgUrl = item.Picture_video?.url || item.Picture_video?.formats?.small?.url || item.Picture_video?.formats?.large?.url;
                                 if (!imgUrl) return null;
 
                                 return (
@@ -223,12 +241,12 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                         }}
                                         className={`relative rounded-lg md:rounded-xl overflow-hidden shadow-2xl transition-all duration-300 cursor-pointer border-[2px] md:border-[3px] ${offset === 0 ? 'w-12 h-16 md:w-16 md:h-24 border-white scale-110 z-10 box-content' : 'w-10 h-14 md:w-14 md:h-22 border-white/20 opacity-50 hover:opacity-100 hover:border-white/60 box-content'}`}
                                     >
-                                        {isVideo(item.Picture) ? (
+                                        {isVideo(item.Picture_video) ? (
                                             <video src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl} className="w-full h-full object-cover" autoPlay muted loop playsInline />
                                         ) : (
                                             <img src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl} className="w-full h-full object-cover" alt="Thumbnail preview" />
                                         )}
-                                        {isVideo(item.Picture) && (
+                                        {isVideo(item.Picture_video) && (
                                             <div className="absolute top-1 right-1 bg-black/50 p-0.5 rounded-full z-10 text-white">
                                                 <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                                             </div>
@@ -242,7 +260,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
             ) : (
                 <div className="w-full max-w-[1000px] grid grid-cols-3 gap-1 md:gap-2 relative z-10 mt-4 mx-auto">
                     {images.map((img, idx) => {
-                        const imgUrl = img.Picture?.url || img.Picture?.formats?.large?.url;
+                        const imgUrl = img.Picture_video?.url || img.Picture_video?.formats?.large?.url;
                         if (!imgUrl) return null;
 
                         return (
@@ -254,7 +272,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                     setViewMode("carousel");
                                 }}
                             >
-                                {isVideo(img.Picture) ? (
+                                {isVideo(img.Picture_video) ? (
                                     <video
                                         src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl}
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -268,7 +286,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                         loading="lazy"
                                     />
                                 )}
-                                {isVideo(img.Picture) && (
+                                {isVideo(img.Picture_video) && (
                                     <div className="absolute top-2 right-2 bg-black/50 p-1.5 rounded-full z-10 text-white shadow-sm dropdown drop-shadow-md">
                                         <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                                     </div>

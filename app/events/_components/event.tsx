@@ -1,9 +1,4 @@
-
-
-
-
 import Link from "next/link";
-
 interface EventProps {
     event: {
         id: number;
@@ -11,18 +6,18 @@ interface EventProps {
         EventDescription: string;
         hasAddress: boolean;
         EventAddress?: string;
-        Image?: {
+        Media?: {
             id?: number;
-            Picture: any;
+            Picture_video: any;
             AltText?: string;
         }[];
     };
 }
 
 export default function Event({ event }: EventProps) {
-    const firstImg = event.Image && event.Image.length > 0 ? event.Image[0] : null;
-    const imgUrl = firstImg?.Picture?.url || firstImg?.Picture?.formats?.large?.url;
-
+    const firstImg = event.Media && event.Media.length > 0 ? event.Media[0] : null;
+    const imgUrl = firstImg?.Picture_video?.url || firstImg?.Picture_video?.formats?.large?.url;
+    // console.log(firstImg);
     return (
         <div className="bg-component rounded-2xl shadow-sm border border-foreground/10 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
             {imgUrl && (
