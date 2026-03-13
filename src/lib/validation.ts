@@ -29,7 +29,7 @@ export const ProductSchema = z.object({
     brand: z.string().min(1, "Brand is required"),
     name: z.string().min(1, "Name is required"),
     slug: z.string().min(1, "Slug is required"),
-    image: z.string().min(1, "Image is required"),
+    images: z.array(z.string()).min(1, "At least one image is required"),
     description: z.string().optional(),
     summary: z.string().optional(),
     sizesAvailable: z.array(z.string()).optional(),

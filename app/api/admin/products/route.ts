@@ -98,9 +98,9 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: "Product not found" }, { status: 404 });
         }
 
-        // Delete image from Gcore
-        if (product.image) {
-            await deleteFromGcore(product.image);
+        // Delete images from Gcore
+        if (product.images && product.images.length > 0) {
+            await Promise.all(product.images.map((img: string) => deleteFromGcore(img)));
         }
 
         // Delete product record

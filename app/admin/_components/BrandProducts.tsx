@@ -100,8 +100,8 @@ export default function BrandProducts({ brandId, brandName }: BrandProductsProps
                             className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all hover:border-gray-300"
                         >
                             <div className="relative w-full sm:w-20 h-32 sm:h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
-                                {product.image ? (
-                                    <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image} alt={product.name} fill className="object-contain p-2 hover:scale-110 transition-transform duration-300" />
+                                {product.images && product.images.length > 0 ? (
+                                    <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.images[0]} alt={product.name} fill className="object-contain p-2 hover:scale-110 transition-transform duration-300" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">No Img</div>
                                 )}

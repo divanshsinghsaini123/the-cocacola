@@ -15,7 +15,7 @@ interface IProduct {
     _id: string;
     slug: string;
     name: string;
-    image: string;
+    images: string[];
 }
 
 interface BrandPageProps {
@@ -103,13 +103,13 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
                                     key={String(product._id)}
                                     className="group flex flex-col items-center gap-3"
                                 >
-                                    <div className="w-full bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 group-hover:scale-[1.02] flex flex-col items-center justify-center p-6 aspect-square">
+                                    <div className="w-full bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 group-hover:scale-[1.02] flex flex-col items-center justify-center p-5 aspect-square">
                                         <div className="relative w-full h-full">
                                             <Image
-                                                src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image}
+                                                src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + (product.images?.[0] || "")}
                                                 alt={product.name}
                                                 fill
-                                                className="object-contain"
+                                                className="object-contain rounded-lg"
                                             />
                                         </div>
                                     </div>

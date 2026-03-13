@@ -7,6 +7,7 @@ import { Product } from "@/src/models/Product";
 import { Brand } from "@/src/models/Brand";
 import { Store } from "@/src/models/store";
 import StoreCarousel from "./_components/StoreCarousel";
+import ProductImageCarousel from "./_components/ProductImageCarousel";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ export async function generateMetadata(
         slug: productSlug,
         brand: brand._id,
         isActive: true
-    }).select("name description image").lean();
+    }).select("name description images").lean();
 
     if (!product) return { title: "Product Not Found" };
 
@@ -42,7 +43,9 @@ export async function generateMetadata(
         title: `${product.name} | ${brand.name} | Cloud9 Beverages`,
         description: product.description || `Discover ${product.name} from ${brand.name} at Cloud9 Beverages.`,
         openGraph: {
-            images: [process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image, ...previousImages],
+            images: product.images && product.images.length > 0
+                ? [process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.images[0], ...previousImages]
+                : previousImages,
         },
     }
 }
@@ -89,18 +92,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 <div className="flex flex-col lg:flex-row justify-between gap-12 lg:gap-10">
 
                     {/* Left Column: Image Container 544x544 */}
-                    <div className="w-full lg:w-[544px] aspect-square lg:h-[544px] bg-white rounded-[20px] flex items-center justify-center shadow-sm relative">
-
-                        <div className="relative w-full h-full transition-transform duration-500 hover:scale-105">
-                            <Image
-                                src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.image}
-                                alt={product.name}
-                                fill
-                                className="object-contain rounded-[20px]"
-                                priority
-                            />
-                        </div>
-                    </div>
+                    <ProductImageCarousel images={product.images || []} productName={product.name} />
 
                     {/* Right Column: Content 480px width */}
                     <div className="w-full lg:w-[450px] flex flex-col pt-2 md:mr-6">
