@@ -4,9 +4,6 @@ import React, { useState, useEffect } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { boolean } from "zod";
 
-
-
-
 interface EventGalleryCarouselProps {
     images: {
         id?: number;
@@ -157,10 +154,10 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                             {isVideo(images[actualActiveIndex]?.Picture_video) ? (
                                 <video
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || '')}
-                                    className="w-full h-full object-cover opacity-40 blur-3xl scale-125 transition-all duration-700"
-                                    autoPlay muted loop playsInline
-                                />
+                                        src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || '')}
+                                        className="w-full h-full object-cover opacity-40 blur-3xl scale-125 transition-all duration-700"
+                                        muted playsInline
+                                    />
                             ) : (
                                 <img
                                     src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || '')}
@@ -242,7 +239,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                         className={`relative rounded-lg md:rounded-xl overflow-hidden shadow-2xl transition-all duration-300 cursor-pointer border-[2px] md:border-[3px] ${offset === 0 ? 'w-12 h-16 md:w-16 md:h-24 border-white scale-110 z-10 box-content' : 'w-10 h-14 md:w-14 md:h-22 border-white/20 opacity-50 hover:opacity-100 hover:border-white/60 box-content'}`}
                                     >
                                         {isVideo(item.Picture_video) ? (
-                                            <video src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl} className="w-full h-full object-cover" autoPlay muted loop playsInline />
+                                            <video src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl} className="w-full h-full object-cover" muted playsInline />
                                         ) : (
                                             <img src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl} className="w-full h-full object-cover" alt="Thumbnail preview" />
                                         )}
