@@ -31,7 +31,7 @@ export interface Product {
     stores: string[];
     name: string;
     slug: string;
-    image: string;
+    images: string[];
     description: string;
     summary: string;
     sizesAvailable: string[];
@@ -59,7 +59,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
         stores: initialData?.stores || [],
         name: initialData?.name || "",
         slug: initialData?.slug || "",
-        image: initialData?.image || "",
+        images: initialData?.images || [],
         description: initialData?.description || "",
         summary: initialData?.summary || "",
         sizesAvailable: initialData?.sizesAvailable || [],
@@ -225,65 +225,47 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
                 <textarea maxLength={190} name="summary" value={formData.summary} onChange={handleChange} className="input-field h-24" required placeholder="Product summary..." />
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-semibold">Product Image URL <span className="text-red-500">*</span></label>
-                <div className="flex gap-4 items-center">
-                    {formData.image ? (
-                        <div className="flex items-center gap-4">
-                            <div className="relative w-20 h-20 bg-gray-50 border rounded overflow-hidden">
-                                <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + formData.image} alt="prev" fill className="object-contain" />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <GcoreUpload
-                                    folder="products"
-                                    maxSizeMB={0.5}
-                                    onSuccess={(url) => {
-                                        handleChange({ target: { name: 'image', value: url } } as any);
-                                    }}
-                                >
-                                    {({ open, isLoading }) => (
-                                        <button
-                                            type="button"
-                                            onClick={() => open()}
-                                            disabled={isLoading}
-                                            className="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
-                                        >
-                                            {isLoading ? "Uploading..." : "Change Image"}
-                                        </button>
-                                    )}
-                                </GcoreUpload>
+            <div className="space-y-4">
+                <label className="text-sm font-semibold">Product Images <span className="text-red-500">*</span></label>
+                <div className="flex flex-wrap gap-4 items-center">
+                    {formData.images && formData.images.map((imgUrl, index) => (
+                        <div key={index} className="relative w-24 h-24 bg-gray-50 border rounded overflow-hidden shadow-sm group">
+                            <Image src={`${process.env.NEXT_PUBLIC_GCORE_CDN_URL}/${imgUrl}`} alt={`prev-${index}`} fill className="object-contain" />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-all duration-200">
                                 <button
                                     type="button"
-                                    onClick={() => handleChange({ target: { name: 'image', value: "" } } as any)}
-                                    className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 rounded-md hover:bg-red-100 text-left"
+                                    onClick={() => {
+                                        setFormData(prev => ({ ...prev, images: prev.images.filter((_, i) => i !== index) }));
+                                    }}
+                                    className="px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-md shadow-md hover:bg-red-700 transition-colors"
                                 >
                                     Remove
                                 </button>
                             </div>
                         </div>
-                    ) : (
-                        <GcoreUpload
-                            folder="products"
-                            maxSizeMB={0.5}
-                            onSuccess={(url) => {
-                                handleChange({ target: { name: 'image', value: url } } as any);
-                            }}
-                        >
-                            {({ open, isLoading }) => (
-                                <button
-                                    type="button"
-                                    onClick={() => open()}
-                                    disabled={isLoading}
-                                    className="flex items-center justify-center w-full max-w-xs h-32 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-black hover:text-black transition-colors disabled:opacity-50"
-                                >
-                                    <span className="text-sm font-medium flex flex-col items-center">
-                                        {isLoading ? "Uploading..." : "+ Upload Image"}
-                                        {!isLoading && <span className="text-xs text-gray-400 mt-1">(800x800)</span>}
-                                    </span>
-                                </button>
-                            )}
-                        </GcoreUpload>
-                    )}
+                    ))}
+
+                    <GcoreUpload
+                        folder="products"
+                        maxSizeMB={0.5}
+                        onSuccess={(url) => {
+                            setFormData(prev => ({ ...prev, images: [...prev.images, url] }));
+                        }}
+                    >
+                        {({ open, isLoading }) => (
+                            <button
+                                type="button"
+                                onClick={() => open()}
+                                disabled={isLoading}
+                                className="flex items-center justify-center w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-black hover:text-black transition-colors disabled:opacity-50"
+                            >
+                                <span className="text-sm font-medium flex flex-col items-center gap-1">
+                                    {isLoading ? "Uploading..." : "+ Add Image"}
+                                    {!isLoading && <span className="text-[10px] text-gray-400">(800x800)</span>}
+                                </span>
+                            </button>
+                        )}
+                    </GcoreUpload>
                 </div>
             </div>
 

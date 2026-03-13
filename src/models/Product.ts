@@ -38,9 +38,9 @@ const ProductSchema = new Schema(
             unique: true,
         },
 
-        image: {
-            type: String, // main product image
-            required: true,
+        images: {
+            type: [String], // multiple brand images
+            default: [],
         },
 
         description: {
