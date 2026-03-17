@@ -4,6 +4,7 @@ import Table from "./_components/table";
 import Image from "next/image";
 
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {
     const strapioutput = await GetManufacturingData();
@@ -30,7 +31,8 @@ export interface TableRow {
 
 export default async function ManufacturingPage() {
     const data = await GetManufacturingData();
-    const tables = data.Section_table;
+    if (data?.DisablePage) return notFound();
+    const tables = data?.Section_table || [];
 
     return (
         <main className="min-h-screen bg-[#f1f5f9] p-2 sm:p-4 md:p-8 flex justify-center font-sans tracking-wide">

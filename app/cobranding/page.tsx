@@ -1,5 +1,6 @@
 import { GetCobrandingData } from "@/src/lib/strapi";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import CobrandingComponent from "./CobrandingComponent";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,7 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
     };
 }
 
-export default function CoBrandingPage() {
+export default async function CoBrandingPage() {
+    const data = await GetCobrandingData();
+    if (data?.DisablePage) return notFound();
     return (
         <>
             <CobrandingComponent />

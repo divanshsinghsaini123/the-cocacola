@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Mainpage_aboutus from "./_components/Mainpage_aboutus";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { SectionItem } from "@/types/home";
 export async function generateMetadata(): Promise<Metadata> {
     const strapioutput = await GetAboutUsPageData();
@@ -28,6 +29,7 @@ interface Feature {
 
 export default async function AboutUs() {
     const strapioutput = await GetAboutUsPageData();
+    if (strapioutput?.DisablePage) return notFound();
 
     const heroData = strapioutput?.Hero;
     // console.log(strapioutput)

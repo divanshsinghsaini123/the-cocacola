@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const data = await GetHomePageData();
-  if (!data) return notFound();
+  if (!data || data?.DisablePage) return notFound();
   return (
     <main>
       <Hero data={data.hero} />

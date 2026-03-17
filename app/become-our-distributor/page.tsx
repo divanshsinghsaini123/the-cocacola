@@ -1,5 +1,6 @@
 import { GetBecomeOurDistributorData, GetBecomeOurDistributorContactUsData } from "@/src/lib/strapi";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import DistributorClientView from "./_components/DistributorClientView";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -14,6 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BecomeOurDistributor() {
     const data = await GetBecomeOurDistributorData();
+    if (data?.DisablePage) return notFound();
     const contactData = await GetBecomeOurDistributorContactUsData();
     
     if (!data) {

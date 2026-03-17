@@ -1,5 +1,6 @@
 import { GetExtensionData } from "@/src/lib/strapi";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import ClientComponent from "./ClientComponent"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -15,6 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ExtensionPage() {
     const data = await GetExtensionData();
+    if (data?.DisablePage) return notFound();
     const rows = data?.Row || [];
     return <ClientComponent rows={rows} />
 }

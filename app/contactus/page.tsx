@@ -2,6 +2,7 @@
 import { GetContactUsPageData } from "../../src/lib/strapi"
 import ContactusClient from "./ContactusClient"
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {
     const strapioutput = await GetContactUsPageData();
@@ -15,6 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 export default async function ContactUs() {
     const data = await GetContactUsPageData();
+    if (data?.DisablePage) return notFound();
 
     return (
         <ContactusClient data={data} />

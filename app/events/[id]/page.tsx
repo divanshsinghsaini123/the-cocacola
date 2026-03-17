@@ -7,6 +7,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     const resolvedParams = await params;
     const { id } = resolvedParams;
     const data = await GetEventsData();
+    if (data?.DisablePage) return notFound();
     const event = data?.Event?.find((e: any) => e.id.toString() === id);
     // console.log(event);
     if (!event) {

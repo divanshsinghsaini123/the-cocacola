@@ -1,5 +1,6 @@
 import { GetEventsData } from "@/src/lib/strapi";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Event from "./_components/event";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -15,6 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function EventsPage() {
     const data = await GetEventsData();
+    if (data?.DisablePage) return notFound();
     const heading = data?.Heading;
     const description = data?.Description;
     const events = data?.Event;
