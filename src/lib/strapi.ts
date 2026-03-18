@@ -42,6 +42,11 @@ const STRAPI_URLCobranding = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/cobrandi
 if (!STRAPI_URLCobranding) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
+
+const STRAPI_URLBecomeOurDistributor = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/become-our-distributor?populate[Hero]=*&populate[Hero2][populate][LeftExpendableSection][populate]=*&populate[SEO][populate]=*&populate[Footer][populate][Footer_Points][populate]=*&populate[Hero2][populate][Service][populate][BulletPoint]=*";
+if (!STRAPI_URLBecomeOurDistributor) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
+}
 export async function GetHomePageData() {
     try {
         const response = await fetch(STRAPI_URLHomepage
@@ -167,13 +172,13 @@ export async function GetManufacturingData() {
             console.error(`Status: ${response.status} ${response.statusText}`);
             const errorText = await response.text();
             console.error(`Response: ${errorText}`);
-            throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to fetch Manufacturing page data: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         return data.data;
     }
     catch (error) {
-        console.error("Error fetching home page data:", error);
+        console.error("Error fetching Manufacturing page data:", error);
         return null;
     }
 }
@@ -195,13 +200,13 @@ export async function GetEventsData() {
             console.error(`Status: ${response.status} ${response.statusText}`);
             const errorText = await response.text();
             console.error(`Response: ${errorText}`);
-            throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to fetch Events page data: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         return data.data;
     }
     catch (error) {
-        console.error("Error fetching home page data:", error);
+        console.error("Error fetching Events page data:", error);
         return null;
     }
 }
@@ -221,13 +226,13 @@ export async function GetExtensionData() {
             console.error(`Failed to fetch from: ${STRAPI_URLExtension} Status: ${response.status} ${response.statusText}`);
             const errorText = await response.text();
             console.error(`Response: ${errorText}`);
-            throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to fetch Extension page data: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         return data.data;
     }
     catch (error) {
-        console.error("Error fetching home page data:", error);
+        console.error("Error fetching Extension page data:", error);
         return null;
     }
 }
@@ -247,13 +252,39 @@ export async function GetCobrandingData() {
             console.error(`Failed to fetch from: ${STRAPI_URLCobranding} Status: ${response.status} ${response.statusText}`);
             const errorText = await response.text();
             console.error(`Response: ${errorText}`);
-            throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to fetch Cobranding page data: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         return data.data;
     }
     catch (error) {
-        console.error("Error fetching home page data:", error);
+        console.error("Error fetching Cobranding page data:", error);
+        return null;
+    }
+}
+export async function GetBecomeOurDistributorData() {
+    try {
+        const response = await fetch(
+            STRAPI_URLBecomeOurDistributor,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        )
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_URLBecomeOurDistributor} Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch Become Our Distributor page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    }
+    catch (error) {
+        console.error("Error fetching Become Our Distributor page data:", error);
         return null;
     }
 }
