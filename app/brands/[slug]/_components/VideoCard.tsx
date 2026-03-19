@@ -23,8 +23,9 @@ export default function VideoCard({ videoUrl, index }: VideoCardProps) {
 
     if (!videoId) return null;
 
-    // Use maxresdefault for high quality, fallback might be needed but usually fine for brand videos
-    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    // Use hqdefault for guaranteed high quality, maxresdefault fails on videos without 1080p custom posters
+    // Using i.ytimg.com (YouTube's official image CDN) resolves network timeout issues on some ISPs
+    const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
     const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
 
     if (isPlaying) {
@@ -46,11 +47,10 @@ export default function VideoCard({ videoUrl, index }: VideoCardProps) {
             className="w-full h-full relative group cursor-pointer"
             onClick={() => setIsPlaying(true)}
         >
-            <Image
-                src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + thumbnailUrl}
+            <img
+                src={thumbnailUrl}
                 alt="Video Thumbnail"
-                fill
-                className="object-cover"
+                className="object-cover w-full h-full"
             />
             {/* Overlay for premium feel */}
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />

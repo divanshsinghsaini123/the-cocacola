@@ -150,16 +150,13 @@ export default function Footer(props: FooterProps) {
                 <div className="mb-9">
                     <Link href="/">
                         <Image
-                            // src="/assets/Home/logo-white-large.svg"
                             src={!isLocal ? process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + FooterImageUrl : `${STRAPI_BASE_URL}${FooterImageUrl}`}
-                            alt="The Coca-Cola Company"
+                            alt="Company Logo"
                             width={249}
-                            height={40}
-                            className="h-[40px] w-[249px]"
+                            height={60}
+                            className="h-[40px] md:h-[45px] w-auto object-contain object-left"
                             unoptimized={isLocal}
-
                         />
-
                     </Link>
                 </div>
 
