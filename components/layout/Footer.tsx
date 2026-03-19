@@ -63,10 +63,13 @@ interface FooterProps {
 export default function Footer(props: FooterProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const isLocal = STRAPI_BASE_URL.includes("localhost");
+
     const pathname = usePathname();
+    const isBecomeOurDisributor = pathname?.startsWith('/become-our-distributor');
+
     const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
     const { data, error } = useGetExtraDataQuery();
-    if (pathname?.startsWith('/admin')) return null;
+    if (pathname?.startsWith('/admin') || isBecomeOurDisributor) return null;
 
     const toggleSection = (section: string) => {
         setOpenSections((prev) => ({

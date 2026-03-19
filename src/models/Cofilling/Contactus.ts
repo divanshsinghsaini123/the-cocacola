@@ -4,7 +4,7 @@ import { boolean } from "zod";
 
 const ContactusCoffilingSchema = new Schema(
     {
-        fullName: {
+        name: {
             type: String,
             required: true
         },

@@ -112,3 +112,17 @@ export const ContactusCoffilingSchema = z.object(
         }),
     }
 )
+export const ContactUsBecomeOurDistributorSchema = z.object(
+    {
+        name: z.string().min(1, "Name is required"),
+        email: z.string().min(1, "Email is required"),
+        phone: z.string().min(1, "Phone is required"),
+        pinCode: z.string().min(1, "Pin code is required"),
+        address: z.string().min(1, "Address is required"),
+        city: z.string().min(1, "City is required"),
+        state: z.string().min(1, "State is required"),
+        businessType: z.string().min(1, "Business type is required"),
+        investmentPlan: z.string().min(1, "Investment plan is required"),
+        isActive: z.boolean().optional(),
+    }
+)

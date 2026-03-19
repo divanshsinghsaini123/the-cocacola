@@ -43,10 +43,16 @@ if (!STRAPI_URLCobranding) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
-const STRAPI_URLBecomeOurDistributor = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/become-our-distributor?populate[Hero]=*&populate[Hero2][populate][LeftExpendableSection][populate]=*&populate[SEO][populate]=*&populate[Footer][populate][Footer_Points][populate]=*&populate[Hero2][populate][Service][populate][BulletPoint]=*";
+const STRAPI_URLBecomeOurDistributor = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/become-our-distributor?populate[Hero][populate]=*&populate[Hero2][populate][LeftExpendableSection][populate]=*&populate[SEO][populate]=*&populate[Footer][populate][Footer_Points][populate]=*&populate[Hero2][populate][Service][populate][BulletPoint]=*";
 if (!STRAPI_URLBecomeOurDistributor) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
+
+const STRAPI_URLBecomeOurDistributorContactUs = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/become-our-distributor-contact-us?populate[FollowUsOn]=*";
+if (!STRAPI_URLBecomeOurDistributorContactUs) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
+}
+
 export async function GetHomePageData() {
     try {
         const response = await fetch(STRAPI_URLHomepage
@@ -285,6 +291,33 @@ export async function GetBecomeOurDistributorData() {
     }
     catch (error) {
         console.error("Error fetching Become Our Distributor page data:", error);
+        return null;
+    }
+}
+
+export async function GetBecomeOurDistributorContactUsData() {
+    try {
+        const response = await fetch(
+            STRAPI_URLBecomeOurDistributorContactUs,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        )
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_URLBecomeOurDistributorContactUs} Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch Become Our Distributor Contact Us page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    }
+    catch (error) {
+        console.error("Error fetching Become Our Distributor Contact Us page data:", error);
         return null;
     }
 }

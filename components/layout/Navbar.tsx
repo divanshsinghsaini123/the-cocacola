@@ -23,11 +23,11 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
     const [activeDropdown, setActiveDropdown] = useState<string>("");
     const [activeMobileDropdown, setActiveMobileDropdown] = useState<string>("");
     const isAdmin = pathname?.startsWith('/admin');
-    const isCofilling = pathname?.startsWith('/cofilling');
+    const isBecomeOurDisributor = pathname?.startsWith('/become-our-distributor');
     const isLocal = STRAPI_BASE_URL.includes("localhost");
     const { data, error } = useGetExtraDataQuery();
     const stickyNav = data?.data?.StickyNavbar;
-    if (isAdmin) return null;
+    if (isAdmin || isBecomeOurDisributor) return null;
 
     // Derived image URL
     const imageUrl = navbarImage
