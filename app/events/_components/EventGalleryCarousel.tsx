@@ -154,10 +154,10 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                             {isVideo(images[actualActiveIndex]?.Picture_video) ? (
                                 <video
-                                        src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || '')}
-                                        className="w-full h-full object-cover opacity-40 blur-3xl scale-125 transition-all duration-700"
-                                        muted playsInline
-                                    />
+                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || '')}
+                                    className="w-full h-full object-cover opacity-40 blur-3xl scale-125 transition-all duration-700"
+                                    muted playsInline
+                                />
                             ) : (
                                 <img
                                     src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + (images[actualActiveIndex]?.Picture_video?.url || '')}
@@ -303,6 +303,28 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
     );
 }
 
+// function CarouselCard({ img, index, eventName }: { img: any; index: number; eventName: string }) {
+//     const imgUrl = img.Picture?.url || img.Picture?.formats?.large?.url;
+//     if (!imgUrl) return null;
+
+//     return (
+//         <div className="group relative rounded-3xl overflow-hidden bg-component shadow-2xl border border-foreground/10 w-full h-full">
+//             <img
+//                 src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl}
+//                 alt={img.AltText || `${eventName} - Image ${index + 1}`}
+//                 className="w-full h-full object-fit transition-all duration-700"
+//                 loading="lazy"
+//             />
+//             {img.AltText && (
+//                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end">
+//                     <span className="text-white text-lg md:text-2xl font-semibold p-6 md:p-10 w-full tracking-wide">
+//                         {img.AltText}
+//                     </span>
+//                 </div>
+//             )}
+//         </div>
+//     );
+// }
 // function CarouselCard({ img, index, eventName }: { img: any; index: number; eventName: string }) {
 //     const imgUrl = img.Picture?.url || img.Picture?.formats?.large?.url;
 //     if (!imgUrl) return null;

@@ -53,6 +53,7 @@ interface SocialLinks {
     Youtube: SocialLink;
     X: SocialLink;
     Facebook: SocialLink;
+
 }
 
 interface FooterProps {
