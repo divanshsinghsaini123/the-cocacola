@@ -20,7 +20,7 @@ export default function Hero({ data }: HeroProps) {
                             src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imageUrl}
                             alt="Winter Adventure in Sweden"
                             fill
-                            className="object-cover object-center"
+                            className="object-cover object-right md:object-center"
                             priority
                             unoptimized={isLocal}
                         />
