@@ -167,10 +167,10 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
 
                 {/* Footer Descriptions */}
                 {(brand.descriptions?.d1 || brand.descriptions?.d2 || brand.descriptions?.d3) && (
-                    <div className="max-w-6xl mx-auto space-y-2 pb-20">
-                        {brand.descriptions?.d1 && <p className="text-m font-medium uppercase text-gray-800 leading-relaxed text-justify">{brand.descriptions.d1}</p>}
-                        {brand.descriptions?.d2 && <p className="text-m font-medium uppercase text-gray-800 leading-relaxed text-justify">{brand.descriptions.d2}</p>}
-                        {brand.descriptions?.d3 && <p className="text-m font-medium uppercase text-gray-800 leading-relaxed text-justify">{brand.descriptions.d3}</p>}
+                    <div className="max-w-6xl mx-auto space-y-2 pb-10">
+                        {brand.descriptions?.d1 && <p className="text-m font-medium uppercase text-gray-800 leading-relaxed text-center md:text-justify">{brand.descriptions.d1}</p>}
+                        {brand.descriptions?.d2 && <p className="text-m font-medium uppercase text-gray-800 leading-relaxed text-center md:text-justify">{brand.descriptions.d2}</p>}
+                        {brand.descriptions?.d3 && <p className="text-m font-medium uppercase text-gray-800 leading-relaxed text-center md:text-justify">{brand.descriptions.d3}</p>}
                     </div>
                 )}
 
