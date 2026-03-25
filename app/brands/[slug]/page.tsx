@@ -85,13 +85,13 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
             ) : (
                 // Fallback if no gallery images
                 <div className="w-full h-[300px] bg-gray-900 flex items-center justify-center">
-                    <h1 className="text-white text-4xl font-bold">{brand.name}</h1>
+                    {/* <h1 className="text-white text-4xl font-bold">{brand.name}</h1> */}
                 </div>
             )}
 
 
             {/* Content Section */}
-            <div className="max-w-6xl mx-auto px-6 space-y-12">
+            <div className="max-w-6xl mx-auto px-6 space-y-12 ">
                 {/* Products Section */}
                 {products.length > 0 && (
                     <div className="space-y-6">
