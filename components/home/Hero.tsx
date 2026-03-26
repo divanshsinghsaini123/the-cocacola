@@ -25,8 +25,8 @@ export default function Hero({ data }: HeroProps) {
                             unoptimized={isLocal}
                         />
 
-                        {/* Overlay gradient for better text readability if needed, though the image seems dark enough on the left */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent md:bg-gradient-to-r md:from-black/15 md:via-transparent md:to-transparent " />
+                        {/* Overlay gradient for better text readability */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-transparent md:bg-gradient-to-r md:from-black/80 md:via-black/10 md:to-transparent" />
                     </div>
 
                     {/* Content */}
