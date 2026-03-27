@@ -66,6 +66,7 @@ export default function AdminPortalPage() {
 
                     {/* Strapi Option */}
                     <a
+
                         href="https://strapicloud9-k6ghp.ondigitalocean.app/admin"
                         target="_blank"
                         rel="noopener noreferrer"
