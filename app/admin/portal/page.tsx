@@ -66,7 +66,7 @@ export default function AdminPortalPage() {
 
                     {/* Strapi Option */}
                     <a
-                        href="https://active-nurture-c4d476a309.strapiapp.com/admin/auth/login"
+                        href="https://strapicloud9-k6ghp.ondigitalocean.app/admin"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group relative flex flex-col p-8 rounded-[24px] bg-neutral-900/50 border border-neutral-800 hover:border-violet-500/50 transition-all duration-300 hover:bg-neutral-900/80 hover:shadow-2xl hover:shadow-violet-900/20 hover:-translate-y-1"
