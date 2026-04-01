@@ -34,7 +34,7 @@ export default async function EventsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {events?.map((event: any, index: number) => (
-                    <Event key={event.id} event={event} />
+                    <Event key={event.id} event={event} buttonStyle={data?.PageButton} />
                 ))}
             </div>
         </div>

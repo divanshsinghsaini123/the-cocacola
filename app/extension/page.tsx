@@ -18,5 +18,5 @@ export default async function ExtensionPage() {
     const data = await GetExtensionData();
     if (data?.DisablePage) return notFound();
     const rows = data?.Row || [];
-    return <ClientComponent rows={rows} />
+    return <ClientComponent rows={rows} buttonStyle={data?.PageButton} />
 }

@@ -12,9 +12,10 @@ interface EventProps {
             AltText?: string;
         }[];
     };
+    buttonStyle?: { BackgroundHexColor?: string; FontHexColor?: string };
 }
 
-export default function Event({ event }: EventProps) {
+export default function Event({ event, buttonStyle }: EventProps) {
     const firstImg = event.Media && event.Media.length > 0 ? event.Media[0] : null;
     const imgUrl = firstImg?.Picture_video?.url || firstImg?.Picture_video?.formats?.large?.url;
     // console.log(firstImg);
@@ -44,7 +45,9 @@ export default function Event({ event }: EventProps) {
                 )}
 
                 <div className="mt-auto pt-6 border-t border-foreground/10">
-                    <Link href={`/events/${event.id}`} className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-3 bg-red-600 hover:bg-red-700 text-[var(--component)] font-semibold rounded-xl transition-colors duration-200 shadow-sm hover:shadow">
+                    <Link href={`/events/${event.id}`} 
+                        style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
+                        className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-3 bg-red-600 hover:opacity-80 text-[var(--component)] font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow">
                         Explore
                         <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />

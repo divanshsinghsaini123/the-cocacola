@@ -5,6 +5,7 @@ import { useRef, useCallback, useState, useMemo } from 'react';
 import DownloadableDirectory from './DownloadableDirectory';
 interface ComponentProps {
     rows: Row[];
+    buttonStyle?: { BackgroundHexColor?: string; FontHexColor?: string };
 }
 interface Row {
     id: string;
@@ -24,7 +25,7 @@ const getInitials = (name: string) => {
 }
 
 
-export default function ClientComponent({ rows }: ComponentProps) {
+export default function ClientComponent({ rows, buttonStyle }: ComponentProps) {
     const contentRef = useRef<HTMLDivElement>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState<SortOption>('default');
@@ -91,7 +92,8 @@ export default function ClientComponent({ rows }: ComponentProps) {
             <div className="flex justify-end mb-6">
                 <button
                     onClick={handleDownload}
-                    className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
+                    className="flex items-center space-x-2 bg-red-600 hover:opacity-80 text-white px-5 py-2.5 rounded-xl transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
                     <Download className="w-5 h-5" />
                     <span className="font-bold text-sm tracking-wide">Download Image</span>
