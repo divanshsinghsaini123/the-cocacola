@@ -82,4 +82,11 @@ export interface HomePageData {
     socialLinks?: any;
     NavbarImage?: StrapiImage;
     attributes?: HomePageData; // For handling nested structure if API returns "attributes"
+    PageButton?: PageButton;
+}
+
+export interface PageButton {
+    id?: number;
+    FontHexColor?: string;
+    BackgroundHexColor?: string;
 }

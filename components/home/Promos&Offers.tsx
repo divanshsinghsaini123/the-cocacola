@@ -7,8 +7,9 @@ import { PromosAndOffersData, SectionItem } from "@/types/home";
 
 interface PromosAndOffersProps {
     data: PromosAndOffersData;
+    buttonStyle?: { BackgroundHexColor?: string; FontHexColor?: string };
 }
-export default function PromosAndOffers({ data }: PromosAndOffersProps) {
+export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const isLocal = STRAPI_BASE_URL.includes("localhost");
     // Fallback static data if data.items is missing or empty
@@ -156,7 +157,9 @@ export default function PromosAndOffers({ data }: PromosAndOffersProps) {
 
                 {/* View All Button */}
                 <div className="flex justify-center mt-8 sm:mt-12">
-                    <Link href="#" className="bg-black text-white w-[90%] sm:w-auto px-14 md:px-20 py-2 rounded-full font-bold text-[16px] tracking-wide hover:bg-gray-800 transition-colors text-center block sm:inline-block">
+                    <Link href="#" 
+                       style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
+                       className="bg-black text-white w-[90%] sm:w-auto px-14 md:px-20 py-2 rounded-full font-bold text-[16px] tracking-wide hover:opacity-80 transition-all text-center block sm:inline-block">
                         View all Offerings
                     </Link>
                 </div>

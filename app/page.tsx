@@ -23,8 +23,8 @@ export default async function Home() {
   if (!data || data?.DisablePage) return notFound();
   return (
     <main>
-      <Hero data={data.hero} />
-      <PromosAndOffers data={data.promosAndOffers} />
+      <Hero data={data.hero} buttonStyle={data.PageButton} />
+      <PromosAndOffers data={data.promosAndOffers} buttonStyle={data.PageButton} />
       <Features data={data.features} />
       <MoreFromCocaCola data={data.moreFromCocaCola} />
       <ExploreBrands />

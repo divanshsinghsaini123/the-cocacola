@@ -4,10 +4,11 @@ import { HeroData } from "@/types/home";
 
 interface HeroProps {
     data: HeroData;
+    buttonStyle?: { BackgroundHexColor?: string; FontHexColor?: string };
 }
 const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL!;
 
-export default function Hero({ data }: HeroProps) {
+export default function Hero({ data, buttonStyle }: HeroProps) {
     const isLocal = STRAPI_BASE_URL.includes("localhost");
     const imageUrlMobile = data?.imageMobile?.data?.attributes?.formats?.large?.url || data?.imageMobile?.formats?.large?.url || data?.imageMobile?.url || "";
     const imageUrlDesktop = data?.imageDesktop?.data?.attributes?.formats?.large?.url || data?.imageDesktop?.formats?.large?.url || data?.imageDesktop?.url || "";
@@ -57,7 +58,8 @@ export default function Hero({ data }: HeroProps) {
                             <div className="mt-auto md:mt-8 pt-4 w-full md:w-auto flex justify-center md:block">
                                 {data.ShowButton && <Link
                                     href={data.ButttonLink || "#"}
-                                    className="flex items-center justify-center w-[290px] h-[40px] lg:w-[327px] lg:h-[40px] md:inline-flex bg-[var(--component)] text-black text-[18px] font-bold rounded-full hover:bg-gray-100 transition-colors duration-200"
+                                    style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
+                                    className="flex items-center justify-center w-[290px] h-[40px] lg:w-[327px] lg:h-[40px] md:inline-flex bg-[var(--component)] text-black text-[18px] font-bold rounded-full hover:bg-opacity-80 transition-all duration-200"
                                 >
                                     {data.ButtonText}
                                 </Link>}

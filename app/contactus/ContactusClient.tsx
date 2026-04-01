@@ -12,6 +12,7 @@ interface ContactData {
     Contact_number: string;
     Terms_of_use?: any; // BlocksContent type from Strapi, keeping as any for now or specific block type if available
     Privacy_policy_page?: any; // BlocksContent type from Strapi
+    PageButton?: { BackgroundHexColor?: string; FontHexColor?: string };
 }
 
 interface ContactusProps {
@@ -467,7 +468,8 @@ export default function ContactusClient({ data }: ContactusProps) {
                                     <div className="flex justify-center">
                                         <button
                                             type="submit"
-                                            className="w-full md:w-auto px-12 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors text-lg"
+                                            style={data?.PageButton ? { backgroundColor: data.PageButton.BackgroundHexColor, color: data.PageButton.FontHexColor } : undefined}
+                                            className="w-full md:w-auto px-12 py-4 bg-black text-white font-bold rounded-full hover:opacity-80 transition-all text-lg"
                                         // disabled={!agreed}
                                         >
                                             Submit

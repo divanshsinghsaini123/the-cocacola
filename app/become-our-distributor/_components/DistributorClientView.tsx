@@ -17,7 +17,7 @@ export default function DistributorClientView({
 }) {
     const [activeTab, setActiveTab] = useState<"home" | "contact">("home");
 
-    const { Hero, Hero2, Footer } = homeData || {};
+    const { Hero, Hero2, Footer, PageButton: buttonStyle } = homeData || {};
 
     // Render Home/Main View
     const renderHome = () => (
@@ -57,7 +57,7 @@ export default function DistributorClientView({
                     </p>
 
                     <div className="flex items-center justify-center w-full">
-                        <button onClick={() => setActiveTab("contact")} className="flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-8 py-3.5 rounded-full font-medium text-base transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:-translate-y-1">
+                        <button onClick={() => setActiveTab("contact")} style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-8 py-3.5 rounded-full font-medium text-base transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:-translate-y-1">
                             <span>Apply Dealership</span>
                             <div className="bg-white rounded-full p-1.5 text-[#3FA2F6]">
                                 <ArrowRight size={18} strokeWidth={3} />
@@ -96,7 +96,7 @@ export default function DistributorClientView({
                         </div>
 
                         <div className="mb-2 mt-auto">
-                            <button className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-7 py-3 rounded-full font-medium transition-colors shadow-lg shadow-blue-500/20">
+                            <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-7 py-3 rounded-full font-medium transition-colors shadow-lg shadow-blue-500/20">
                                 <span>Learn More</span>
                                 <div className="bg-white text-[#3FA2F6] rounded-full p-1.5">
                                     <ArrowRight size={16} strokeWidth={3} />
@@ -161,7 +161,7 @@ export default function DistributorClientView({
 
                                     {isLast && (
                                         <div className="mt-auto flex justify-end w-full">
-                                            <button className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-6 py-3 rounded-full font-medium transition-transform hover:scale-105 shadow-lg shadow-blue-500/20">
+                                            <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-6 py-3 rounded-full font-medium transition-transform hover:scale-105 shadow-lg shadow-blue-500/20">
                                                 <span>All Services</span>
                                                 <div className="bg-white text-[#3FA2F6] rounded-full p-1.5">
                                                     <ArrowRight size={16} strokeWidth={3} />
@@ -322,7 +322,7 @@ export default function DistributorClientView({
                         </select>
 
                         <div className="mt-2 flex justify-start">
-                            <button type="submit" className="bg-[#4aa5f8] hover:bg-blue-400 text-white px-9 py-3 rounded-full font-medium transition-all shadow-md mt-2 text-[15px]">
+                            <button type="submit" style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="bg-[#4aa5f8] hover:bg-blue-400 text-white px-9 py-3 rounded-full font-medium transition-all shadow-md mt-2 text-[15px]">
                                 Submit
                             </button>
                         </div>
@@ -406,6 +406,7 @@ export default function DistributorClientView({
                 <div className="flex shrink-0 order-2 lg:order-none">
                     <button
                         onClick={() => setActiveTab("contact")}
+                        style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
                         className="flex items-center space-x-1.5 md:space-x-2 bg-[#3FA2F6] hover:bg-blue-500 text-white px-3 md:px-5 py-2 md:py-2.5 rounded-full font-medium transition-colors shadow-lg"
                     >
                         <span className="text-xs md:text-sm">Let's Talk</span>
