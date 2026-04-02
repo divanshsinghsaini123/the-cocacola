@@ -37,7 +37,8 @@ export interface HeroData {
     ButtonText: string;
     ButttonLink: string | null;
     ShowButton: boolean;
-    image: StrapiImage;
+    imageMobile: StrapiImage;
+    imageDesktop: StrapiImage;
 }
 
 // Common Item Type for lists
