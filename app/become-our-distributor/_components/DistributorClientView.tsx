@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowRight, Megaphone, CheckCircle2, Map, Phone, Mail } from "lucide-react";
 import Accordion from "./Accordion";
 

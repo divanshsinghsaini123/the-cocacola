@@ -39,6 +39,7 @@ interface FooterData {
     FooterImage: {
         url: string;
     };
+    FooterHexColorCode?: string;
 }
 
 interface SocialLink {
@@ -143,9 +144,10 @@ export default function Footer(props: FooterProps) {
     const section1Name = footerData?.Section1?.LinkSectionName || "Help";
     const section2Name = footerData?.Section2?.LinkSectionName || "Shop & Visit";
     const section3Name = footerData?.Section3?.LinkSectionName || "Legal";
+    const footerHexCode = footerData?.FooterHexColorCode || "black";
 
     return (
-        <footer className="bg-black text-white pb-8 w-full">
+        <footer className="text-white pb-8 w-full" style={{ backgroundColor: footerHexCode }}>
             <div className="max-w-7xl px-[18px] lg:px-[70px] pt-12 lg:pt-[120px] mx-auto">
                 {/* Logo Section */}
                 <div className="mb-9">

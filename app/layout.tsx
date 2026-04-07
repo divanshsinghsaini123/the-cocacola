@@ -73,6 +73,7 @@ export default async function RootLayout({
   const footerData = data?.footer || data?.attributes?.footer;
   const socialLinksData = data?.socialLinks || data?.attributes?.socialLinks;
   const navbarImage = data?.NavbarImage?.url || data?.attributes?.NavbarImage?.url;
+  const navbarColor = data?.NavbarHaxCode || "#FFFFFF";
   return (
     <html lang="en">
       <body
@@ -80,7 +81,7 @@ export default async function RootLayout({
         suppressHydrationWarning={true}
       >
         <StoreProvider>
-          <NavbarServer navbarImage={navbarImage} />
+          <NavbarServer navbarImage={navbarImage} navbarColor={navbarColor} />
           {children}
           <Footer
             footerData={footerData}

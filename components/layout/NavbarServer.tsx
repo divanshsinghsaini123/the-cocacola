@@ -5,8 +5,9 @@ import Loading from "@/app/loading";
 export const revalidate = 3600;
 interface NavbarServerProps {
     navbarImage: string | undefined;
+    navbarColor: string | undefined;
 }
-export default async function NavbarServer({ navbarImage }: NavbarServerProps) {
+export default async function NavbarServer({ navbarImage, navbarColor }: NavbarServerProps) {
     var serializedStores;
     try {
         await connectDB();
@@ -18,7 +19,7 @@ export default async function NavbarServer({ navbarImage }: NavbarServerProps) {
     }
     finally {
         // Convert ObjectId to string to avoid serialization warnings
-        return <Navbar stores={serializedStores} navbarImage={navbarImage} />;
+        return <Navbar stores={serializedStores} navbarImage={navbarImage} navbarColor={navbarColor} />;
     }
 
 }

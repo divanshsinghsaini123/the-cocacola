@@ -15,8 +15,9 @@ interface Store {
 interface NavbarProps {
     stores: Store[];
     navbarImage: string | undefined;
+    navbarColor: string | undefined;
 }
-export default function Navbar({ stores, navbarImage }: NavbarProps) {
+export default function Navbar({ stores, navbarImage, navbarColor }: NavbarProps) {
     const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
@@ -61,10 +62,14 @@ export default function Navbar({ stores, navbarImage }: NavbarProps) {
         });
     }
     console.log('DEBUG: stickyNav', stickyNav);
+    // console.log('navbarColor', navbarColor);
     return (
         <>
             {stickyNav && <div className="h-20" />}
-            <nav className={`bg-[var(--component)] z-50 transition-all duration-300 ${stickyNav ? "fixed top-0 left-0 w-full shadow-md" : "relative"}`}>
+            <nav
+                className={`z-50 transition-all duration-300 ${stickyNav ? "fixed top-0 left-0 w-full shadow-md" : "relative"}`}
+                style={{ backgroundColor: navbarColor }}
+            >
                 <div className="max-w-7xl mx-auto px-3 sm:px-3 lg:px-3">
                     <div className="flex items-center justify-between md:justify-start gap-14 h-20">
                         {/* Logo */}

@@ -15,7 +15,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
     return (
         <section className="w-full bg-[var(--background)] pt-4 lg:pt-14 pb-4 lg:pb-14">
             <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-6">
-                <div className="relative w-full h-[450px] md:h-[540px] lg:h-[570px] rounded-[18px] overflow-hidden">
+                <div className="relative w-full h-[500px] md:h-[540px] lg:h-[570px] rounded-[18px] overflow-hidden">
                     {/* Background Image */}
                     <div className="absolute inset-0 ">
                         {imageUrlMobile && (
@@ -23,7 +23,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                                 src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imageUrlMobile}
                                 alt="Winter Adventure in Sweden"
                                 fill
-                                className="object-cover object-right md:hidden"
+                                className="object-fit object-right md:hidden"
                                 priority
                                 unoptimized={isLocal}
                             />
@@ -50,7 +50,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                                 <h1 className="leading-[1.3] text-[23px] md:text-[40px] lg:text-[35px] font-bold text-white">
                                     {data.heading}
                                 </h1>
-                                <p className="text-[16px] md:text-[16px] leading-[1.5] max-w-[500px] text-white px-3 md:px-0">
+                                <p className="text-left text-[16px] md:text-[16px] leading-[1.5] max-w-[500px] text-white px-3 md:px-0">
                                     {data.description[0]?.children[0]?.text}
                                 </p>
                             </div>
