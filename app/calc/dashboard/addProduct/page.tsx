@@ -158,17 +158,17 @@ export default function AddProductForm() {
             <div className="max-w-4xl mx-auto space-y-8">
 
                 {/* Header */}
-                <div className="flex justify-between items-center bg-white p-6 justify-center rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100 gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Add New Calculator Product</h1>
+                        <h1 className="text-2xl font-bold text-gray-900">{id ? 'Edit Calculator Product' : 'Add New Calculator Product'}</h1>
                         <p className="text-sm text-gray-500 mt-1">Define base product info, states, and dynamic pricing models for various sizes.</p>
                     </div>
                     <button
                         onClick={handleSave}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-medium shadow-sm transition-all flex items-center gap-2"
+                        className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto justify-center px-6 py-3 sm:py-2.5 rounded-xl font-medium shadow-sm transition-all flex items-center gap-2"
                     >
                         <Save size={18} />
-                        Save Product
+                        {id ? 'Save Changes' : 'Save Product'}
                     </button>
                 </div>
 
