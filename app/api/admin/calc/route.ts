@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
         let unhashpassword = await bcrypt.compare(password, admin.password);
         // Verify Password (hashed password)
-        if (!unhashpassword || !admin.isActive || admin.role !== "Superadmin") {
+        if (!unhashpassword || !admin.isActive || admin.role !== "admin") {
             return NextResponse.json({ error: "Invalid password" }, { status: 401 });
         }
 
@@ -49,12 +49,11 @@ export async function POST(request: Request) {
         const response = NextResponse.json({ message: "Login successful" });
 
         // Set Cookie
-        response.cookies.set("admin_token", token, {
+        response.cookies.set("calc_token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             path: "/",
-            maxAge: 3600, // 1 hour
         });
 
         return response;
@@ -66,6 +65,6 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE() {
-    (await cookies()).delete("admin_token");
+    (await cookies()).delete("calc_token");
     return NextResponse.json({ message: "Logged out" });
 }

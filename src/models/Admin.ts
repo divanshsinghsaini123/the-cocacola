@@ -18,6 +18,11 @@ const AdminSchema = new Schema(
             type: Boolean,
             default: true,
         },
+        role: {
+            type: String,
+            enum: ["Superadmin", "admin"],
+            default: "editor",
+        },
     },
     { timestamps: true }
 );

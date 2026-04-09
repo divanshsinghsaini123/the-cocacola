@@ -6,8 +6,17 @@ export function proxy(req: NextRequest) {
 
     // Protect admin routes
     if (req.nextUrl.pathname.startsWith("/admin")) {
-        // Skip check for login page
+        // If user is accessing login page
         if (req.nextUrl.pathname === "/admin/login") {
+            if (token) {
+                try {
+                    jwt.verify(token, process.env.JWT_SECRET!);
+                    return NextResponse.redirect(new URL("/admin/portal", req.url));
+                } catch (err) {
+                    // Invalid token, just show login page
+                    return NextResponse.next();
+                }
+            }
             return NextResponse.next();
         }
 
