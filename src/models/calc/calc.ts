@@ -61,6 +61,7 @@ const CalSchema = new Schema(
                     ],
                     default: [
                         { name: 'GST', rate: 0.15 },
+                        { name: 'Rejection', rate: 0.03 },
                         { name: 'Carton Cost', rate: 150.17 },
                         { name: 'Transportation', rate: 8.00 },
                         { name: 'JHPL Margin', rate: 10.00 }
