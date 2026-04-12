@@ -336,8 +336,7 @@ export async function GetStoreLocatorData() {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                },
-                next: { revalidate: 60 },
+                }
             }
         )
         if (!response.ok) {
