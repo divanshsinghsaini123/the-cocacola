@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Edit2, Trash2, Package } from 'lucide-react';
+import { Plus, Edit2, Trash2, Package, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface Product {
@@ -36,6 +36,11 @@ export default function DashboardPage() {
         fetchProducts();
     }, []);
 
+    const hangleLogout = async () => {
+        const res = await fetch('/api/admin/calc', { method: 'DELETE' });
+        if (!res.ok) throw new Error("Failed to logout");
+        router.push("/calc");
+    }
     const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this product?")) {
             // TODO: Delete API Request here
@@ -64,13 +69,22 @@ export default function DashboardPage() {
                         </h1>
                         <p className="text-sm text-gray-500 mt-1">Manage your calculator products, prices, and sizes.</p>
                     </div>
-                    <Link
-                        href="/calc/dashboard/addProduct"
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-medium shadow-sm transition-all flex items-center gap-2"
-                    >
-                        <Plus size={18} />
-                        Add New Product
-                    </Link>
+                    <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-3 mt-4 sm:mt-0">
+                        <Link
+                            href="/calc/dashboard/addProduct"
+                            className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto justify-center px-6 py-3 sm:py-2.5 rounded-xl font-medium shadow-sm transition-all flex items-center gap-2"
+                        >
+                            <Plus size={18} />
+                            Add New Product
+                        </Link>
+                        <button
+                            onClick={hangleLogout}
+                            className="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 w-full sm:w-auto justify-center px-6 py-3 sm:py-2.5 rounded-xl font-medium shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+                        >
+                            <LogOut size={18} />
+                            Logout
+                        </button>
+                    </div>
                 </div>
 
                 {/* Table Section */}
