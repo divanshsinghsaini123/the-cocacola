@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Save, MapPin } from 'lucide-react';
-
+import { useSearchParams, useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
 const INDIAN_STATES = [
     "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
     "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
@@ -44,6 +45,22 @@ interface SizeItem {
 }
 
 export default function AddProductForm() {
+
+    const params = useSearchParams();
+    const router = useRouter();
+    const id = params.get('id');
+    useEffect(() => {
+        if (id) {
+            fetch(`/api/admin/calc/dashboard?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    // Make sure these match the key sent from your backend!
+                    setProductName(data.products.productname);
+                    setSelectedStates(data.products.states);
+                    setSizes(data.products.sizeAndChanges);
+                });
+        }
+    }, [id]);
     const [productName, setProductName] = useState("");
     const [selectedStates, setSelectedStates] = useState<string[]>([]);
 
@@ -70,7 +87,7 @@ export default function AddProductForm() {
             bottleComponents: JSON.parse(JSON.stringify(DEFAULT_BOTTLE_COMPONENTS)),
             extraComponents: JSON.parse(JSON.stringify(DEFAULT_EXTRA_COMPONENTS)),
         }]);
-    };
+    }
 
     const removeSizePanel = (index: number) => {
         const newSizes = [...sizes];
@@ -91,19 +108,53 @@ export default function AddProductForm() {
     };
 
     const handleSave = async () => {
+        if (!productName.trim()) return toast.error("Product name is required!");
+        if (selectedStates.length === 0) return toast.error("Please select at least one state!");
+        
+        for (let i = 0; i < sizes.length; i++) {
+            if (!sizes[i].size.trim()) return toast.error(`Please provide a size label for variant ${i + 1}`);
+            if (!sizes[i].bottlesPerCase) return toast.error(`Please enter Bottles Per Case for variant ${i + 1}`);
+        }
+
         const payload = {
             productname: productName,
             states: selectedStates,
-            sizeAndChanges: sizes
+            // Safely parse to number so Zod doesn't complain about strings!
+            sizeAndChanges: sizes.map(sz => ({
+                ...sz,
+                bottlesPerCase: Number(sz.bottlesPerCase)
+            }))
         };
 
-        console.log("Saving payload to DB:", payload);
-        alert("Check console for the payload object saved! Next step: send this to your backend API.");
-        // TODO: await fetch('/api/calc/product', { method: 'POST', body: JSON.stringify(payload) })
+        try {
+            // If we have an ID from the URL, it's an edit! We use PUT. Otherwise, we POST a new one.
+            const url = id ? `/api/admin/calc/dashboard?id=${id}` : '/api/admin/calc/dashboard';
+            const method = id ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Failed to save product");
+            }
+
+            toast.success(`Product successfully ${id ? 'updated' : 'created'}!`);
+            setTimeout(() => {
+                router.push('/calc/dashboard');
+            }, 1000);
+        } catch (error: any) {
+            toast.error(error.message || "Error saving product");
+            console.error("Save error:", error);
+        }
     };
 
     return (
         <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
+            <Toaster position="top-right" />
             <div className="max-w-4xl mx-auto space-y-8">
 
                 {/* Header */}

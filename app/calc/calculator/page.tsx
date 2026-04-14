@@ -37,48 +37,12 @@ export default function CalculatorWorksheetPage() {
 
     useEffect(() => {
         // MOCK FETCH: Simulate getting full data from the DB
-        const mockProducts: Product[] = [
-            {
-                _id: 'p1',
-                productname: 'Classic Cola',
-                states: ['Delhi', 'Haryana', 'Maharashtra'],
-                sizeAndChanges: [
-                    {
-                        size: '500 ML',
-                        bottlesPerCase: 48,
-                        bottleComponents: [
-                            { name: 'Preform', rate: 1.50 },
-                            { name: 'Caps', rate: 0.45 },
-                            { name: 'Labels', rate: 0.75 },
-                            { name: 'Shrink/C.Box', rate: 0.25 }
-                        ],
-                        extraComponents: [
-                            { name: 'GST', rate: 7.20 },
-                            { name: 'Transportation', rate: 8.00 },
-                            { name: 'JHPL Margin', rate: 10.00 }
-                        ]
-                    },
-                    {
-                        size: '1 Ltr',
-                        bottlesPerCase: 24,
-                        bottleComponents: [
-                            { name: 'Preform', rate: 2.50 },
-                            { name: 'Caps', rate: 0.45 },
-                            { name: 'Labels', rate: 0.85 },
-                            { name: 'Shrink/C.Box', rate: 0.35 }
-                        ],
-                        extraComponents: [
-                            { name: 'GST', rate: 4.50 },
-                            { name: 'Transportation', rate: 5.00 },
-                            { name: 'JHPL Margin', rate: 12.00 }
-                        ]
-                    }
-                ]
-            }
-        ];
-
-        // TODO: Replace with real api fetch eg. await fetch('/api/calc/products')
-        setProducts(mockProducts);
+        async function fetchProducts() {
+            const mockProducts = await fetch('/api/admin/calc/calculator');
+            const data = await mockProducts.json();
+            setProducts(data.products);
+        }
+        fetchProducts();
     }, []);
 
     const selectedProduct = products.find(p => p._id === selectedProductId);

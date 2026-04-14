@@ -126,3 +126,26 @@ export const ContactUsBecomeOurDistributorSchema = z.object(
         isActive: z.boolean().optional(),
     }
 )
+
+export const CalculatorProductSchema = z.object({
+    productname: z.string().min(1, "Product name is required"),
+    states: z.array(z.string()).min(1, "At least one state is required"),
+    sizeAndChanges: z.array(
+        z.object({
+            size: z.string().min(1, "Size is required"),
+            bottlesPerCase: z.number().min(1, "Bottles per case is required"),
+            bottleComponents: z.array(
+                z.object({
+                    name: z.string().min(1, "Component name is required"),
+                    rate: z.number(),
+                })
+            ).default([]),
+            extraComponents: z.array(
+                z.object({
+                    name: z.string().min(1, "Component name is required"),
+                    rate: z.number(),
+                })
+            ).default([]),
+        })
+    ).optional().default([]),
+});

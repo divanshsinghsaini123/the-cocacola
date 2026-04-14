@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Plus, Edit2, Trash2, Package } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface Product {
     _id: string;
@@ -12,6 +13,7 @@ interface Product {
 }
 
 export default function DashboardPage() {
+    const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -20,12 +22,10 @@ export default function DashboardPage() {
         const fetchProducts = async () => {
             setIsLoading(true);
             try {
-                // TODO: Replace with actual database fetch logic e.g., await fetch('/api/calc/products').then(res => res.json())
-                const mockData = [
-                    { _id: '1', productname: 'Classic Cola', states: ['Delhi', 'Haryana'], createdAt: '2026-04-10' },
-                    { _id: '2', productname: 'Orange Soda', states: ['Maharashtra', 'Goa', 'Karnataka', 'Kerala'], createdAt: '2026-04-11' },
-                ];
-                setProducts(mockData);
+                const res = await fetch('/api/admin/calc/dashboard');
+                if (!res.ok) throw new Error("Failed to fetch");
+                const data = await res.json();
+                setProducts(data.products || []);
             } catch (error) {
                 console.error("Failed to fetch products:", error);
             } finally {
@@ -40,15 +40,15 @@ export default function DashboardPage() {
         if (confirm("Are you sure you want to delete this product?")) {
             // TODO: Delete API Request here
             // await fetch(`/api/calc/products?id=${id}`, { method: 'DELETE' });
-
-            // Remove from UI
+            const res = await fetch(`/api/admin/calc/dashboard?id=${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error("Failed to delete");
+            const data = await res.json();
             setProducts(products.filter(p => p._id !== id));
         }
     };
 
     const handleEdit = (id: string) => {
-        // TODO: Push to actual edit route, e.g. router.push(`/calc/dashboard/editProduct/${id}`)
-        alert(`Ye Edit ka button dabaya. Isko apne Edit Page pe redirect karna hoga. Product ID: ${id}`);
+        router.push(`/calc/dashboard/addProduct?id=${id}`);
     };
 
     return (
