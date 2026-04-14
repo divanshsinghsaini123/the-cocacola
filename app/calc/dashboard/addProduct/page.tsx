@@ -110,7 +110,7 @@ export default function AddProductForm() {
     const handleSave = async () => {
         if (!productName.trim()) return toast.error("Product name is required!");
         if (selectedStates.length === 0) return toast.error("Please select at least one state!");
-        
+
         for (let i = 0; i < sizes.length; i++) {
             if (!sizes[i].size.trim()) return toast.error(`Please provide a size label for variant ${i + 1}`);
             if (!sizes[i].bottlesPerCase) return toast.error(`Please enter Bottles Per Case for variant ${i + 1}`);
