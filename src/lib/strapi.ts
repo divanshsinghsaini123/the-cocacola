@@ -53,6 +53,12 @@ if (!STRAPI_URLBecomeOurDistributorContactUs) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
+
+const STRAPI_URLStoreLocator = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/store-locator?populate=*";
+if (!STRAPI_URLStoreLocator) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
+}
+
 export async function GetHomePageData() {
     try {
         const response = await fetch(STRAPI_URLHomepage
@@ -318,6 +324,33 @@ export async function GetBecomeOurDistributorContactUsData() {
     }
     catch (error) {
         console.error("Error fetching Become Our Distributor Contact Us page data:", error);
+        return null;
+    }
+}
+
+export async function GetStoreLocatorData() {
+    try {
+        const response = await fetch(
+            STRAPI_URLStoreLocator,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        )
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_URLStoreLocator} Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch Store Locator page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    }
+    catch (error) {
+        console.error("Error fetching Store Locator page data:", error);
         return null;
     }
 }
