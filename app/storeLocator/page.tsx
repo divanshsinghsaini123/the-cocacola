@@ -63,8 +63,8 @@ export default function StoreLocator() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                fetchStores(`?lat=${lat}&lng=${lng}`);
+                const lon = position.coords.longitude;
+                fetchStores(`?lat=${lat}&lon=${lon}`);
             },
             () => {
                 setError("Unable to retrieve your location. Please check your browser permissions.");
