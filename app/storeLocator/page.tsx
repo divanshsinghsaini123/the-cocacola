@@ -4,6 +4,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import Map to prevent SSR "window is not defined" crashes
+const StoreMap = dynamic(() => import("./Map"), {
+    ssr: false,
+    loading: () => (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-black"></div>
+        </div>
+    )
+});
 
 export default function StoreLocator() {
     const [stores, setStores] = useState<any[]>([]);
@@ -11,6 +22,8 @@ export default function StoreLocator() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [pincode, setPincode] = useState<string>("");
+    const [selectedState, setSelectedState] = useState<string>("All");
+    const [selectedStore, setSelectedStore] = useState<any>(null);
 
     // Initial fetch to show all available stores (unsorted)
     useEffect(() => {
@@ -26,6 +39,8 @@ export default function StoreLocator() {
 
             if (res.ok) {
                 setStores(data.stores || []);
+                setSelectedState("All");
+                setSelectedStore(null); // Clear selection on new search
                 if (data.pageData) {
                     setPageConfig(data.pageData);
                 }
@@ -67,74 +82,223 @@ export default function StoreLocator() {
         fetchStores(`?pincode=${pincode.trim()}`);
     };
 
+    const INDIAN_STATES = [
+        "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar",
+        "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa",
+        "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka",
+        "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
+        "Mizoram", "Nagaland", "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+        "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+    ];
+
+    const filteredStores = selectedState === "All"
+        ? stores
+        : stores.filter(s => s.state?.trim().toLowerCase() === selectedState.toLowerCase());
+
     return (
-        <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen">
-            <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Store Locator</h1>
+        <div className="flex flex-col h-screen max-h-screen bg-white overflow-hidden">
+            {/* TOP HEADER & SEARCH BAR */}
+            <div className="bg-white border-b border-gray-200 shrink-0">
+                <div className="max-w-[1600px] mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <h1 className="text-2xl font-bold text-gray-900 tracking-tight">STORE LOCATOR</h1>
 
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4 justify-between items-center bg-gray-50">
-                <form onSubmit={handleSearchByPincode} className="flex flex-1 w-full gap-2">
-                    <input
-                        type="text"
-                        placeholder="Enter Pincode (e.g. 136129)"
-                        value={pincode}
-                        onChange={(e) => setPincode(e.target.value)}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                    />
-                    <button
-                        type="submit"
-                        className="px-6 py-2 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition"
-                        style={pageConfig ? { backgroundColor: pageConfig.BackgroundHexColor, color: pageConfig.FontHexColor } : {}}
-                    >
-                        Search
-                    </button>
-                </form>
+                    <div className="flex-1 max-w-2xl w-full">
+                        <form onSubmit={handleSearchByPincode} className="flex w-full relative drop-shadow-sm">
+                            <input
+                                type="text"
+                                placeholder="Search by Pincode..."
+                                value={pincode}
+                                onChange={(e) => setPincode(e.target.value)}
+                                className="w-full px-5 py-3 pr-32 border border-gray-300 rounded-full focus:outline-none focus:border-black focus:ring-1 focus:ring-black text-sm"
+                            />
+                            <div className="absolute right-1 top-1 bottom-1 flex gap-1">
+                                <button
+                                    type="button"
+                                    onClick={handleUseMyLocation}
+                                    title="Use My Location"
+                                    className="px-3 py-2 text-gray-500 hover:text-black hover:bg-gray-100 rounded-full transition"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-6 py-2 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition text-sm"
+                                    style={pageConfig ? { backgroundColor: pageConfig.BackgroundHexColor, color: pageConfig.FontHexColor } : {}}
+                                >
+                                    Search
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-                <div className="flex items-center gap-4 w-full md:w-auto">
-                    <span className="text-gray-500 font-medium hidden md:block">OR</span>
-                    <button
-                        type="button"
-                        onClick={handleUseMyLocation}
-                        className="w-full md:w-auto px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2"
-                    >
-                        <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        Use My Location
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {stores.length > 0 && (
+                            <select
+                                value={selectedState}
+                                onChange={(e) => setSelectedState(e.target.value)}
+                                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-black focus:ring-1 focus:ring-black text-sm bg-white cursor-pointer"
+                            >
+                                <option value="All">All States</option>
+                                {INDIAN_STATES.map(state => (
+                                    <option key={state} value={state}>{state}</option>
+                                ))}
+                            </select>
+                        )}
+                    </div>
                 </div>
             </div>
 
+            {/* ERROR BANNER */}
             {error && (
-                <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg border border-red-200">
+                <div className="bg-red-50 text-red-600 px-4 py-2 text-center text-sm font-medium border-b border-red-100 shrink-0">
                     {error}
                 </div>
             )}
 
-            {loading ? (
-                <div className="flex justify-center items-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
-                </div>
-            ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {stores.length > 0 ? (
-                        stores.map((store) => (
-                            <div key={store.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                                <h3 className="text-xl font-semibold mb-2 text-gray-900">{store.name}</h3>
-                                <p className="text-gray-600 mb-1">{store.address}</p>
-                                <p className="text-gray-600 mb-3">{store.city} - {store.pincode}</p>
+            {/* MAIN CONTENT SPLIT */}
+            <div className="flex flex-1 overflow-hidden max-w-[1600px] w-full mx-auto">
 
-                                {store.distance !== undefined && store.distance !== null && (
-                                    <div className="mt-4 pt-4 border-t border-gray-100">
-                                        <span className="inline-block px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
-                                            {store.distance.toFixed(2)} km away
-                                        </span>
+                {/* LEFT - MAP */}
+                <div className="hidden md:block w-2/5 lg:w-[40%] bg-gray-100 relative h-full border-r border-gray-200">
+                    <StoreMap stores={filteredStores} selectedStore={selectedStore} />
+                </div>
+
+                {/* RIGHT - STORE LIST */}
+                <div className="w-full md:w-3/5 lg:w-[60%] flex flex-col h-full bg-white relative">
+                    {/* List Header */}
+                    <div className="px-6 py-4 border-b border-gray-200 bg-white shadow-sm z-10 shrink-0 flex justify-between items-center">
+                        <div>
+                            <p className="text-sm font-medium text-gray-900 border-b border-black inline-block pb-0.5">
+                                View all stores
+                            </p>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
+                            {filteredStores.length} Stores
+                        </span>
+                    </div>
+
+                    {/* Scrollable List */}
+                    <div className="flex-1 overflow-y-auto">
+                        {loading ? (
+                            <div className="flex justify-center py-12">
+                                <div className="animate-pulse flex flex-col items-center gap-4">
+                                    <div className="h-6 w-32 bg-gray-200 rounded"></div>
+                                    <div className="h-4 w-48 bg-gray-200 rounded"></div>
+                                </div>
+                            </div>
+                        ) : filteredStores.length > 0 ? (
+                            <div className="divide-y divide-gray-100">
+                                {filteredStores.map((store) => (
+                                    <div
+                                        key={store.id}
+                                        onClick={() => setSelectedStore(store)}
+                                        className={`p-6 hover:bg-gray-50 transition duration-150 cursor-pointer group border-l-4 ${selectedStore?.id === store.id ? 'border-black bg-gray-50' : 'border-transparent'}`}
+                                    >
+                                        <h3 className="text-lg font-medium text-gray-900 group-hover:text-red-700 transition-colors">
+                                            {store.name}
+                                        </h3>
+
+                                        <div className="mt-2 text-sm text-gray-500 font-medium">
+                                            PRODUCTS: DEFAULT BEVERAGES
+                                        </div>
+
+                                        <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                                            {store.address} <br />
+                                            {store.city}, {store.state} {store.pincode}
+                                        </p>
+
+                                        {store.distance !== undefined && store.distance !== null && (
+                                            <div className="mt-4 flex items-center">
+                                                <span className="text-sm font-bold text-gray-900 border border-gray-200 rounded px-2 py-1 shadow-sm">
+                                                    📍 {store.distance.toFixed(1)} km
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col flex-1 items-center justify-center p-12 text-center h-full text-gray-500">
+                                <svg className="w-12 h-12 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                <p className="text-base font-medium">No stores found</p>
+                                <p className="text-sm mt-1">Try searching a different area or removing the State filter.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* STORE DETAIL MODAL/OVERLAY */}
+            {selectedStore && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="relative p-6 sm:p-8">
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setSelectedStore(null)}
+                                className="absolute right-4 top-4 p-2 text-gray-400 hover:text-black rounded-full hover:bg-gray-100 transition"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+
+                            <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedStore.name}</h2>
+                            <p className="text-gray-500 text-sm font-medium mb-6 uppercase tracking-wider">Store Details</p>
+
+                            <div className="space-y-6">
+                                <div className="flex gap-4">
+                                    <div className="shrink-0 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-gray-900">Address</h4>
+                                        <p className="text-gray-600">{selectedStore.address}, {selectedStore.city}, {selectedStore.state} {selectedStore.pincode}</p>
+                                    </div>
+                                </div>
+
+                                {(selectedStore.mobileNumber || selectedStore.mobile) && (
+                                    <div className="flex gap-4">
+                                        <div className="shrink-0 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h2.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1.28c-8.158 0-14.72-6.562-14.72-14.72V5z" /></svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-gray-900">Phone</h4>
+                                            <p className="text-gray-600">{selectedStore.mobileNumber || selectedStore.mobile}</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {selectedStore.email && (
+                                    <div className="flex gap-4">
+                                        <div className="shrink-0 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-gray-900">Email</h4>
+                                            <p className="text-gray-600">{selectedStore.email}</p>
+                                        </div>
                                     </div>
                                 )}
                             </div>
-                        ))
-                    ) : (
-                        <div className="col-span-full text-center py-12 text-gray-500">
-                            No stores found matching your criteria.
+
+                            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                                <a
+                                    href={`https://www.google.com/maps/dir/?api=1&destination=${selectedStore.latitude || selectedStore.lat},${selectedStore.longitude || selectedStore.lon}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 px-6 py-4 bg-black text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition shadow-lg shadow-black/10"
+                                >
+                                    <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg>
+                                    Get Directions
+                                </a>
+                                <button
+                                    onClick={() => setSelectedStore(null)}
+                                    className="px-6 py-4 bg-gray-100 text-gray-900 rounded-xl font-bold hover:bg-gray-200 transition"
+                                >
+                                    Close
+                                </button>
+                            </div>
                         </div>
-                    )}
+                    </div>
                 </div>
             )}
         </div>
