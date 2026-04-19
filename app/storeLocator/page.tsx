@@ -188,41 +188,81 @@ export default function StoreLocator() {
                             </div>
                         ) : filteredStores.length > 0 ? (
                             <div className="divide-y divide-gray-100">
-                                {filteredStores.map((store) => (
-                                    <div
-                                        key={store.id}
-                                        onClick={() => setSelectedStore(store)}
-                                        className={`p-6 hover:bg-gray-50 transition duration-150 cursor-pointer group border-l-4 ${selectedStore?.id === store.id ? 'border-black bg-gray-50' : 'border-transparent'}`}
-                                    >
-                                        <h3 className="text-lg font-medium text-gray-900 group-hover:text-red-700 transition-colors">
-                                            {store.name}
-                                        </h3>
+                                {filteredStores.map((store) => {
+                                    const isSelected = selectedStore?.id === store.id;
+                                    return (
+                                        <div
+                                            key={store.id}
+                                            onClick={() => setSelectedStore(isSelected ? null : store)}
+                                            className={`p-6 transition-all duration-300 cursor-pointer group border-l-4 ${isSelected ? 'border-black bg-gray-50' : 'border-transparent hover:bg-gray-50'}`}
+                                        >
+                                            <h3 className={`text-lg font-medium transition-colors ${isSelected ? 'text-black' : 'text-gray-900 group-hover:text-red-700'}`}>
+                                                {store.name}
+                                            </h3>
 
-                                        {/* <div className="mt-2 text-sm text-gray-500 font-medium">
-                                            PRODUCTS: DEFAULT BEVERAGES
-                                        </div> */}
+                                            {/* <div className="mt-2 text-sm text-gray-500 font-medium">
+                                                PRODUCTS: DEFAULT BEVERAGES
+                                            </div> */}
 
-                                        <p className="mt-2 text-sm text-gray-600 leading-relaxed">
-                                            {store.address} <br />
-                                            {store.city}, {store.state} {store.pincode}
-                                        </p>
-
-                                        {/* {(store.mobileNumber || store.mobile) && (
-                                            <p className="mt-1 text-sm text-gray-500 font-medium flex items-center gap-1">
-                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h2.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1.28c-8.158 0-14.72-6.562-14.72-14.72V5z" /></svg>
-                                                {store.mobileNumber || store.mobile}
+                                            <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                                                {store.address} <br />
+                                                {store.city}, {store.state} {store.pincode}
                                             </p>
-                                        )} */}
 
-                                        {store.distance !== undefined && store.distance !== null && (
-                                            <div className="mt-4 flex items-center">
-                                                <span className="text-sm font-bold text-gray-900 border border-gray-200 rounded px-2 py-1 shadow-sm">
-                                                    📍 {store.distance.toFixed(1)} km
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                                            {/* {(store.mobileNumber || store.mobile) && !isSelected && (
+                                                <p className="mt-1 text-sm text-gray-500 font-medium flex items-center gap-1">
+                                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h2.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1.28c-8.158 0-14.72-6.562-14.72-14.72V5z" /></svg>
+                                                    {store.mobileNumber || store.mobile}
+                                                </p>
+                                            )} */}
+
+                                            {/* EXPANDED DETAILS */}
+                                            {isSelected && (
+                                                <div className="mt-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
+                                                    <div className="pt-4 border-t border-gray-200 space-y-3">
+                                                        {(store.mobileNumber || store.mobile) && (
+                                                            <div className="flex items-center gap-3 text-sm text-gray-700">
+                                                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h2.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1.28c-8.158 0-14.72-6.562-14.72-14.72V5z" /></svg>
+                                                                </div>
+                                                                <span className="font-semibold w-16">Phone:</span>
+                                                                <span>{store.mobileNumber || store.mobile}</span>
+                                                            </div>
+                                                        )}
+                                                        {store.email && (
+                                                            <div className="flex items-center gap-3 text-sm text-gray-700">
+                                                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                                                </div>
+                                                                <span className="font-semibold w-16">Email:</span>
+                                                                <span className="break-all">{store.email}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    <a
+                                                        href={`https://www.google.com/maps/dir/?api=1&destination=${store.latitude || store.lat},${store.longitude || store.lon}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        onClick={(e) => e.stopPropagation()} // Prevent closing the accordion when clicking the link
+                                                        className="w-full py-3 bg-black text-white rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition shadow-md"
+                                                    >
+                                                        <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg>
+                                                        Get Directions
+                                                    </a>
+                                                </div>
+                                            )}
+
+                                            {store.distance !== undefined && store.distance !== null && (
+                                                <div className="mt-4 flex items-center">
+                                                    <span className="text-sm font-bold text-gray-900 border border-gray-200 rounded px-2 py-1 shadow-sm">
+                                                        📍 {store.distance.toFixed(1)} km
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="flex flex-col flex-1 items-center justify-center p-12 text-center h-full text-gray-500">
@@ -234,80 +274,6 @@ export default function StoreLocator() {
                     </div>
                 </div>
             </div>
-
-            {/* STORE DETAIL MODAL/OVERLAY */}
-            {selectedStore && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="relative p-6 sm:p-8">
-                            {/* Close Button */}
-                            <button
-                                onClick={() => setSelectedStore(null)}
-                                className="absolute right-4 top-4 p-2 text-gray-400 hover:text-black rounded-full hover:bg-gray-100 transition"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                            </button>
-
-                            <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedStore.name}</h2>
-                            <p className="text-gray-500 text-sm font-medium mb-6 uppercase tracking-wider">Store Details</p>
-
-                            <div className="space-y-6">
-                                <div className="flex gap-4">
-                                    <div className="shrink-0 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900">Address</h4>
-                                        <p className="text-gray-600">{selectedStore.address}, {selectedStore.city}, {selectedStore.state} {selectedStore.pincode}</p>
-                                    </div>
-                                </div>
-
-                                {(selectedStore.mobileNumber || selectedStore.mobile) && (
-                                    <div className="flex gap-4">
-                                        <div className="shrink-0 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h2.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1.28c-8.158 0-14.72-6.562-14.72-14.72V5z" /></svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900">Phone</h4>
-                                            <p className="text-gray-600">{selectedStore.mobileNumber || selectedStore.mobile}</p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {selectedStore.email && (
-                                    <div className="flex gap-4">
-                                        <div className="shrink-0 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900">Email</h4>
-                                            <p className="text-gray-600">{selectedStore.email}</p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                                <a
-                                    href={`https://www.google.com/maps/dir/?api=1&destination=${selectedStore.latitude || selectedStore.lat},${selectedStore.longitude || selectedStore.lon}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex-1 px-6 py-4 bg-black text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition shadow-lg shadow-black/10"
-                                >
-                                    <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg>
-                                    Get Directions
-                                </a>
-                                <button
-                                    onClick={() => setSelectedStore(null)}
-                                    className="px-6 py-4 bg-gray-100 text-gray-900 rounded-xl font-bold hover:bg-gray-200 transition"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
