@@ -46,7 +46,15 @@ export async function GET(request: NextRequest) {
         lon = existingStore.lon;
       }
       else {
-        const geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?postalcode=${pincode}&country=India&format=json`);
+        const geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?postalcode=${pincode}&country=India&format=json`
+          , {
+            headers: {
+              "User-Agent": "MyStoreLocatorApp/1.0" // Simply adding this fixes the 403 Forbidden!
+            }
+          }
+        );
+        console.log(geoResponse);
+        // console.log(pincode);
         if (geoResponse.ok) {
           const geoData = await geoResponse.json();
           if (geoData && geoData.length > 0) {
