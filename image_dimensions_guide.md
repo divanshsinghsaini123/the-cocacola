@@ -152,7 +152,7 @@ Used across all standard customer-facing pages.
 * **Container Size:**
   * **Desktop:** 100vw x 500px (wide banner layout)
 
-* **Fit Mode:** `object-cover md:object-fit`
+* **Fit Mode:** `object-cover`
 * **Recommended Upload:** **1920px x 700px** (Landscape background banner)
 
 ### MainPage Card Cards (Mainpage_aboutus)
