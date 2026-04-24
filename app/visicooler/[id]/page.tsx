@@ -23,6 +23,8 @@ interface Shop {
   visicooler: string[];
   isActive: boolean;
   images: ShopImage[];
+  asm?: string;
+  se?: string;
 }
 
 export default function ShopViewPage() {
@@ -229,8 +231,8 @@ export default function ShopViewPage() {
                     value={adminUsername}
                     onChange={(e) => { setAdminUsername(e.target.value); setAuthError(null); }}
                     className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 outline-none transition-all ${authError
-                        ? "border-red-400 focus:border-red-500 focus:ring-red-200"
-                        : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
+                      ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                      : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
                       }`}
                     placeholder="Enter username"
                   />
@@ -243,8 +245,8 @@ export default function ShopViewPage() {
                     value={adminPassword}
                     onChange={(e) => { setAdminPassword(e.target.value); setAuthError(null); }}
                     className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 outline-none transition-all ${authError
-                        ? "border-red-400 focus:border-red-500 focus:ring-red-200"
-                        : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
+                      ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                      : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
                       }`}
                     placeholder="Enter password"
                   />
@@ -335,7 +337,7 @@ export default function ShopViewPage() {
             </GcoreUpload>
           </div>
 
-          <div className="p-5 sm:p-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8">
+          <div className="p-5 sm:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-6 sm:gap-8">
             <div className="flex items-start gap-3">
               <MapPin className="text-blue-500 mt-1" size={24} />
               <div>
@@ -377,6 +379,24 @@ export default function ShopViewPage() {
                     ? shop.visicooler.join(', ')
                     : <span className="text-gray-400 italic">None registered</span>}
                 </p>
+              </div>
+            </div>
+
+            {/* ASM Display */}
+            <div className="flex items-start gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="text-blue-500 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+              <div>
+                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">ASM</p>
+                <p className="text-lg font-medium text-gray-900 mt-1 truncate" title={shop.asm}>{shop.asm || <span className="text-gray-400 italic">N/A</span>}</p>
+              </div>
+            </div>
+
+            {/* SE Display */}
+            <div className="flex items-start gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="text-blue-500 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+              <div>
+                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">SE</p>
+                <p className="text-lg font-medium text-gray-900 mt-1 truncate" title={shop.se}>{shop.se || <span className="text-gray-400 italic">N/A</span>}</p>
               </div>
             </div>
           </div>

@@ -50,6 +50,14 @@ const ShopSchema = new Schema(
             type: Boolean,
             default: true,
         },
+        asm: {
+            type: String,
+            trim: true,
+        },
+        se: {
+            type: String,
+            trim: true,
+        },
 
     },
     {

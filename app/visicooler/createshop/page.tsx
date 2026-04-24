@@ -22,6 +22,8 @@ function CreateShopForm() {
     email: "",
     visicooler: "", 
     isActive: true,
+    asm: "",
+    se: "",
   });
 
   // Fetch data if we are in Edit mode
@@ -41,6 +43,8 @@ function CreateShopForm() {
               email: shop.email || "",
               visicooler: shop.visicooler ? shop.visicooler.join(", ") : "",
               isActive: shop.isActive ?? true,
+              asm: shop.asm || "",
+              se: shop.se || "",
             });
           } else {
             toast.error("Shop not found");
@@ -80,6 +84,8 @@ function CreateShopForm() {
           ? formData.visicooler.split(",").map((s) => s.trim()).filter((s) => s !== "")
           : [],
         isActive: formData.isActive,
+        asm: formData.asm,
+        se: formData.se,
       };
 
       const url = editId ? `/api/visicooler?id=${editId}` : "/api/visicooler";
@@ -205,7 +211,7 @@ function CreateShopForm() {
               />
             </div>
 
-            {/* Email */}
+             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
                 Email Address
@@ -217,6 +223,38 @@ function CreateShopForm() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="e.g. contact@shop.com (Optional)"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
+
+            {/* ASM Name */}
+            <div>
+              <label htmlFor="asm" className="block text-sm font-semibold text-gray-700 mb-2">
+                Area Sales Manager (ASM) Name
+              </label>
+              <input
+                type="text"
+                id="asm"
+                name="asm"
+                value={formData.asm}
+                onChange={handleChange}
+                placeholder="e.g. Ramesh Kumar (Optional)"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
+
+            {/* SE Name */}
+            <div>
+              <label htmlFor="se" className="block text-sm font-semibold text-gray-700 mb-2">
+                Sales Executive (SE) Name
+              </label>
+              <input
+                type="text"
+                id="se"
+                name="se"
+                value={formData.se}
+                onChange={handleChange}
+                placeholder="e.g. Suresh Patel (Optional)"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
               />
             </div>

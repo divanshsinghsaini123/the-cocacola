@@ -20,13 +20,15 @@ export async function GET(req: NextRequest) {
 
         const cdnUrl = process.env.NEXT_PUBLIC_GCORE_CDN_URL || "";
         
-        let csvContent = "Shop Name,Area,Pincode,Mobile,Email,Image URL,Upload Date,Upload Time\n";
+        let csvContent = "Shop Name,Area,Pincode,Mobile,Email,ASM Name,SE Name,Image URL,Upload Date,Upload Time\n";
         
         const shopName = `"${shopData.name.replace(/"/g, '""')}"`;
         const area = `"${shopData.area.replace(/"/g, '""')}"`;
         const pincode = shopData.pincode;
         const mobile = shopData.mobileNumber || "N/A";
         const email = shopData.email ? `"${shopData.email}"` : "N/A";
+        const asm = shopData.asm ? `"${shopData.asm.replace(/"/g, '""')}"` : "N/A";
+        const se = shopData.se ? `"${shopData.se.replace(/"/g, '""')}"` : "N/A";
 
         if (shopData.images && shopData.images.length > 0) {
             shopData.images.forEach((img: any) => {
@@ -34,10 +36,10 @@ export async function GET(req: NextRequest) {
                 const date = dateObj.toLocaleDateString();
                 const time = dateObj.toLocaleTimeString();
                 const fullUrl = `${cdnUrl}/${img.url}`;
-                csvContent += `${shopName},${area},${pincode},${mobile},${email},"${fullUrl}",${date},${time}\n`;
+                csvContent += `${shopName},${area},${pincode},${mobile},${email},${asm},${se},"${fullUrl}",${date},${time}\n`;
             });
         } else {
-            csvContent += `${shopName},${area},${pincode},${mobile},${email},No Images,N/A,N/A\n`;
+            csvContent += `${shopName},${area},${pincode},${mobile},${email},${asm},${se},No Images,N/A,N/A\n`;
         }
 
         const headers = new Headers();

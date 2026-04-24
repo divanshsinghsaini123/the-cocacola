@@ -166,4 +166,6 @@ export const ShopValidationSchema = z.object({
         })
     ).optional(),
     isActive: z.boolean().optional(),
+    asm: z.string().optional(),
+    se: z.string().optional(),
 });
