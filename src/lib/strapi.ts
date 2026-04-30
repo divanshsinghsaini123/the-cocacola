@@ -59,6 +59,8 @@ if (!STRAPI_URLStoreLocator) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
+let cachedHomePageData: any = null;
+
 export async function GetHomePageData() {
     try {
         const response = await fetch(STRAPI_URLHomepage
@@ -74,14 +76,21 @@ export async function GetHomePageData() {
         if (!response.ok) {
             console.error(`Failed to fetch from: ${STRAPI_URLHomepage}`);
             console.error(`Status: ${response.status} ${response.statusText}`);
-            const errorText = await response.text();
-            console.error(`Response: ${errorText}`);
+            if (cachedHomePageData) {
+                console.log("Using cached fallback for HomePageData");
+                return cachedHomePageData;
+            }
             throw new Error(`Failed to fetch home page data: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
+        cachedHomePageData = data.data;
         return data.data;
     } catch (error) {
         console.error("Error fetching home page data:", error);
+        if (cachedHomePageData) {
+            console.log("Using cached fallback for HomePageData inside catch block");
+            return cachedHomePageData;
+        }
         return null;
     }
 }

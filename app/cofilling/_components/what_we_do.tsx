@@ -6,9 +6,17 @@ import Product from "./_components_what_we_do/product";
 import LogisticsSection from "./_components_what_we_do/logistics";
 import { useGetExtraDataQuery } from "@/src/store/slices/api";
 
+import { useState, useEffect } from "react";
+
 const WhatWeDo = () => {
     const { data, error } = useGetExtraDataQuery();
-    const stickyNav = data?.data?.StickyNavbar;
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    const stickyNav = isMounted ? data?.data?.StickyNavbar : false;
 
 
     return (

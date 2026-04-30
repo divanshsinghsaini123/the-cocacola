@@ -1,13 +1,19 @@
 
 
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useGetExtraDataQuery } from "@/src/store/slices/api";
 
 export default function Packaging() {
     const { data, error } = useGetExtraDataQuery();
-    const stickyNav = data?.data?.StickyNavbar;
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    const stickyNav = isMounted ? data?.data?.StickyNavbar : false;
     return (
         <div className="w-full relative flex flex-col items-center bg-black pb-20">
             {/* Section Background */}

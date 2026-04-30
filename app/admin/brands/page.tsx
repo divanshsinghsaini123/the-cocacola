@@ -17,6 +17,15 @@ export default async function BrandsPage() {
 
     return (
         <div className="space-y-8">
+            <div>
+                <Link
+                    href="/admin/dashboard"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-black transition-colors"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Back to Dashboard
+                </Link>
+            </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Brands</h1>
