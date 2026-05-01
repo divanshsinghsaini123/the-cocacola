@@ -66,7 +66,7 @@ export interface FeaturesData {
 }
 
 // More from CocaCola Section Types
-export interface MoreFromCocaColaData {
+export interface MoreFromCloud9Data {
     id: number;
     sectionTitle: string;
     items: SectionItem[];
@@ -77,7 +77,7 @@ export interface HomePageData {
     hero: HeroData;
     promosAndOffers: PromosAndOffersData;
     features: FeaturesData;
-    moreFromCocaCola: MoreFromCocaColaData;
+    moreFromCloud9: MoreFromCloud9Data;
     footer?: any;
     socialLinks?: any;
     NavbarImage?: StrapiImage;

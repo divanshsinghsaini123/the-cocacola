@@ -24,12 +24,12 @@ export default function DistributorClientView({
             <section className="relative w-full flex flex-col items-center justify-center text-center px-4 overflow-hidden pb-20">
                 <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center">
                     <div className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-5 py-2 mb-8 backdrop-blur-md">
-                        <span className="text-sm font-medium tracking-wide">👋 Welcome To Hell</span>
+                        <span className="text-sm font-medium tracking-wide">👋 Welcome To Cloud9</span>
                     </div>
 
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white mb-6 leading-[1.3] text-center max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-x-4 gap-y-3 lg:gap-y-4">
                         {Hero?.Heading ? Hero.Heading.split(" ").filter(Boolean).map((word: string, i: number) => {
-                            if (word.toLowerCase().includes("hell")) {
+                            if (word.toLowerCase().includes("Cloud9")) {
                                 return (
                                     <span key={i} className="bg-[#3FA2F6] text-white px-4 py-0 pb-1 rounded-2xl inline-block -rotate-2 transform hover:rotate-0 transition-transform cursor-pointer">
                                         {word}
@@ -370,7 +370,7 @@ export default function DistributorClientView({
             {/* Custom Navbar just for this page */}
             <nav className="absolute top-0 left-0 w-full z-50 flex flex-wrap lg:flex-nowrap items-center justify-between gap-y-4 px-4 py-4 md:px-6 md:py-6 lg:px-10">
                 <div className="flex items-center shrink-0">
-                    {/* The screenshot shows 'HELL ENERGY DRINK' logo. We use the one from Hero or standard img. */}
+                    {/* The screenshot shows 'Cloud9 ENERGY DRINK' logo. We use the one from Hero or standard img. */}
                     {Hero?.Logo ? (
                         <Image
                             src={getStrapiMediaUrl(Hero.Logo.url)}
@@ -380,7 +380,7 @@ export default function DistributorClientView({
                             className="object-contain w-20 md:w-[110px]"
                         />
                     ) : (
-                        <span className="text-xl md:text-2xl font-black text-red-600 tracking-tighter">HELL<span className="hidden sm:inline text-white text-sm font-medium ml-2">ENERGY DRINK</span></span>
+                        <span className="text-xl md:text-2xl font-black text-red-600 tracking-tighter">Cloud9<span className="hidden sm:inline text-white text-sm font-medium ml-2">ENERGY DRINK</span></span>
                     )}
                 </div>
 
@@ -447,7 +447,7 @@ export default function DistributorClientView({
                             </div>
                         ) : (
                             <div className="mb-10 text-3xl font-black text-red-600 tracking-tighter">
-                                HELL<span className="text-white text-sm font-medium ml-2">ENERGY DRINK</span>
+                                Cloud9<span className="text-white text-sm font-medium ml-2">ENERGY DRINK</span>
                             </div>
                         )}
 
@@ -455,7 +455,7 @@ export default function DistributorClientView({
                             {...(Footer.Heading ? [Footer.Heading] : [
                                 <span key="1">
                                     Become An <br className="hidden md:block" />
-                                    Authorized Hell <br className="hidden md:block" />
+                                    Authorized Cloud9 <br className="hidden md:block" />
                                     Energy <br className="hidden md:block" />
                                     Distributor!
                                 </span>
