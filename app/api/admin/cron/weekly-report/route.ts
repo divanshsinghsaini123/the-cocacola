@@ -75,7 +75,7 @@ export async function POST(request: Request) {
 
             const mailOptions = {
                 from: process.env.EMAIL_USER,
-                to: process.env.REPORT_EMAIL_TO || process.env.EMAIL_USER, // Who receives the report
+                to: process.env.REPORT_EMAIL_TO || process.env.EMAIL_USER, // Set multiple emails separated by commas in .env
                 subject: `Visicooler Weekly Report - ${new Date().toLocaleDateString()}`,
                 text: `Hello,\n\nPlease find the weekly Visicooler reports attached.\n\nSummary:\n- ${shopsPendingPhotos.length} shops have NOT uploaded photos this week.\n- ${shopsWithRecentPhotos.length} shops HAVE uploaded photos this week.\n\nBest,\nSystem Administrator`,
                 attachments: [

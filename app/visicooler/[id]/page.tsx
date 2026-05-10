@@ -28,12 +28,13 @@ interface Shop {
 export default function ShopViewPage() {
   const { id } = useParams();
   const router = useRouter();
-  
+
   const [shop, setShop] = useState<Shop | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Admin Verification Modal State
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteType, setDeleteType] = useState<"image" | "shop">("image");
   const [imageToDelete, setImageToDelete] = useState<string | null>(null);
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
@@ -81,8 +82,17 @@ export default function ShopViewPage() {
     }
   };
 
-  const openDeleteModal = (url: string) => {
+  const openDeleteImageModal = (url: string) => {
     setImageToDelete(url);
+    setDeleteType("image");
+    setAdminUsername("");
+    setAdminPassword("");
+    setAuthError(null);
+    setDeleteModalOpen(true);
+  };
+
+  const openDeleteShopModal = () => {
+    setDeleteType("shop");
     setAdminUsername("");
     setAdminPassword("");
     setAuthError(null);
@@ -99,11 +109,11 @@ export default function ShopViewPage() {
 
   const handleVerifyAndDelete = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!imageToDelete) return;
-    
+    if (deleteType === "image" && !imageToDelete) return;
+
     setVerifying(true);
     setAuthError(null);
-    
+
     try {
       // 1. Verify Admin Credentials
       const verifyRes = await fetch("/api/admin/verify", {
@@ -111,7 +121,7 @@ export default function ShopViewPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: adminUsername, password: adminPassword }),
       });
-      
+
       let verifyData;
       try {
         verifyData = await verifyRes.json();
@@ -120,7 +130,7 @@ export default function ShopViewPage() {
         setVerifying(false);
         return;
       }
-      
+
       if (!verifyData.success) {
         setAuthError(verifyData.error || "Please enter the correct username or password.");
         setVerifying(false);
@@ -128,19 +138,34 @@ export default function ShopViewPage() {
       }
 
       // 2. If verified, proceed with deletion
-      const res = await fetch("/api/visicooler", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, action: "delete_image", url: imageToDelete }),
-      });
-      const data = await res.json();
-      
-      if (data.success) {
-        toast.success("Image deleted successfully");
-        closeDeleteModal();
-        fetchShop();
-      } else {
-        setAuthError("Failed to delete image");
+      if (deleteType === "image") {
+        const res = await fetch("/api/visicooler", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, action: "delete_image", url: imageToDelete }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          toast.success("Image deleted successfully");
+          closeDeleteModal();
+          fetchShop();
+        } else {
+          setAuthError("Failed to delete image");
+        }
+      } else if (deleteType === "shop") {
+        const res = await fetch(`/api/visicooler?id=${id}`, {
+          method: "DELETE",
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          toast.success("Shop deleted successfully");
+          closeDeleteModal();
+          router.push("/visicooler");
+        } else {
+          setAuthError("Failed to delete shop");
+        }
       }
     } catch (error: any) {
       setAuthError(error.message || "An error occurred during deletion");
@@ -166,7 +191,7 @@ export default function ShopViewPage() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 py-6 px-4 sm:py-10 sm:px-6">
-      
+
       {/* Delete Verification Modal */}
       {deleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -180,19 +205,21 @@ export default function ShopViewPage() {
                 <X size={20} />
               </button>
             </div>
-            
+
             <form onSubmit={handleVerifyAndDelete} className="p-6">
               <p className="text-sm text-gray-600 mb-6">
-                Deleting images requires administrator privileges. Please enter an active admin's credentials to confirm deletion.
+                {deleteType === "shop"
+                  ? "Deleting this entire shop requires administrator privileges. Please enter an active admin's credentials to confirm deletion. This action cannot be undone."
+                  : "Deleting images requires administrator privileges. Please enter an active admin's credentials to confirm deletion."}
               </p>
-              
+
               {authError && (
                 <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm font-medium rounded-lg border border-red-100 flex items-center gap-2">
                   <ShieldAlert size={16} className="shrink-0" />
                   {authError}
                 </div>
               )}
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Admin Username</label>
@@ -201,11 +228,10 @@ export default function ShopViewPage() {
                     required
                     value={adminUsername}
                     onChange={(e) => { setAdminUsername(e.target.value); setAuthError(null); }}
-                    className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 outline-none transition-all ${
-                      authError 
-                        ? "border-red-400 focus:border-red-500 focus:ring-red-200" 
+                    className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 outline-none transition-all ${authError
+                        ? "border-red-400 focus:border-red-500 focus:ring-red-200"
                         : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
-                    }`}
+                      }`}
                     placeholder="Enter username"
                   />
                 </div>
@@ -216,16 +242,15 @@ export default function ShopViewPage() {
                     required
                     value={adminPassword}
                     onChange={(e) => { setAdminPassword(e.target.value); setAuthError(null); }}
-                    className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 outline-none transition-all ${
-                      authError 
-                        ? "border-red-400 focus:border-red-500 focus:ring-red-200" 
+                    className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 outline-none transition-all ${authError
+                        ? "border-red-400 focus:border-red-500 focus:ring-red-200"
                         : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
-                    }`}
+                      }`}
                     placeholder="Enter password"
                   />
                 </div>
               </div>
-              
+
               <div className="mt-8 flex gap-3">
                 <button
                   type="button"
@@ -252,22 +277,31 @@ export default function ShopViewPage() {
       )}
 
       <div className="max-w-5xl mx-auto space-y-6">
-        
+
         {/* Header */}
         <div className="flex justify-between items-center">
-          <Link 
-            href="/visicooler" 
+          <Link
+            href="/visicooler"
             className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-medium"
           >
             <ArrowLeft size={18} />
             Back to Shops
           </Link>
-          <Link
-            href={`/visicooler/createshop?edit=${shop._id}`}
-            className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200"
-          >
-            Edit Details
-          </Link>
+          <div className="flex flex-wrap items-center justify-end gap-2 mt-2 sm:mt-0">
+            <Link
+              href={`/visicooler/createshop?edit=${shop._id}`}
+              className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200"
+            >
+              Edit Details
+            </Link>
+            <button
+              onClick={openDeleteShopModal}
+              className="inline-flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg font-medium transition-colors border border-red-100"
+            >
+              <Trash2 size={16} />
+              Delete Shop
+            </button>
+          </div>
         </div>
 
         {/* Shop Info Card */}
@@ -282,7 +316,7 @@ export default function ShopViewPage() {
                 <span className="text-gray-500 text-sm font-mono">ID: {shop._id}</span>
               </div>
             </div>
-            
+
             <GcoreUpload folder="visicooler" onSuccess={handleImageUpload} multiple={true}>
               {({ open, isLoading }) => (
                 <button
@@ -300,7 +334,7 @@ export default function ShopViewPage() {
               )}
             </GcoreUpload>
           </div>
-          
+
           <div className="p-5 sm:p-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8">
             <div className="flex items-start gap-3">
               <MapPin className="text-blue-500 mt-1" size={24} />
@@ -309,7 +343,7 @@ export default function ShopViewPage() {
                 <p className="text-lg font-medium text-gray-900 mt-1">{shop.area}</p>
               </div>
             </div>
-            
+
             <div className="flex items-start gap-3">
               <Hash className="text-blue-500 mt-1" size={24} />
               <div>
@@ -333,14 +367,14 @@ export default function ShopViewPage() {
                 <p className="text-lg font-medium text-gray-900 mt-1 truncate" title={shop.email}>{shop.email || <span className="text-gray-400 italic">N/A</span>}</p>
               </div>
             </div>
-            
+
             <div className="flex items-start gap-3">
               <Package className="text-blue-500 mt-1" size={24} />
               <div>
                 <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Visicoolers</p>
                 <p className="text-lg font-medium text-gray-900 mt-1">
-                  {shop.visicooler && shop.visicooler.length > 0 
-                    ? shop.visicooler.join(', ') 
+                  {shop.visicooler && shop.visicooler.length > 0
+                    ? shop.visicooler.join(', ')
                     : <span className="text-gray-400 italic">None registered</span>}
                 </p>
               </div>
@@ -387,17 +421,17 @@ export default function ShopViewPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sortedImages.map((img, idx) => (
                   <div key={idx} className="group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white aspect-[4/3]">
-                    <img 
-                      src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + img.url} 
-                      alt={`Shop view ${idx}`} 
+                    <img
+                      src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + img.url}
+                      alt={`Shop view ${idx}`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    
+
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-black/40 sm:bg-black/50 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 sm:p-4">
                       <div className="self-end flex gap-2">
                         {/* View Full Screen Button */}
-                        <a 
+                        <a
                           href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + img.url}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -406,28 +440,28 @@ export default function ShopViewPage() {
                         >
                           <Maximize size={18} />
                         </a>
-                        
+
                         {/* Delete Button (Opens Admin Modal) */}
-                        <button 
-                          onClick={() => openDeleteModal(img.url)}
+                        <button
+                          onClick={() => openDeleteImageModal(img.url)}
                           className="bg-white hover:bg-red-50 text-red-600 p-2.5 rounded-lg shadow-sm transition-colors"
                           title="Delete image (Requires Admin)"
                         >
                           <Trash2 size={18} />
                         </button>
                       </div>
-                      
+
                       <div className="bg-white/95 px-4 py-2 rounded-lg self-start shadow-sm border border-white/20">
                         <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-0.5">Uploaded</p>
                         <p className="text-sm font-bold text-gray-900">
-                          {img.uploadedAt 
+                          {img.uploadedAt
                             ? new Date(img.uploadedAt).toLocaleString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                                hour: 'numeric',
-                                minute: '2-digit'
-                              }) 
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: 'numeric',
+                              minute: '2-digit'
+                            })
                             : 'Unknown'}
                         </p>
                       </div>
@@ -438,7 +472,7 @@ export default function ShopViewPage() {
             )}
           </div>
         </div>
-        
+
       </div>
     </div>
   );
