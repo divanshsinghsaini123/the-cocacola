@@ -18,6 +18,8 @@ function CreateShopForm() {
     name: "",
     pincode: "",
     area: "",
+    mobileNumber: "",
+    email: "",
     visicooler: "", 
     isActive: true,
   });
@@ -35,6 +37,8 @@ function CreateShopForm() {
               name: shop.name || "",
               pincode: shop.pincode?.toString() || "",
               area: shop.area || "",
+              mobileNumber: shop.mobileNumber || "",
+              email: shop.email || "",
               visicooler: shop.visicooler ? shop.visicooler.join(", ") : "",
               isActive: shop.isActive ?? true,
             });
@@ -70,6 +74,8 @@ function CreateShopForm() {
         name: formData.name,
         pincode: Number(formData.pincode),
         area: formData.area,
+        mobileNumber: formData.mobileNumber,
+        email: formData.email,
         visicooler: formData.visicooler
           ? formData.visicooler.split(",").map((s) => s.trim()).filter((s) => s !== "")
           : [],
@@ -178,6 +184,39 @@ function CreateShopForm() {
                 value={formData.pincode}
                 onChange={handleChange}
                 placeholder="e.g. 400011"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
+
+            {/* Mobile Number */}
+            <div>
+              <label htmlFor="mobileNumber" className="block text-sm font-semibold text-gray-700 mb-2">
+                Mobile Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="mobileNumber"
+                name="mobileNumber"
+                required
+                value={formData.mobileNumber}
+                onChange={handleChange}
+                placeholder="e.g. 9876543210"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="e.g. contact@shop.com (Optional)"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
               />
             </div>

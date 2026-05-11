@@ -24,6 +24,15 @@ const ShopSchema = new Schema(
             required: true,
             trim: true
         },
+        mobileNumber: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        email: {
+            type: String,
+            trim: true
+        },
         visicooler: [String],
         images: [
             {
