@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Search, Compass, Palette, Rocket, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { GetCobrandingData } from "@/src/lib/strapi";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 const stages = [
     {
         id: 1,
@@ -218,7 +219,7 @@ export default function CobrandingComponent() {
                                     <div className="absolute top-6 right-6 w-10 h-10 sm:w-12 sm:h-12 bg-[#8c9fcf] rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-indigo-600 transition-colors shadow-lg z-10 hover:scale-105 duration-300">
                                         <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-2" />
                                     </div>
-                                    <img src={data?.Card1?.CardImage?.url ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${data.Card1.CardImage.url}` : "/cola.png"} alt={data?.Card1?.CardName || "Tata Sampann"} className="max-h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700" />
+                                    <img src={data?.Card1?.CardImage?.url ? getStrapiMediaUrl(data.Card1.CardImage.url) : "/cola.png"} alt={data?.Card1?.CardName || "Tata Sampann"} className="max-h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700" />
                                 </div>
                                 <h3 className="text-[28px] sm:text-[36px] font-serif tracking-wide text-[#8c9fcf] mb-2 font-medium">{data?.Card1?.CardName || "Tata Sampann"}</h3>
                                 <p className="text-gray-500 text-[13px] sm:text-[15px] font-medium tracking-wide mb-8">{data?.Card1?.SubName || "FMCG // Packaging Design"}</p>
@@ -233,7 +234,7 @@ export default function CobrandingComponent() {
                                     <div className="absolute top-6 right-6 w-10 h-10 sm:w-12 sm:h-12 bg-[#8c9fcf] rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-indigo-600 transition-colors shadow-lg z-10 hover:scale-105 duration-300">
                                         <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-2" />
                                     </div>
-                                    <img src={data?.card2?.CardImage?.url ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${data.card2.CardImage.url}` : "/assets/Home/drinkup.webp"} alt={data?.card2?.CardName || "Gunjan Jewels"} className="max-h-[80%] object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700" />
+                                    <img src={data?.card2?.CardImage?.url ? getStrapiMediaUrl(data.card2.CardImage.url) : "/assets/Home/drinkup.webp"} alt={data?.card2?.CardName || "Gunjan Jewels"} className="max-h-[80%] object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700" />
                                 </div>
                                 <h3 className="text-[28px] sm:text-[36px] font-serif tracking-wide text-[#8c9fcf] mb-2 font-medium">{data?.card2?.CardName || "Gunjan Jewels"}</h3>
                                 <p className="text-gray-500 text-[13px] sm:text-[15px] font-medium tracking-wide mb-8">{data?.card2?.SubName || "Jewellery // Brand Identity Design"}</p>

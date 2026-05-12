@@ -4,15 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Megaphone, CheckCircle2, Map, Phone, Mail } from "lucide-react";
 import Accordion from "./Accordion";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 export default function DistributorClientView({
     homeData,
     contactData,
-    STRAPI_BASE_URL
 }: {
     homeData: any;
     contactData: any;
-    STRAPI_BASE_URL: string;
 }) {
     const [activeTab, setActiveTab] = useState<"home" | "contact">("home");
 
@@ -67,7 +66,7 @@ export default function DistributorClientView({
                     {/* {Hero?.Logo && (
                         <div className="mt-16 relative opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
                             <Image
-                                src={`${STRAPI_BASE_URL}${Hero.Logo.url}`}
+                                src={getStrapiMediaUrl(Hero.Logo.url)}
                                 alt="Hero Logo"
                                 width={Hero.Logo.width || 150}
                                 height={Hero.Logo.height || 50}
@@ -374,7 +373,7 @@ export default function DistributorClientView({
                     {/* The screenshot shows 'HELL ENERGY DRINK' logo. We use the one from Hero or standard img. */}
                     {Hero?.Logo ? (
                         <Image
-                            src={`${STRAPI_BASE_URL}${Hero.Logo.url}`}
+                            src={getStrapiMediaUrl(Hero.Logo.url)}
                             alt="Logo"
                             width={110}
                             height={40}
@@ -439,7 +438,7 @@ export default function DistributorClientView({
                         {Hero?.Logo ? (
                             <div className="mb-10">
                                 <Image
-                                    src={`${STRAPI_BASE_URL}${Hero.Logo.url}`}
+                                    src={getStrapiMediaUrl(Hero.Logo.url)}
                                     alt="Logo"
                                     width={120}
                                     height={40}
