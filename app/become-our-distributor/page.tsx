@@ -22,8 +22,6 @@ export default async function BecomeOurDistributor() {
         return <div className="min-h-screen flex items-center justify-center bg-[#070910] text-white">Loading...</div>;
     }
 
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-
     return (
         <main className="bg-[#0A0D14] min-h-screen text-white font-sans selection:bg-[#3FA2F6] selection:text-white pb-20 relative">
             {/* Simulated global background gradient matching the whole theme */}
@@ -33,7 +31,6 @@ export default async function BecomeOurDistributor() {
                 <DistributorClientView 
                     homeData={data} 
                     contactData={contactData} 
-                    STRAPI_BASE_URL={STRAPI_BASE_URL} 
                 />
             </div>
         </main>

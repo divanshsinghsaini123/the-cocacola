@@ -1,4 +1,5 @@
 import { GetAboutUsPageData } from "@/src/lib/strapi";
+import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 import Image from "next/image";
 import Link from "next/link";
 import Mainpage_aboutus from "./_components/Mainpage_aboutus";
@@ -35,12 +36,10 @@ export default async function AboutUs() {
     // console.log(strapioutput)
     const bannerUrl = heroData?.HeroBanner?.formats?.large?.url || heroData?.HeroBanner?.url;
     // console.log(heroData);
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-    const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const isLocal = isStrapiLocal();
     const herodata_main = strapioutput.MainPageCards;
     const featuresdata = (herodata_main?.items && herodata_main.items.length > 0) ? herodata_main.items.map((item: SectionItem, index: number) => {
-        //sbse phle nikalenge url 
-        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image?.formats?.large?.url}` : item.image?.formats?.large?.url || item.image?.url;
+        const imgurl = item.image?.formats?.large?.url || item.image?.url || "";
         return {
             id: item.id,
             image: imgurl,
@@ -56,7 +55,7 @@ export default async function AboutUs() {
     const relatedItems = (relatedSection?.items && relatedSection.items.length > 0) ? relatedSection.items.slice(0, 3).map((item: SectionItem) => {
         const itemImg = item.image;
         const imgUrlRaw = itemImg?.formats?.medium?.url || itemImg?.formats?.small?.url || itemImg?.url;
-        const imgUrl = isLocal ? `${STRAPI_BASE_URL}${imgUrlRaw}` : imgUrlRaw;
+        const imgUrl = imgUrlRaw || "";
 
         return {
             id: item.id,
@@ -71,7 +70,7 @@ export default async function AboutUs() {
             <section className="relative w-full h-[400px] md:h-[400px] lg:h-[500px] overflow-hidden">
                 {bannerUrl && (
                     <Image
-                        src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + bannerUrl}
+                        src={getStrapiMediaUrl(bannerUrl)}
                         alt="Our Company Data"
                         fill
                         className="object-cover md:object-fit"
@@ -117,7 +116,7 @@ export default async function AboutUs() {
                                     <div key={item.id} className="bg-white rounded-[16px] overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
                                         <div className="relative h-[200px] w-full bg-gray-100">
                                             <Image
-                                                src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + item.image}
+                                                src={getStrapiMediaUrl(item.image)}
                                                 alt={item.title}
                                                 fill
                                                 className="object-cover"
