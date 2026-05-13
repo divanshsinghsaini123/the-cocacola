@@ -26,7 +26,7 @@ const ShopSchema = new Schema(
             required: true,
             trim: true
         },
-        visicolor: [String],
+        visicooler: [String],
         images: [
             {
                 url: {

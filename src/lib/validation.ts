@@ -154,7 +154,7 @@ export const ShopValidationSchema = z.object({
     name: z.string().min(1, "Name is required"),
     pincode: z.number({ message: "Pincode is required" }),
     area: z.string().min(1, "Area is required"),
-    visicolor: z.array(z.string()).optional(),
+    visicooler: z.array(z.string()).optional(),
     images: z.array(
         z.object({
             url: z.string().min(1, "Image URL is required"),
