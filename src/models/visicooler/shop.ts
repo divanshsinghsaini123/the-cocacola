@@ -7,8 +7,6 @@
 // Visicooler : 280 ltr, 360 ltr
 
 import { Schema, model, models } from "mongoose";
-import { number } from "zod";
-import { required } from "zod/mini";
 
 const ShopSchema = new Schema(
     {
@@ -18,7 +16,7 @@ const ShopSchema = new Schema(
             trim: true
         },
         pincode: {
-            type: number,
+            type: Number,
             required: true
         },
         area: {
