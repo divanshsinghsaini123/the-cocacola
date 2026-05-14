@@ -149,3 +149,17 @@ export const CalculatorProductSchema = z.object({
         })
     ).optional().default([]),
 });
+
+export const ShopValidationSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    pincode: z.number({ message: "Pincode is required" }),
+    area: z.string().min(1, "Area is required"),
+    visicolor: z.array(z.string()).optional(),
+    images: z.array(
+        z.object({
+            url: z.string().min(1, "Image URL is required"),
+            uploadedAt: z.date().optional(),
+        })
+    ).optional(),
+    isActive: z.boolean().optional(),
+});
