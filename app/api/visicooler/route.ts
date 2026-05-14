@@ -44,6 +44,36 @@ export async function POST(req: NextRequest) {
     }
 }
 
+// PUT: Update an existing shop
+export async function PUT(req: NextRequest) {
+    try {
+        await connectDB();
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+
+        if (!id) {
+            return NextResponse.json({ success: false, message: "Shop ID is required" }, { status: 400 });
+        }
+
+        const body = await req.json();
+
+        // Validate using Zod
+        const validation = ShopValidationSchema.safeParse(body);
+        if (!validation.success) {
+            return NextResponse.json({ success: false, error: validation.error.format() }, { status: 400 });
+        }
+
+        const updatedShop = await shop.findByIdAndUpdate(id, validation.data, { new: true });
+        if (!updatedShop) {
+            return NextResponse.json({ success: false, message: "Shop not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ success: true, data: updatedShop }, { status: 200 });
+    } catch (error: any) {
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+}
+
 // DELETE: Delete a shop by ID (e.g. ?id=...)
 export async function DELETE(req: NextRequest) {
     try {

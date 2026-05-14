@@ -74,7 +74,7 @@ export async function PUT(req: Request) {
         }
 
         // Validate folder
-        if (!["brands", "products", "stores"].includes(folder)) {
+        if (!["brands", "products", "stores", "visicooler"].includes(folder)) {
             return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
         }
 
@@ -134,3 +134,5 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ error: "Delete failed: " + err.message }, { status: 500 });
     }
 }
+
+
