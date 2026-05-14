@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Trash2, MapPin, Hash, Package, Image as ImageIcon, Plus } from "lucide-react";
+import { ArrowLeft, Trash2, MapPin, Hash, Package, Image as ImageIcon, Plus, Maximize, X, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import GcoreUpload from "@/app/admin/_components/GcoreUpload";
@@ -29,6 +29,13 @@ export default function ShopViewPage() {
   
   const [shop, setShop] = useState<Shop | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Admin Verification Modal State
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [imageToDelete, setImageToDelete] = useState<string | null>(null);
+  const [adminUsername, setAdminUsername] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
+  const [verifying, setVerifying] = useState(false);
 
   const fetchShop = async () => {
     try {
@@ -71,24 +78,68 @@ export default function ShopViewPage() {
     }
   };
 
-  const handleDeleteImage = async (url: string) => {
-    if (!confirm("Are you sure you want to delete this image?")) return;
+  const openDeleteModal = (url: string) => {
+    setImageToDelete(url);
+    setAdminUsername("");
+    setAdminPassword("");
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setImageToDelete(null);
+    setAdminUsername("");
+    setAdminPassword("");
+  };
+
+  const handleVerifyAndDelete = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!imageToDelete) return;
+    
+    setVerifying(true);
     
     try {
+      // 1. Verify Admin Credentials
+      const verifyRes = await fetch("/api/admin/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: adminUsername, password: adminPassword }),
+      });
+      
+      let verifyData;
+      try {
+        verifyData = await verifyRes.json();
+      } catch (err) {
+        toast.error("Server error: API returned invalid response. Did you restart the server?");
+        setVerifying(false);
+        return;
+      }
+      
+      if (!verifyData.success) {
+        toast.error(verifyData.error || "Please enter the correct username or password.");
+        setVerifying(false);
+        return;
+      }
+
+      // 2. If verified, proceed with deletion
       const res = await fetch("/api/visicooler", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, action: "delete_image", url }),
+        body: JSON.stringify({ id, action: "delete_image", url: imageToDelete }),
       });
       const data = await res.json();
+      
       if (data.success) {
         toast.success("Image deleted successfully");
+        closeDeleteModal();
         fetchShop();
       } else {
         toast.error("Failed to delete image");
       }
-    } catch (error) {
-      toast.error("Error deleting image");
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred during deletion");
+    } finally {
+      setVerifying(false);
     }
   };
 
@@ -109,6 +160,76 @@ export default function ShopViewPage() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 py-10 px-6">
+      
+      {/* Delete Verification Modal */}
+      {deleteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+              <div className="flex items-center gap-2 text-red-600 font-bold">
+                <ShieldAlert size={20} />
+                <h3>Admin Verification Required</h3>
+              </div>
+              <button onClick={closeDeleteModal} className="text-gray-400 hover:text-gray-600 transition-colors p-1">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleVerifyAndDelete} className="p-6">
+              <p className="text-sm text-gray-600 mb-6">
+                Deleting images requires administrator privileges. Please enter an active admin's credentials to confirm deletion.
+              </p>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Admin Username</label>
+                  <input
+                    type="text"
+                    required
+                    value={adminUsername}
+                    onChange={(e) => setAdminUsername(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
+                    placeholder="Enter username"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Admin Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
+                    placeholder="Enter password"
+                  />
+                </div>
+              </div>
+              
+              <div className="mt-8 flex gap-3">
+                <button
+                  type="button"
+                  onClick={closeDeleteModal}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2.5 rounded-lg font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={verifying}
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-70 flex justify-center items-center"
+                >
+                  {verifying ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    "Verify & Delete"
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-5xl mx-auto space-y-6">
         
         {/* Header */}
@@ -141,7 +262,6 @@ export default function ShopViewPage() {
               </div>
             </div>
             
-            {/* GcoreUpload trigger button inside the header */}
             <GcoreUpload folder="visicooler" onSuccess={handleImageUpload} multiple={true}>
               {({ open, isLoading }) => (
                 <button
@@ -238,11 +358,23 @@ export default function ShopViewPage() {
                     
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
-                      <div className="self-end">
+                      <div className="self-end flex gap-2">
+                        {/* View Full Screen Button */}
+                        <a 
+                          href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + img.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-white hover:bg-gray-100 text-gray-800 p-2.5 rounded-lg shadow-sm transition-colors"
+                          title="View full screen"
+                        >
+                          <Maximize size={18} />
+                        </a>
+                        
+                        {/* Delete Button (Opens Admin Modal) */}
                         <button 
-                          onClick={() => handleDeleteImage(img.url)}
+                          onClick={() => openDeleteModal(img.url)}
                           className="bg-white hover:bg-red-50 text-red-600 p-2.5 rounded-lg shadow-sm transition-colors"
-                          title="Delete image"
+                          title="Delete image (Requires Admin)"
                         >
                           <Trash2 size={18} />
                         </button>
