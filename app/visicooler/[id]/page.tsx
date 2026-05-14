@@ -36,6 +36,7 @@ export default function ShopViewPage() {
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [verifying, setVerifying] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const fetchShop = async () => {
     try {
@@ -82,6 +83,7 @@ export default function ShopViewPage() {
     setImageToDelete(url);
     setAdminUsername("");
     setAdminPassword("");
+    setAuthError(null);
     setDeleteModalOpen(true);
   };
 
@@ -90,6 +92,7 @@ export default function ShopViewPage() {
     setImageToDelete(null);
     setAdminUsername("");
     setAdminPassword("");
+    setAuthError(null);
   };
 
   const handleVerifyAndDelete = async (e: React.FormEvent) => {
@@ -97,6 +100,7 @@ export default function ShopViewPage() {
     if (!imageToDelete) return;
     
     setVerifying(true);
+    setAuthError(null);
     
     try {
       // 1. Verify Admin Credentials
@@ -110,13 +114,13 @@ export default function ShopViewPage() {
       try {
         verifyData = await verifyRes.json();
       } catch (err) {
-        toast.error("Server error: API returned invalid response. Did you restart the server?");
+        setAuthError("Server error: API returned invalid response. Did you restart the server?");
         setVerifying(false);
         return;
       }
       
       if (!verifyData.success) {
-        toast.error(verifyData.error || "Please enter the correct username or password.");
+        setAuthError(verifyData.error || "Please enter the correct username or password.");
         setVerifying(false);
         return;
       }
@@ -134,10 +138,10 @@ export default function ShopViewPage() {
         closeDeleteModal();
         fetchShop();
       } else {
-        toast.error("Failed to delete image");
+        setAuthError("Failed to delete image");
       }
     } catch (error: any) {
-      toast.error(error.message || "An error occurred during deletion");
+      setAuthError(error.message || "An error occurred during deletion");
     } finally {
       setVerifying(false);
     }
@@ -180,6 +184,13 @@ export default function ShopViewPage() {
                 Deleting images requires administrator privileges. Please enter an active admin's credentials to confirm deletion.
               </p>
               
+              {authError && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm font-medium rounded-lg border border-red-100 flex items-center gap-2">
+                  <ShieldAlert size={16} className="shrink-0" />
+                  {authError}
+                </div>
+              )}
+              
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Admin Username</label>
@@ -187,8 +198,12 @@ export default function ShopViewPage() {
                     type="text"
                     required
                     value={adminUsername}
-                    onChange={(e) => setAdminUsername(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
+                    onChange={(e) => { setAdminUsername(e.target.value); setAuthError(null); }}
+                    className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 outline-none transition-all ${
+                      authError 
+                        ? "border-red-400 focus:border-red-500 focus:ring-red-200" 
+                        : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
+                    }`}
                     placeholder="Enter username"
                   />
                 </div>
@@ -198,8 +213,12 @@ export default function ShopViewPage() {
                     type="password"
                     required
                     value={adminPassword}
-                    onChange={(e) => setAdminPassword(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
+                    onChange={(e) => { setAdminPassword(e.target.value); setAuthError(null); }}
+                    className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 outline-none transition-all ${
+                      authError 
+                        ? "border-red-400 focus:border-red-500 focus:ring-red-200" 
+                        : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
+                    }`}
                     placeholder="Enter password"
                   />
                 </div>
