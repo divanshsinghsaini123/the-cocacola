@@ -9,7 +9,7 @@ const s3 = new S3Client({
         accessKeyId: process.env.GCORE_ACCESS_KEY_ID!,
         secretAccessKey: process.env.GCORE_SECRET_ACCESS_KEY!,
     },
-    forcePathStyle: true // Gcore often requires path style
+    forcePathStyle: false // Changed to false: Gcore often prefers virtual-hosted style (bucket.endpoint.com)
 });
 
 /**
@@ -110,8 +110,14 @@ export async function PUT(req: Request) {
 
     } catch (err: any) {
         console.error("Gcore Upload Error:", err);
+        
+        let errorMessage = err.message;
+        if (err.$response && err.$response.statusCode) {
+            errorMessage += ` (Gcore returned HTTP ${err.$response.statusCode})`;
+        }
+
         return NextResponse.json(
-            { error: "Upload failed: " + err.message },
+            { error: "Upload failed: " + errorMessage },
             { status: 500 }
         );
     }
