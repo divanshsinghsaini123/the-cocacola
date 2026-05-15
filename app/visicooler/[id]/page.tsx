@@ -163,7 +163,7 @@ export default function ShopViewPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50/50 py-10 px-6">
+    <div className="min-h-screen bg-gray-50/50 py-6 px-4 sm:py-10 sm:px-6">
       
       {/* Delete Verification Modal */}
       {deleteModalOpen && (
@@ -270,9 +270,9 @@ export default function ShopViewPage() {
 
         {/* Shop Info Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="px-5 sm:px-8 py-5 sm:py-6 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{shop.name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{shop.name}</h1>
               <div className="flex items-center gap-2 mt-2">
                 <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${shop.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                   {shop.isActive ? "Active" : "Inactive"}
@@ -286,7 +286,7 @@ export default function ShopViewPage() {
                 <button
                   onClick={open}
                   disabled={isLoading}
-                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm disabled:opacity-70"
+                  className="flex items-center justify-center w-full md:w-auto gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm disabled:opacity-70"
                 >
                   {isLoading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -299,7 +299,7 @@ export default function ShopViewPage() {
             </GcoreUpload>
           </div>
           
-          <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-5 sm:p-8 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <div className="flex items-start gap-3">
               <MapPin className="text-blue-500 mt-1" size={24} />
               <div>
@@ -332,7 +332,7 @@ export default function ShopViewPage() {
 
         {/* Images Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+          <div className="px-5 sm:px-8 py-5 sm:py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <ImageIcon className="text-gray-500" size={22} />
               <h2 className="text-xl font-bold text-gray-900">Gallery</h2>
@@ -342,7 +342,7 @@ export default function ShopViewPage() {
             </span>
           </div>
 
-          <div className="p-8 bg-gray-50/30">
+          <div className="p-5 sm:p-8 bg-gray-50/30">
             {sortedImages.length === 0 ? (
               <div className="text-center py-16 border-2 border-dashed border-gray-300 rounded-xl bg-white">
                 <ImageIcon className="mx-auto h-12 w-12 text-gray-300 mb-3" />
@@ -376,7 +376,7 @@ export default function ShopViewPage() {
                     />
                     
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
+                    <div className="absolute inset-0 bg-black/40 sm:bg-black/50 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 sm:p-4">
                       <div className="self-end flex gap-2">
                         {/* View Full Screen Button */}
                         <a 

@@ -120,7 +120,7 @@ function CreateShopForm() {
       </Link>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/50">
+        <div className="px-5 sm:px-8 py-5 sm:py-6 border-b border-gray-100 bg-gray-50/50">
           <h1 className="text-2xl font-bold text-gray-900">
             {editId ? "Edit Shop Details" : "Create New Shop"}
           </h1>
@@ -129,8 +129,8 @@ function CreateShopForm() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-5 sm:space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
             {/* Shop Name */}
             <div className="md:col-span-2">
               <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -237,7 +237,7 @@ function CreateShopForm() {
 
 export default function CreateShopPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-6">
+    <div className="min-h-screen bg-gray-50 py-6 px-4 sm:py-10 sm:px-6">
       <div className="max-w-3xl mx-auto">
         {/* Suspense boundary is required when using useSearchParams() in App Router */}
         <Suspense fallback={<div className="animate-spin mx-auto mt-20 h-10 w-10 border-b-2 border-blue-600"></div>}>
