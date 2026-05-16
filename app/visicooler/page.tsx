@@ -52,14 +52,8 @@ export default function VisicoolerPage() {
     });
 
     const handleExport = (shop: Shop) => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(shop, null, 2));
-        const downloadAnchorNode = document.createElement("a");
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", `${shop.name.replace(/\s+/g, '_')}_data.json`);
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-        toast.success(`${shop.name} data exported!`);
+        window.open(`/api/admin/cron/manual-report?shopId=${shop._id}`, "_blank");
+        toast.success(`Downloading report for ${shop.name}...`);
     };
 
     return (
