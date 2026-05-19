@@ -16,10 +16,10 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
         port: "1337",
       },
-      // {
-      //   protocol: "https",
-      //   hostname: "active-nurture-c4d476a309.strapiapp.comhttps"
-      // },
+      {
+        protocol: "https",
+        hostname: "jellyfish-app-4r55c.ondigitalocean.app"
+      },
       {
         protocol: "https",
         hostname: "active-nurture-c4d476a309.media.strapiapp.com"

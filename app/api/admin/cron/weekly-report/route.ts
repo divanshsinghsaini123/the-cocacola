@@ -2,10 +2,14 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import { shop } from "@/src/models/visicooler/shop";
 import nodemailer from "nodemailer";
+import { convertSegmentPathToStaticExportFilename } from "next/dist/shared/lib/segment-cache/segment-value-encoding";
 
 export async function POST(request: Request) {
     try {
         // 1. Verify the Secret Key
+
+        //request hit hui , 
+        // console.log("request hit hui");
         const authHeader = request.headers.get("Authorization");
         if (authHeader !== "MY_SUPER_SECRET_CRON_KEY_WEEKLY") {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
