@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { projectCompilationEventsSubscribe } from "next/dist/build/swc/generated-native";
 
 export default function AdminPortalPage() {
     return (
@@ -67,7 +68,7 @@ export default function AdminPortalPage() {
                     {/* Strapi Option */}
                     <a
 
-                        href="https://strapicloud9-k6ghp.ondigitalocean.app/admin"
+                        href={process.env.NEXT_PUBLIC_STRAPI_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group relative flex flex-col p-8 rounded-[24px] bg-neutral-900/50 border border-neutral-800 hover:border-violet-500/50 transition-all duration-300 hover:bg-neutral-900/80 hover:shadow-2xl hover:shadow-violet-900/20 hover:-translate-y-1"
