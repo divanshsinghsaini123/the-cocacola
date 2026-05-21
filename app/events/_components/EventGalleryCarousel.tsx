@@ -155,13 +155,13 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                             {isVideo(images[actualActiveIndex]?.Picture_video) ? (
                                 <video
-                                    src={getStrapiMediaUrl( (images[actualActiveIndex]?.Picture_video?.url || '')}
+                                    src={getStrapiMediaUrl(images[actualActiveIndex]?.Picture_video?.url || "")}
                                     className="w-full h-full object-cover opacity-40 blur-3xl scale-125 transition-all duration-700"
                                     muted playsInline
                                 />
                             ) : (
                                 <img
-                                    src={getStrapiMediaUrl( (images[actualActiveIndex]?.Picture_video?.url || '')}
+                                    src={getStrapiMediaUrl(images[actualActiveIndex]?.Picture_video?.url || "")}
                                     className="w-full h-full object-cover opacity-40 blur-3xl scale-125 transition-all duration-700"
                                     alt="Background blur"
                                 />
@@ -192,7 +192,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                             {isVideo(images[actualActiveIndex]?.Picture_video) ? (
                                 <video
                                     key={`main-vid-${actualActiveIndex}`}
-                                    src={getStrapiMediaUrl( (images[actualActiveIndex]?.Picture_video?.url)}
+                                    src={getStrapiMediaUrl(images[actualActiveIndex]?.Picture_video?.url)}
                                     className="w-full h-full object-contain drop-shadow-2xl max-h-full"
                                     autoPlay playsInline
                                     onLoadedMetadata={(e) => {
@@ -208,7 +208,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                             ) : (
                                 <img
                                     key={`main-img-${actualActiveIndex}`}
-                                    src={getStrapiMediaUrl( (images[actualActiveIndex]?.Picture_video?.url || images[actualActiveIndex]?.Picture_video?.formats?.large?.url)}
+                                    src={getStrapiMediaUrl(images[actualActiveIndex]?.Picture_video?.url || images[actualActiveIndex]?.Picture_video?.formats?.large?.url)}
                                     alt={images[actualActiveIndex]?.AltText || `${eventName} - Image`}
                                     className="w-full h-full object-contain drop-shadow-2xl max-h-full"
                                 />
@@ -240,9 +240,9 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                                         className={`relative rounded-lg md:rounded-xl overflow-hidden shadow-2xl transition-all duration-300 cursor-pointer border-[2px] md:border-[3px] ${offset === 0 ? 'w-12 h-16 md:w-16 md:h-24 border-white scale-110 z-10 box-content' : 'w-10 h-14 md:w-14 md:h-22 border-white/20 opacity-50 hover:opacity-100 hover:border-white/60 box-content'}`}
                                     >
                                         {isVideo(item.Picture_video) ? (
-                                            <video src={getStrapiMediaUrl( imgUrl} className="w-full h-full object-cover" muted playsInline />
+                                            <video src={getStrapiMediaUrl(imgUrl)} className="w-full h-full object-cover" muted playsInline />
                                         ) : (
-                                            <img src={getStrapiMediaUrl( imgUrl} className="w-full h-full object-cover" alt="Thumbnail preview" />
+                                            <img src={getStrapiMediaUrl(imgUrl)} className="w-full h-full object-cover" alt="Thumbnail preview" />
                                         )}
                                         {isVideo(item.Picture_video) && (
                                             <div className="absolute top-1 right-1 bg-black/50 p-0.5 rounded-full z-10 text-white">
@@ -272,13 +272,13 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
                             >
                                 {isVideo(img.Picture_video) ? (
                                     <video
-                                        src={getStrapiMediaUrl( imgUrl}
+                                        src={getStrapiMediaUrl(imgUrl)}
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         muted loop playsInline
                                     />
                                 ) : (
                                     <img
-                                        src={getStrapiMediaUrl( imgUrl}
+                                        src={getStrapiMediaUrl(imgUrl)}
                                         alt={img.AltText || `${eventName} - Image ${idx + 1}`}
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         loading="lazy"
@@ -311,7 +311,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
 //     return (
 //         <div className="group relative rounded-3xl overflow-hidden bg-component shadow-2xl border border-foreground/10 w-full h-full">
 //             <img
-//                 src={getStrapiMediaUrl( imgUrl}
+//                 src={getStrapiMediaUrl(imgUrl)}
 //                 alt={img.AltText || `${eventName} - Image ${index + 1}`}
 //                 className="w-full h-full object-fit transition-all duration-700"
 //                 loading="lazy"
@@ -333,7 +333,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
 //     return (
 //         <div className="group relative rounded-3xl overflow-hidden bg-component shadow-2xl border border-foreground/10 w-full h-full">
 //             <img
-//                 src={getStrapiMediaUrl( imgUrl}
+//                 src={getStrapiMediaUrl(imgUrl)}
 //                 alt={img.AltText || `${eventName} - Image ${index + 1}`}
 //                 className="w-full h-full object-fit transition-all duration-700"
 //                 loading="lazy"
