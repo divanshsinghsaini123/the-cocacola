@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { Pill, BookOpen, Ban, CandyOff } from "lucide-react"; // Fallback icons
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 export interface ProductProps {
     title: string;
@@ -109,7 +110,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                                     <div className="w-16 h-16 relative flex items-center justify-center border-2 border-white/20 rounded-xl p-3 bg-black/20 backdrop-blur-sm group-hover:border-[#E51D29] transition-colors">
                                         {typeof feature.icon === 'string' ? (
                                             <div className="relative md:w-full md:h-full w-[50%] h-[50%]">
-                                                <Image src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + feature.icon} alt={feature.text} fill className="object-contain invert" />
+                                                <Image src={getStrapiMediaUrl(feature.icon)} alt={feature.text} fill className="object-contain invert" />
                                             </div>
                                         ) : (
                                             <div className="text-white md:w-full md:h-full w-[70%] h-[70%] [&>svg]:w-full [&>svg]:h-full">
@@ -130,7 +131,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                                 <div key={i} className="flex items-center gap-4 group">
                                     <div className="w-8 h-8 relative text-[#E51D29]">
                                         {typeof sub.icon === 'string' ? (
-                                            <Image src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + sub.icon} alt={sub.text} fill className="object-contain" />
+                                            <Image src={getStrapiMediaUrl(sub.icon)} alt={sub.text} fill className="object-contain" />
                                         ) : (
                                             <div className="w-full h-full [&>svg]:w-full [&>svg]:h-full">
                                                 {sub.icon}

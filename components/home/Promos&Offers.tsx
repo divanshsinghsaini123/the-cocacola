@@ -4,14 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { PromosAndOffersData, SectionItem } from "@/types/home";
+import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 
 interface PromosAndOffersProps {
     data: PromosAndOffersData;
     buttonStyle?: { BackgroundHexColor?: string; FontHexColor?: string };
 }
 export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersProps) {
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-    const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const isLocal = isStrapiLocal();
     // Fallback static data if data.items is missing or empty
     const defaultOffers = [
         {
@@ -34,7 +34,7 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
 
     const offers = (data?.items && data.items.length > 0) ? data.items.slice(0, 2).map((item: SectionItem) => {
         // @ts-ignore
-        const imageUrl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url}` : item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url;
+        const imageUrl = item.image.data?.attributes?.formats?.large?.url || item.image.formats?.large?.url || item.image?.url || "";
 
         return {
             id: item.id,
@@ -117,7 +117,7 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
                         <div key={offer.id} className="min-w-[85%] sm:min-w-0 bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col snap-center shadow-sm select-none">
                             <div className="relative h-[250px] md:h-[430px] sm:h-[350px] w-full">
                                 <Image
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + offer.image}
+                                    src={getStrapiMediaUrl(offer.image)}
                                     alt={offer.title}
                                     fill
                                     className="object-cover pointer-events-none"

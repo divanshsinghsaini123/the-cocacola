@@ -2,18 +2,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FeaturesData, SectionItem } from "@/types/home";
+import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 
 interface FeaturesProps {
     data: FeaturesData;
 }
 export default function Features({ data }: FeaturesProps) {
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-    const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const isLocal = isStrapiLocal();
 
     const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: SectionItem, index: number) => {
-        //sbse phle nikalenge url 
         // @ts-ignore
-        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.large?.url || item.image.formats.large.url}` : item.image.data?.attributes?.formats?.large?.url || item.image.formats.large?.url || item.image?.url;
+        const imgurl = item.image.data?.attributes?.formats?.large?.url || item.image.formats?.large?.url || item.image?.url || "";
         return {
             id: item.id,
             image: imgurl,
@@ -45,7 +44,7 @@ export default function Features({ data }: FeaturesProps) {
                             {/* Image Container */}
                             <div className="w-full lg:w-[660px] h-[400px] lg:h-[540px] relative rounded-none lg:rounded-[16px] overflow-hidden shadow-sm mb-2">
                                 <Image
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + feature.image}
+                                    src={getStrapiMediaUrl(feature.image)}
                                     alt={feature.title}
                                     fill
                                     className="object-contain"

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, Fragment } from "react";
 import { usePathname } from "next/navigation";
 import { useGetExtraDataQuery } from "@/src/store/slices/api";
+import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 
 interface Store {
     _id: string;
@@ -18,21 +19,20 @@ interface NavbarProps {
     navbarColor: string | undefined;
 }
 export default function Navbar({ stores, navbarImage, navbarColor }: NavbarProps) {
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const [activeDropdown, setActiveDropdown] = useState<string>("");
     const [activeMobileDropdown, setActiveMobileDropdown] = useState<string>("");
     const isAdmin = pathname?.startsWith('/admin');
     const isBecomeOurDisributor = pathname?.startsWith('/become-our-distributor');
-    const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const isLocal = isStrapiLocal();
     const { data, error } = useGetExtraDataQuery();
     const stickyNav = data?.data?.StickyNavbar;
     if (isAdmin || isBecomeOurDisributor) return null;
 
     // Derived image URL
     const imageUrl = navbarImage
-        ? (!isLocal ? navbarImage : `${STRAPI_BASE_URL}${navbarImage}`)
+        ? getStrapiMediaUrl(navbarImage)
         : "/assets/Home/Coke-company-logo-black.svg"; // Fallback
 
     const toggleMenu = () => {
@@ -77,7 +77,7 @@ export default function Navbar({ stores, navbarImage, navbarColor }: NavbarProps
                             <Link href="/" className="flex items-center">
                                 <Image
                                     // src="/assets/Home/Coke-company-logo-black.svg"
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imageUrl}
+                                    src={imageUrl}
                                     // src={navbarImage}
                                     alt="The Coca-Cola Company"
                                     width={125}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 interface EventProps {
     event: {
         id: number;
@@ -24,7 +25,7 @@ export default function Event({ event, buttonStyle }: EventProps) {
             {imgUrl && (
                 <div className="relative aspect-video w-full overflow-hidden bg-background">
                     <img
-                        src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imgUrl}
+                        src={getStrapiMediaUrl(imgUrl)}
                         alt={firstImg.AltText}
                         className="object-cover w-full h-full"
                     />

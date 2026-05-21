@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { MoreFromCocaColaData, SectionItem } from "@/types/home";
+import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 
 interface MoreFromCocaColaItem {
     id: number;
@@ -17,8 +18,7 @@ interface MoreFromCocaColaProps {
     data: MoreFromCocaColaData;
 }
 export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-    const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const isLocal = isStrapiLocal();
 
     const defaultItems: MoreFromCocaColaItem[] = [
         {
@@ -65,7 +65,7 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
     const StrapiItems = (data?.items && data.items.length > 0) ? data.items.map((item: SectionItem) => {
         //sbse phle nikalenge url
         // @ts-ignore
-        const imgurl = isLocal ? `${STRAPI_BASE_URL}${item.image.data?.attributes?.formats?.small?.url || item.image.formats.small.url}` : item.image.data?.attributes?.formats?.small?.url || item.image.formats.small.url;
+        const imgurl = item.image.data?.attributes?.formats?.small?.url || item.image.formats?.small?.url || item.image?.url || "";
         return {
             id: item.id,
             image: imgurl,
@@ -121,7 +121,7 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
                         <div key={`${item.id}-${index}`} className="w-[85vw] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-start bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col shadow-sm group">
                             <div className="relative h-[200px] md:h-[250px] w-full">
                                 <Image
-                                    src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + item.image}
+                                    src={getStrapiMediaUrl(item.image)}
                                     alt={item.title}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-105"

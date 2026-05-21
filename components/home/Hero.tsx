@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HeroData } from "@/types/home";
+import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 
 interface HeroProps {
     data: HeroData;
     buttonStyle?: { BackgroundHexColor?: string; FontHexColor?: string };
 }
-const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL!;
 
 export default function Hero({ data, buttonStyle }: HeroProps) {
-    const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const isLocal = isStrapiLocal();
     const imageUrlMobile = data?.imageMobile?.data?.attributes?.formats?.large?.url || data?.imageMobile?.formats?.large?.url || data?.imageMobile?.url || "";
     const imageUrlDesktop = data?.imageDesktop?.data?.attributes?.formats?.large?.url || data?.imageDesktop?.formats?.large?.url || data?.imageDesktop?.url || "";
     return (
@@ -20,7 +20,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                     <div className="absolute inset-0 ">
                         {imageUrlMobile && (
                             <Image
-                                src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imageUrlMobile}
+                                src={getStrapiMediaUrl(imageUrlMobile)}
                                 alt="Winter Adventure in Sweden"
                                 fill
                                 className="object-fit object-right md:hidden"
@@ -30,7 +30,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                         )}
                         {imageUrlDesktop && (
                             <Image
-                                src={process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + imageUrlDesktop}
+                                src={getStrapiMediaUrl(imageUrlDesktop)}
                                 alt="Winter Adventure in Sweden"
                                 fill
                                 className="hidden md:block object-cover object-center"
@@ -51,7 +51,9 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                                     {data.heading}
                                 </h1>
                                 <p className="text-left text-[16px] md:text-[16px] leading-[1.5] max-w-[500px] text-white px-3 md:px-0">
-                                    {data.description[0]?.children[0]?.text}
+                                    {data.description
+                                        ?.map((block) => block.children?.map((child) => child.text).join(""))
+                                        .join(" ")}
                                 </p>
                             </div>
 

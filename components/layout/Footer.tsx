@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useGetExtraDataQuery } from "@/src/store/slices/api";
+import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 const ChevronDown = ({ isOpen }: { isOpen: boolean }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -63,8 +64,7 @@ interface FooterProps {
 }
 
 export default function Footer(props: FooterProps) {
-    const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-    const isLocal = STRAPI_BASE_URL.includes("localhost");
+    const isLocal = isStrapiLocal();
 
     const pathname = usePathname();
     const isBecomeOurDisributor = pathname?.startsWith('/become-our-distributor');
@@ -153,7 +153,7 @@ export default function Footer(props: FooterProps) {
                 <div className="mb-9">
                     <Link href="/">
                         <Image
-                            src={!isLocal ? process.env.NEXT_PUBLIC_STRAPICONTENT_PREFIX + FooterImageUrl : `${STRAPI_BASE_URL}${FooterImageUrl}`}
+                            src={getStrapiMediaUrl(FooterImageUrl)}
                             alt="Company Logo"
                             width={249}
                             height={60}
