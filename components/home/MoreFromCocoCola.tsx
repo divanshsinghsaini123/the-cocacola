@@ -20,48 +20,48 @@ interface MoreFromCocaColaProps {
 export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
     const isLocal = isStrapiLocal();
 
-    const defaultItems: MoreFromCocaColaItem[] = [
-        {
-            id: 1,
-            image: "/assets/Home/coke-offering-vending.jpg",
-            title: "Coca-Cola Vending",
-            description: "Each time you make a purchase with your mobile wallet at select Coca-Cola vending machines, you’ll be one step closer to earning a drink reward.",
-            buttonText: "Start Earning Today",
-            buttonLink: "#"
-        },
-        {
-            id: 2,
-            image: "/assets/Home/coke-offering-refreshing-films.jpg",
-            title: "Coca-Cola Refreshing Films",
-            description: "Coca-Cola® Refreshing Films provides students the opportunity to create content for the big screen.",
-            buttonText: "Check It Out",
-            buttonLink: "#"
-        },
-        {
-            id: 3,
-            image: "/assets/Home/plusone-card.jpg",
-            title: "you plus +one",
-            description: "Have you downloaded yet? The +one app brings the universe of Coca-Cola® into the palm of your hand. Start earning rewards today!",
-            buttonText: "Download Now",
-            buttonLink: "#"
-        },
-        {
-            id: 4,
-            image: "/assets/Home/newExhibit.webp",
-            title: "New Exhibit at World of Coca-Cola",
-            description: "Experience the magic of Coca-Cola’s history like never before—step into Coca-Cola Stories at World of Coca-Cola.",
-            buttonText: "Learn More",
-            buttonLink: "#"
-        },
-        {
-            id: 5,
-            image: "/assets/Home/drinkup.webp",
-            title: "Drink up what we’ve dreamed up!",
-            description: "Coca-Cola Freestyle gives you the freedom to explore, pour, and enjoy your perfect drinks.",
-            buttonText: "Explore and Pour",
-            buttonLink: "#"
-        }
-    ];
+    // const defaultItems: MoreFromCocaColaItem[] = [
+    //     {
+    //         id: 1,
+    //         image: "/assets/Home/coke-offering-vending.jpg",
+    //         title: "Coca-Cola Vending",
+    //         description: "Each time you make a purchase with your mobile wallet at select Coca-Cola vending machines, you’ll be one step closer to earning a drink reward.",
+    //         buttonText: "Start Earning Today",
+    //         buttonLink: "#"
+    //     },
+    //     {
+    //         id: 2,
+    //         image: "/assets/Home/coke-offering-refreshing-films.jpg",
+    //         title: "Coca-Cola Refreshing Films",
+    //         description: "Coca-Cola® Refreshing Films provides students the opportunity to create content for the big screen.",
+    //         buttonText: "Check It Out",
+    //         buttonLink: "#"
+    //     },
+    //     {
+    //         id: 3,
+    //         image: "/assets/Home/plusone-card.jpg",
+    //         title: "you plus +one",
+    //         description: "Have you downloaded yet? The +one app brings the universe of Coca-Cola® into the palm of your hand. Start earning rewards today!",
+    //         buttonText: "Download Now",
+    //         buttonLink: "#"
+    //     },
+    //     {
+    //         id: 4,
+    //         image: "/assets/Home/newExhibit.webp",
+    //         title: "New Exhibit at World of Coca-Cola",
+    //         description: "Experience the magic of Coca-Cola’s history like never before—step into Coca-Cola Stories at World of Coca-Cola.",
+    //         buttonText: "Learn More",
+    //         buttonLink: "#"
+    //     },
+    //     {
+    //         id: 5,
+    //         image: "/assets/Home/drinkup.webp",
+    //         title: "Drink up what we’ve dreamed up!",
+    //         description: "Coca-Cola Freestyle gives you the freedom to explore, pour, and enjoy your perfect drinks.",
+    //         buttonText: "Explore and Pour",
+    //         buttonLink: "#"
+    //     }
+    // ];
     const StrapiItems = (data?.items && data.items.length > 0) ? data.items.map((item: SectionItem) => {
         //sbse phle nikalenge url
         // @ts-ignore
@@ -74,8 +74,8 @@ export default function MoreFromCocaCola({ data }: MoreFromCocaColaProps) {
             buttonText: item.buttonText,
             buttonLink: item.buttonLink || "#",
         }
-    }) : defaultItems;
-    const finalItems = StrapiItems || defaultItems;
+    }) : [];
+    const finalItems = StrapiItems;
 
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
