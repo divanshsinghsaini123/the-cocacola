@@ -33,7 +33,7 @@ export default function Navbar({ stores, navbarImage, navbarColor }: NavbarProps
     // Derived image URL
     const imageUrl = navbarImage
         ? getStrapiMediaUrl(navbarImage)
-        : "/assets/Home/Coke-company-logo-black.svg"; // Fallback
+        : "/"; // Fallback
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
