@@ -247,7 +247,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
 
                     <GcoreUpload
                         folder="products"
-                        maxSizeMB={0.5}
+                        maxSizeMB={2}
                         onSuccess={(url) => {
                             setFormData(prev => ({ ...prev, images: [...prev.images, url] }));
                         }}

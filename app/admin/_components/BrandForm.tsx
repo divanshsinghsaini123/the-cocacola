@@ -220,7 +220,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                                     <div className="flex flex-col gap-2">
                                         <GcoreUpload
                                             folder="brands"
-                                            maxSizeMB={0.2}
+                                            maxSizeMB={2}
                                             onSuccess={(url) => {
                                                 const eventLine = { target: { name: 'logo', value: url } } as React.ChangeEvent<HTMLInputElement>;
                                                 handleChange(eventLine);
@@ -252,7 +252,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                             ) : (
                                 <GcoreUpload
                                     folder="brands"
-                                    maxSizeMB={0.2}
+                                    maxSizeMB={2}
                                     onSuccess={(url) => {
                                         const eventLine = { target: { name: 'logo', value: url } } as React.ChangeEvent<HTMLInputElement>;
                                         handleChange(eventLine);
@@ -282,7 +282,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                             <GcoreUpload
                                 folder="brands"
                                 multiple={true}
-                                maxSizeMB={0.5}
+                                maxSizeMB={2}
                                 onSuccess={(url) => {
                                     setFormData(prev => ({
                                         ...prev,

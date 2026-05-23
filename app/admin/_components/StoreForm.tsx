@@ -180,6 +180,7 @@ export default function StoreForm({ store }: StoreProps) {
                             <div className="flex flex-col gap-2">
                                 <GcoreUpload
                                     folder="stores"
+                                    maxSizeMB={2}
                                     onSuccess={(url) => {
                                         handleChange({ target: { name: 'image', value: url } } as any);
                                     }}
@@ -207,6 +208,7 @@ export default function StoreForm({ store }: StoreProps) {
                     ) : (
                         <GcoreUpload
                             folder="stores"
+                            maxSizeMB={2}
                             onSuccess={(url) => {
                                 handleChange({ target: { name: 'image', value: url } } as any);
                             }}
