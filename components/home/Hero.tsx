@@ -18,14 +18,14 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
     const desktopImages = Array.isArray(data?.imageDesktop)
         ? data.imageDesktop
         : data?.imageDesktop
-        ? [data.imageDesktop]
-        : [];
+            ? [data.imageDesktop]
+            : [];
 
     const mobileImages = Array.isArray(data?.imageMobile)
         ? data.imageMobile
         : data?.imageMobile
-        ? [data.imageMobile]
-        : [];
+            ? [data.imageMobile]
+            : [];
 
     const getImageUrl = (img: any) => {
         return img?.data?.attributes?.formats?.large?.url || img?.formats?.large?.url || img?.url || "";
@@ -39,7 +39,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
         if (desktopImages.length <= 1) return;
         const interval = setInterval(() => {
             setDesktopIndex((prev) => (prev + 1) % desktopImages.length);
-        }, 2000);
+        }, 4000);
         return () => clearInterval(interval);
     }, [desktopImages.length]);
 
@@ -47,7 +47,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
         if (mobileImages.length <= 1) return;
         const interval = setInterval(() => {
             setMobileIndex((prev) => (prev + 1) % mobileImages.length);
-        }, 2000);
+        }, 4000);
         return () => clearInterval(interval);
     }, [mobileImages.length]);
 
@@ -67,9 +67,8 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                                     src={getStrapiMediaUrl(url)}
                                     alt="Hero Mobile Banner"
                                     fill
-                                    className={`object-fit object-right md:hidden absolute inset-0 transition-opacity duration-1000 ${
-                                        index === mobileIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-                                    }`}
+                                    className={`object-fit object-right md:hidden absolute inset-0 transition-opacity duration-1000 ${index === mobileIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+                                        }`}
                                     priority={index === 0}
                                     unoptimized={isLocal}
                                 />
@@ -86,9 +85,8 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                                     src={getStrapiMediaUrl(url)}
                                     alt="Hero Desktop Banner"
                                     fill
-                                    className={`hidden md:block object-cover object-center absolute inset-0 transition-opacity duration-1000 ${
-                                        index === desktopIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-                                    }`}
+                                    className={`hidden md:block object-cover object-center absolute inset-0 transition-opacity duration-1000 ${index === desktopIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+                                        }`}
                                     priority={index === 0}
                                     unoptimized={isLocal}
                                 />
