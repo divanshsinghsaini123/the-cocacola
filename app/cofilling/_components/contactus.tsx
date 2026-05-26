@@ -58,7 +58,7 @@ export default function ContactUs() {
             <h2 className="w-full bg-[#E51D29] py-6 px-4 md:px-16 text-white text-3xl md:text-4xl font-black italic uppercase tracking-wider mb-4 md:mb-15">
                 Contact Us
             </h2>
-            <div className="px-4 md:px-16 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16">
+            <div className="px-4 md:px-16 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 pb-16">
 
                 {/* LEFT COLUMN: LOCATION */}
                 <div className="flex-1 flex flex-col gap-8">

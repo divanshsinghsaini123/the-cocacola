@@ -24,7 +24,8 @@ const WhatWeDo = () => {
             {/* Header Bar */}
             <div
                 className="w-full bg-[#E51D29] py-4 px-4 md:px-16 flex flex-col md:flex-row justify-between items-center md:sticky z-40 shadow-md transition-all duration-300"
-                style={{ top: stickyNav ? '80px' : '0px' }}
+                // style={{ top: stickyNav ? '80px' : '0px' }}
+                style={{ top: '0px' }}
             >
                 <h2 className="text-white text-2xl md:text-4xl font-black italic uppercase tracking-wider mb-2 md:mb-0">
                     WHAT WE DO

@@ -4,7 +4,7 @@ import { boolean } from "zod";
 
 const ContactusCoffilingSchema = new Schema(
     {
-        name: {
+        fullName: {
             type: String,
             required: true
         },
@@ -58,5 +58,10 @@ const ContactusCoffilingSchema = new Schema(
         }
     }
 )
+
+// Clear cached ContactusCofilling model to ensure hot-reload schema updates are forced immediately
+// if (models.ContactusCofilling) {
+//     delete (models as any).ContactusCofilling;
+// }
 
 export default models.ContactusCofilling || model("ContactusCofilling", ContactusCoffilingSchema);
