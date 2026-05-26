@@ -151,7 +151,7 @@ export default function Footer(props: FooterProps) {
 
     return (
         <footer className="text-white pb-8 w-full" style={{ backgroundColor: footerHexCode }}>
-            <div className="max-w-7xl px-[18px] lg:px-[70px] pt-12 lg:pt-[120px] mx-auto">
+            <div className="max-w-7xl px-[18px] lg:px-[70px] pt-12 lg:pt-[50px] mx-auto">
                 {/* Logo Section */}
                 <div className="mb-9">
                     <Link href="/">
