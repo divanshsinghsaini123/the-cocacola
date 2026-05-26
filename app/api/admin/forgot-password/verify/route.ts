@@ -19,6 +19,7 @@ export async function POST(request: Request) {
         }
 
         if (!admin.resetCode || admin.resetCode !== code.trim()) {
+            console.log(admin.resetCode, code.trim())
             return NextResponse.json({ error: "Invalid verification code" }, { status: 400 });
         }
 
@@ -26,9 +27,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Verification code has expired. Please request a new one." }, { status: 400 });
         }
 
-        return NextResponse.json({ 
-            success: true, 
-            message: "Verification code verified successfully" 
+        return NextResponse.json({
+            success: true,
+            message: "Verification code verified successfully"
         });
 
     } catch (error: any) {
