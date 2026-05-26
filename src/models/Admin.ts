@@ -23,6 +23,16 @@ const AdminSchema = new Schema(
             enum: ["Superadmin", "admin"],
             default: "editor",
         },
+        email: {
+            type: String,
+            trim: true,
+        },
+        resetCode: {
+            type: String,
+        },
+        resetCodeExpires: {
+            type: Date,
+        },
     },
     { timestamps: true }
 );
