@@ -58,7 +58,7 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
     }
 
     // Fetch related products
-    const products = await Product.find({ brand: brand._id, isActive: true }).lean();
+    const products = await Product.find({ brand: brand._id, isActive: true }).sort({ order: 1, createdAt: -1 }).lean();
 
     return (
         <main className="min-h-screen bg-[#EEEEEE]">

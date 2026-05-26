@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 
         const products = await Product.find(query)
             .populate("brand", "name logo slug")
-            .sort({ createdAt: -1 });
+            .sort({ order: 1, createdAt: -1 });
 
         return NextResponse.json({ products }, { status: 200 });
     } catch (error) {

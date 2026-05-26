@@ -7,7 +7,7 @@ import { BrandSchema } from "@/src/lib/validation";
 export async function GET() {
     try {
         await connectDB();
-        const brands = await Brand.find();
+        const brands = await Brand.find().sort({ order: 1, createdAt: -1 });
         return NextResponse.json({ brands }, { status: 200 });
     } catch (error) {
         return NextResponse.json(

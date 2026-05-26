@@ -23,6 +23,7 @@ export const BrandSchema = z.object({
     }).optional(),
     youtubeVideos: z.array(z.string()).optional(),
     isActive: z.boolean().optional(),
+    order: z.number().optional(),
 });
 
 export const ProductSchema = z.object({
@@ -48,6 +49,7 @@ export const ProductSchema = z.object({
     }).optional(),
     stores: z.array(z.string()).optional(),
     isActive: z.boolean().optional(),
+    order: z.number().optional(),
 });
 
 export const StoreSchema = z.object({

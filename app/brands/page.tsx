@@ -26,7 +26,7 @@ interface IBrand {
 
 export default async function BrandsPage() {
     await connectDB();
-    const brands = await Brand.find({ isActive: true }).lean();
+    const brands = await Brand.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).lean();
 
     return (
         <main className="w-full bg-[#EEEEEE] min-h-screen py-10">

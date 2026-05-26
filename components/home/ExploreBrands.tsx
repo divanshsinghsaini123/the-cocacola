@@ -12,7 +12,7 @@ interface IBrand {
 
 export default async function ExploreBrands() {
     await connectDB();
-    const brands = await Brand.find({ isActive: true }).lean();
+    const brands = await Brand.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).lean();
 
     return (
         <section className="w-full bg-[var(--background)] py-20 ">
