@@ -17,8 +17,9 @@ interface NavbarProps {
     stores: Store[];
     navbarImage: string | undefined;
     navbarColor: string | undefined;
+    navbarFontColor?: string;
 }
-export default function Navbar({ stores, navbarImage, navbarColor }: NavbarProps) {
+export default function Navbar({ stores, navbarImage, navbarColor, navbarFontColor }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const [activeDropdown, setActiveDropdown] = useState<string>("");
@@ -103,8 +104,11 @@ export default function Navbar({ stores, navbarImage, navbarColor }: NavbarProps
                                     >
                                         <Link
                                             href={link.href}
-                                            className={`pt-2 h-full flex items-center text-black font-bold text-[15px] tracking-wide transition-all duration-200 border-b-4 ${isActive ? "border-black" : "border-transparent hover:border-black"
-                                                }`}
+                                            className={`pt-2 h-full flex items-center font-bold text-[15px] tracking-wide transition-all duration-200 border-b-4`}
+                                            style={{
+                                                color: navbarFontColor || "black",
+                                                borderColor: isActive ? (navbarFontColor || "black") : "transparent"
+                                            }}
                                         >
                                             {link.name}
                                             {link.hasChevron && (
@@ -149,7 +153,8 @@ export default function Navbar({ stores, navbarImage, navbarColor }: NavbarProps
                             <button
                                 onClick={toggleMenu}
                                 type="button"
-                                className="inline-flex items-center justify-center p-2 rounded-md text-black hover:text-gray-700 focus:outline-none"
+                                className="inline-flex items-center justify-center p-2 rounded-md focus:outline-none hover:opacity-80"
+                                style={{ color: navbarFontColor || "black" }}
                                 aria-controls="mobile-menu"
                                 aria-expanded={isOpen}
                             >

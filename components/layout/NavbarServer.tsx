@@ -6,8 +6,9 @@ export const revalidate = 3600;
 interface NavbarServerProps {
     navbarImage: string | undefined;
     navbarColor: string | undefined;
+    navbarFontColor?: string;
 }
-export default async function NavbarServer({ navbarImage, navbarColor }: NavbarServerProps) {
+export default async function NavbarServer({ navbarImage, navbarColor, navbarFontColor }: NavbarServerProps) {
     var serializedStores;
     try {
         await connectDB();
@@ -19,7 +20,7 @@ export default async function NavbarServer({ navbarImage, navbarColor }: NavbarS
     }
     finally {
         // Convert ObjectId to string to avoid serialization warnings
-        return <Navbar stores={serializedStores} navbarImage={navbarImage} navbarColor={navbarColor} />;
+        return <Navbar stores={serializedStores} navbarImage={navbarImage} navbarColor={navbarColor} navbarFontColor={navbarFontColor} />;
     }
 
 }

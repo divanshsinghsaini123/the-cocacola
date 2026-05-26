@@ -81,6 +81,10 @@ export interface HomePageData {
     footer?: any;
     socialLinks?: any;
     NavbarImage?: StrapiImage;
+    NavbarHaxCode?: string;
+    NavbarFontColorHaxCode?: string;
+    Favicon?: StrapiImage;
+    sameColorNavAndFoot?: boolean;
     attributes?: HomePageData; // For handling nested structure if API returns "attributes"
     PageButton?: PageButton;
 }

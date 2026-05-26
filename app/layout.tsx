@@ -4,6 +4,7 @@ import "./globals.css";
 import Footer from "../components/layout/Footer";
 import NavbarServer from "@/components/layout/NavbarServer";
 import StoreProvider from "@/src/providers/StoreProvider";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,52 +16,63 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://thecoco-cola-e7tww.ondigitalocean.app"), // Replace with actual domain
-  title: {
-    default: "The Cloud9 Beverages Company",
-    template: "%s | The Cloud9 Beverages Company",
-  },
-  description: "Powering the World's Favorite Beverage Brands. We are a leading beverage company dedicated to refreshing the world and making a difference.",
-  keywords: ["beverages", "drinks", "soda", "coca-cola", "refreshment", "cloud9", "manufacturing", "distribution"],
-  authors: [{ name: "The Cloud9 Beverages Company" }],
-  creator: "The Cloud9 Beverages Company",
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://thecoco-cola-e7tww.ondigitalocean.app",
-    title: "The Cloud9 Beverages Company",
-    description: "Powering the World's Favorite Beverage Brands.",
-    siteName: "The Cloud9 Beverages Company",
-    images: [
-      {
-        url: "/assets/Home/logo-white-large.svg", // Ideally use an absolute URL or a specific OG image
-        width: 1200,
-        height: 630,
-        alt: "The Cloud9 Beverages Company",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "The Cloud9 Beverages Company",
-    description: "Powering the World's Favorite Beverage Brands.",
-    images: ["/assets/Home/logo-white-large.svg"], // Ideally use an absolute URL or a specific OG image
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+import { GetHomePageData } from "@/src/lib/strapi";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await GetHomePageData();
+  const faviconUrl = data?.Favicon?.url || data?.attributes?.Favicon?.url;
+  const fullFaviconUrl = faviconUrl ? getStrapiMediaUrl(faviconUrl) : "/favicon.ico";
+
+  return {
+    metadataBase: new URL("https://thecoco-cola-e7tww.ondigitalocean.app"), // Replace with actual domain
+    title: {
+      default: "The Cloud9 Beverages Company",
+      template: "%s | The Cloud9 Beverages Company",
+    },
+    description: "Powering the World's Favorite Beverage Brands. We are a leading beverage company dedicated to refreshing the world and making a difference.",
+    keywords: ["beverages", "drinks", "soda", "coca-cola", "refreshment", "cloud9", "manufacturing", "distribution"],
+    authors: [{ name: "The Cloud9 Beverages Company" }],
+    creator: "The Cloud9 Beverages Company",
+    icons: {
+      icon: fullFaviconUrl,
+      shortcut: fullFaviconUrl,
+      apple: fullFaviconUrl,
+    },
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      url: "https://thecoco-cola-e7tww.ondigitalocean.app",
+      title: "The Cloud9 Beverages Company",
+      description: "Powering the World's Favorite Beverage Brands.",
+      siteName: "The Cloud9 Beverages Company",
+      images: [
+        {
+          url: "/assets/Home/logo-white-large.svg", // Ideally use an absolute URL or a specific OG image
+          width: 1200,
+          height: 630,
+          alt: "The Cloud9 Beverages Company",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "The Cloud9 Beverages Company",
+      description: "Powering the World's Favorite Beverage Brands.",
+      images: ["/assets/Home/logo-white-large.svg"], // Ideally use an absolute URL or a specific OG image
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
-  },
-};
-
-import { GetHomePageData } from "@/src/lib/strapi";
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -73,19 +85,36 @@ export default async function RootLayout({
   const footerData = data?.footer || data?.attributes?.footer;
   const socialLinksData = data?.socialLinks || data?.attributes?.socialLinks;
   const navbarImage = data?.NavbarImage?.url || data?.attributes?.NavbarImage?.url;
-  const navbarColor = data?.NavbarHaxCode || "#FFFFFF";
+  const navbarColor = data?.NavbarHaxCode || data?.attributes?.NavbarHaxCode || "#FFFFFF";
+  const navbarFontColor = data?.NavbarFontColorHaxCode || data?.attributes?.NavbarFontColorHaxCode;
+
+  // sameColorNavAndFoot logic:
+  // if sameColorNavAndFoot == true then footer bg is navbarColor
+  // else fallback to footerHexCode
+  const sameColor = data?.sameColorNavAndFoot ?? data?.attributes?.sameColorNavAndFoot;
+  const footerHexCode = footerData?.FooterHexColorCode || "black";
+  const footerBgColor = (sameColor === true) ? navbarColor : footerHexCode;
+
+  // Favicon dynamic resolution
+  const faviconUrl = data?.Favicon?.url || data?.attributes?.Favicon?.url;
+  const fullFaviconUrl = faviconUrl ? getStrapiMediaUrl(faviconUrl) : "/favicon.ico";
+
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href={fullFaviconUrl} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning={true}
       >
         <StoreProvider>
-          <NavbarServer navbarImage={navbarImage} navbarColor={navbarColor} />
+          <NavbarServer navbarImage={navbarImage} navbarColor={navbarColor} navbarFontColor={navbarFontColor} />
           {children}
           <Footer
             footerData={footerData}
             socialLinks={socialLinksData}
+            footerBgColor={footerBgColor}
           />
         </StoreProvider>
       </body>
