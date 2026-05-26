@@ -10,8 +10,8 @@ export async function POST(request: Request) {
         const { username, code, newPassword } = await request.json();
 
         if (!username || !code || !newPassword) {
-            return NextResponse.json({ 
-                error: "Username, verification code, and new password are required" 
+            return NextResponse.json({
+                error: "Username, verification code, and new password are required"
             }, { status: 400 });
         }
 
@@ -43,9 +43,9 @@ export async function POST(request: Request) {
         admin.resetCodeExpires = undefined;
         await admin.save();
 
-        return NextResponse.json({ 
-            success: true, 
-            message: "Password updated successfully" 
+        return NextResponse.json({
+            success: true,
+            message: "Password updated successfully"
         });
 
     } catch (error: any) {

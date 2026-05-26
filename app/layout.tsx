@@ -85,8 +85,8 @@ export default async function RootLayout({
   const footerData = data?.footer || data?.attributes?.footer;
   const socialLinksData = data?.socialLinks || data?.attributes?.socialLinks;
   const navbarImage = data?.NavbarImage?.url || data?.attributes?.NavbarImage?.url;
-  const navbarColor = data?.NavbarHaxCode || data?.attributes?.NavbarHaxCode || "#FFFFFF";
-  const navbarFontColor = data?.NavbarFontColorHaxCode || data?.attributes?.NavbarFontColorHaxCode;
+  const navbarColor = data?.NavbarHexCode || data?.attributes?.NavbarHexCode || "#FFFFFF";
+  const navbarFontColor = data?.NavbarFontColorHexCode || data?.attributes?.NavbarFontColorHexCode;
 
   // sameColorNavAndFoot logic:
   // if sameColorNavAndFoot == true then footer bg is navbarColor
@@ -98,7 +98,6 @@ export default async function RootLayout({
   // Favicon dynamic resolution
   const faviconUrl = data?.Favicon?.url || data?.attributes?.Favicon?.url;
   const fullFaviconUrl = faviconUrl ? getStrapiMediaUrl(faviconUrl) : "/favicon.ico";
-
   return (
     <html lang="en">
       <head>
@@ -109,6 +108,7 @@ export default async function RootLayout({
         suppressHydrationWarning={true}
       >
         <StoreProvider>
+
           <NavbarServer navbarImage={navbarImage} navbarColor={navbarColor} navbarFontColor={navbarFontColor} />
           {children}
           <Footer

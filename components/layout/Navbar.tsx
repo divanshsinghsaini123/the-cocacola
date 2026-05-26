@@ -48,10 +48,11 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
 
     let navLinks: Record<string, NavLinkData> = {
         "Brands": { href: "/brands" },
-        "Discover": { href: "/discover", hasChevron: true, dropdownContent: [{ name: "Coke Studio Bharat", link: "#" }, { name: "Sprite Joke In A Bottle", link: "#" }] },
-        "Impact": { href: "/impact", hasChevron: true, dropdownContent: [{ name: "Sustainability", link: "#" }] },
-        "Shop": { href: "#", hasChevron: true },
-        "Promos & Offers": { href: "/promos&offers" }
+        "Cofilling": { href: "/cofilling" },
+        "Become Our Distributor": { href: "/become-our-distributor" },
+        "VisiCooler": { href: "/visicooler" },
+        "Promos & Offers": { href: "/promos&offers" },
+        "Contact Us": { href: "/contactus" }
     };
 
     if (navLinks["Shop"]) {

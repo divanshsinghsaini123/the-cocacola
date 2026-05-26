@@ -41,8 +41,8 @@ interface FooterData {
         url: string;
     };
     FooterHexColorCode?: string;
-    LinkSectionNameHaxColor?: string;
-    LinkHaxColor?: string;
+    LinkSectionNameHexColor?: string;
+    LinkHexColor?: string;
 }
 
 interface SocialLink {
@@ -176,20 +176,20 @@ export default function Footer(props: FooterProps) {
                         <button
                             onClick={() => toggleSection('section1')}
                             className="flex justify-between items-center w-full md:hidden py-2"
-                            style={{ color: footerData?.LinkSectionNameHaxColor || "white" }}
+                            style={{ color: footerData?.LinkSectionNameHexColor || "white" }}
                         >
                             <h3 className="text-[20px] font-bold">{section1Name}</h3>
                             <ChevronDown isOpen={openSections['section1']} />
                         </button>
 
                         {/* Desktop Header */}
-                        <h3 className="hidden md:block text-xs font-bold tracking-widest mb-6 uppercase" style={{ color: footerData?.LinkSectionNameHaxColor || "#9ca3af" }}>{section1Name}</h3>
+                        <h3 className="hidden md:block text-xs font-bold tracking-widest mb-6 uppercase" style={{ color: footerData?.LinkSectionNameHexColor || "#9ca3af" }}>{section1Name}</h3>
 
                         {/* Link List */}
                         <ul className={`space-y-3 text-md font-bold ${openSections['section1'] ? 'block py-4 ml-5' : 'hidden'} md:block md:py-0`}>
                             {section1Links.map((link) => (
                                 <li key={link.id || link.name}>
-                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHaxColor || "white" }}>
+                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
                                         {link.name}
                                     </Link>
                                 </li>
@@ -202,18 +202,18 @@ export default function Footer(props: FooterProps) {
                         <button
                             onClick={() => toggleSection('section2')}
                             className="flex justify-between items-center w-full md:hidden py-2"
-                            style={{ color: footerData?.LinkSectionNameHaxColor || "white" }}
+                            style={{ color: footerData?.LinkSectionNameHexColor || "white" }}
                         >
                             <h3 className="text-[20px] font-bold">{section2Name}</h3>
                             <ChevronDown isOpen={openSections['section2']} />
                         </button>
 
-                        <h3 className="hidden md:block text-xs font-bold tracking-widest mb-6 uppercase" style={{ color: footerData?.LinkSectionNameHaxColor || "#9ca3af" }}>{section2Name}</h3>
+                        <h3 className="hidden md:block text-xs font-bold tracking-widest mb-6 uppercase" style={{ color: footerData?.LinkSectionNameHexColor || "#9ca3af" }}>{section2Name}</h3>
 
                         <ul className={`space-y-3 text-md font-bold ${openSections['section2'] ? 'block py-4 ml-5' : 'hidden'} md:block md:py-0`}>
                             {section2Links.map((link) => (
                                 <li key={link.id || link.name}>
-                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHaxColor || "white" }}>
+                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
                                         {link.name}
                                     </Link>
                                 </li>
@@ -226,18 +226,18 @@ export default function Footer(props: FooterProps) {
                         <button
                             onClick={() => toggleSection('section3')}
                             className="flex justify-between items-center w-full md:hidden py-2"
-                            style={{ color: footerData?.LinkSectionNameHaxColor || "white" }}
+                            style={{ color: footerData?.LinkSectionNameHexColor || "white" }}
                         >
                             <h3 className="text-[20px] font-bold">{section3Name}</h3>
                             <ChevronDown isOpen={openSections['section3']} />
                         </button>
 
-                        <h3 className="hidden md:block text-xs font-bold tracking-widest mb-6 uppercase" style={{ color: footerData?.LinkSectionNameHaxColor || "#9ca3af" }}>{section3Name}</h3>
+                        <h3 className="hidden md:block text-xs font-bold tracking-widest mb-6 uppercase" style={{ color: footerData?.LinkSectionNameHexColor || "#9ca3af" }}>{section3Name}</h3>
 
                         <ul className={`space-y-3 text-md font-bold ${openSections['section3'] ? 'block py-4 ml-7' : 'hidden'} md:block md:py-0`}>
                             {section3Links.map((link) => (
                                 <li key={link.id || link.name}>
-                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHaxColor || "white" }}>
+                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
                                         {link.name}
                                     </Link>
                                 </li>
