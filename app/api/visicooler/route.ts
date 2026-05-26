@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from '@/src/lib/mongoose';
 import { shop } from "@/src/models/visicooler/shop";
 import { ShopValidationSchema } from "@/src/lib/validation";
+import { VisicoolerOtp } from "@/src/models/visicooler/otp";
 
 // GET: Get all shops OR get one shop by ID (e.g. ?id=...)
 export async function GET(req: NextRequest) {
@@ -30,9 +31,23 @@ export async function POST(req: NextRequest) {
     try {
         await connectDB();
         const body = await req.json();
+        const { otp, ...shopData } = body;
+
+        // Enforce OTP verification
+        if (!otp) {
+            return NextResponse.json({ success: false, error: { message: "Authorization code (OTP) is required" } }, { status: 400 });
+        }
+
+        const otpRecord = await VisicoolerOtp.findOne({ otp: otp.trim() });
+        if (!otpRecord || new Date() > otpRecord.expiresAt) {
+            return NextResponse.json({ success: false, error: { message: "Invalid or expired authorization code" } }, { status: 400 });
+        }
+
+        // OTP is valid - consume/delete it immediately to prevent replay attacks
+        await VisicoolerOtp.deleteOne({ _id: otpRecord._id });
 
         // Validate using Zod
-        const validation = ShopValidationSchema.safeParse(body);
+        const validation = ShopValidationSchema.safeParse(shopData);
         if (!validation.success) {
             return NextResponse.json({ success: false, error: validation.error.format() }, { status: 400 });
         }
@@ -56,9 +71,23 @@ export async function PUT(req: NextRequest) {
         }
 
         const body = await req.json();
+        const { otp, ...shopData } = body;
+
+        // Enforce OTP verification
+        if (!otp) {
+            return NextResponse.json({ success: false, error: { message: "Authorization code (OTP) is required" } }, { status: 400 });
+        }
+
+        const otpRecord = await VisicoolerOtp.findOne({ otp: otp.trim() });
+        if (!otpRecord || new Date() > otpRecord.expiresAt) {
+            return NextResponse.json({ success: false, error: { message: "Invalid or expired authorization code" } }, { status: 400 });
+        }
+
+        // OTP is valid - consume/delete it immediately to prevent replay attacks
+        await VisicoolerOtp.deleteOne({ _id: otpRecord._id });
 
         // Validate using Zod
-        const validation = ShopValidationSchema.safeParse(body);
+        const validation = ShopValidationSchema.safeParse(shopData);
         if (!validation.success) {
             return NextResponse.json({ success: false, error: validation.error.format() }, { status: 400 });
         }
