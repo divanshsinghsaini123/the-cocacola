@@ -3,14 +3,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ClientComponent from "./ClientComponent"
 
+import { SITE_CONFIG } from "@/src/config/site";
+
 export async function generateMetadata(): Promise<Metadata> {
     const strapioutput = await GetExtensionData();
     const seo = strapioutput?.SEO || strapioutput?.seo;
 
     return {
-        title: seo?.metaTitle || "Extension | Cloud9 Beverages",
-        description: seo?.metaDescription || "Explore our extensions and additional offerings at Cloud9 Beverages.",
-        keywords: seo?.keywords || "extension, Cloud9, beverages, offerings, new products",
+        title: seo?.metaTitle || `${SITE_CONFIG.pages.extension.title} | ${SITE_CONFIG.companyName}`,
+        description: seo?.metaDescription || SITE_CONFIG.pages.extension.description,
+        keywords: seo?.keywords || SITE_CONFIG.defaultKeywords.join(", "),
     };
 }
 

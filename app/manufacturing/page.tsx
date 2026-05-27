@@ -6,14 +6,16 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { SITE_CONFIG } from "@/src/config/site";
+
 export async function generateMetadata(): Promise<Metadata> {
     const strapioutput = await GetManufacturingData();
     const seo = strapioutput?.SEO;
 
     return {
-        title: seo?.metaTitle || "Manufacturing | Cloud9 Beverages",
-        description: seo?.metaDescription || "Learn about our manufacturing processes, facilities, and the high standards we maintain at Cloud9 Beverages.",
-        keywords: seo?.keywords || "manufacturing, facilities, Cloud9, beverages, standards, production",
+        title: seo?.metaTitle || `${SITE_CONFIG.pages.manufacturing.title} | ${SITE_CONFIG.companyName}`,
+        description: seo?.metaDescription || SITE_CONFIG.pages.manufacturing.description,
+        keywords: seo?.keywords || SITE_CONFIG.defaultKeywords.join(", "),
     };
 }
 
@@ -47,7 +49,7 @@ export default async function ManufacturingPage() {
                         </div>
                         <Image
                             src="/assets/Manufacturing/manufacturing_logo.png"
-                            alt="Cloud9 Beverages"
+                            alt={SITE_CONFIG.companyName}
                             width={140}
                             height={60}
                             className="object-contain w-24 md:w-[140px]"
@@ -61,7 +63,7 @@ export default async function ManufacturingPage() {
                             Home / Manufacturing_list
                         </h1>
                         <p className="text-[9px] sm:text-[11px] md:text-sm text-gray-800 leading-snug md:leading-normal pr-4 md:pr-0">
-                            <span className="font-bold text-gray-900">Marketer Details :</span> Cloud9 Beverages 101, Bhakti Park, R.H.B. Road, Mulund West, Mumbai, Maharashtra - 400080
+                            <span className="font-bold text-gray-900">Marketer Details :</span> {SITE_CONFIG.companyAddress}
                         </p>
                     </div>
                 </div>

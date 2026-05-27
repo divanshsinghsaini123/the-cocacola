@@ -4,13 +4,15 @@ import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
 import type { Metadata } from "next";
 
+import { SITE_CONFIG } from "@/src/config/site";
+
 export async function generateMetadata(): Promise<Metadata> {
     await connectDB();
     const topBrands = await Brand.find({ isActive: true }).limit(3).select("name").lean();
     const brandNames = topBrands.map((b: any) => b.name).join(", ");
 
     return {
-        title: "Our Brands | Cloud9 Beverages",
+        title: `${SITE_CONFIG.pages.brands.title} | ${SITE_CONFIG.companyName}`,
         description: `Explore our portfolio of world-class beverage brands${brandNames ? `, including ${brandNames}, and more` : ''}.`,
     };
 }

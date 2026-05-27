@@ -3,14 +3,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Event from "./_components/event";
 
+import { SITE_CONFIG } from "@/src/config/site";
+
 export async function generateMetadata(): Promise<Metadata> {
     const strapioutput = await GetEventsData();
     const seo = strapioutput?.SEO || strapioutput?.seo;
 
     return {
-        title: seo?.metaTitle || "Events | Cloud9 Beverages",
-        description: seo?.metaDescription || "Join us at Cloud9 Beverages events. Stay updated with our latest happenings and community engagements.",
-        keywords: seo?.keywords || "events, Cloud9, beverages, community, happenings",
+        title: seo?.metaTitle || `${SITE_CONFIG.pages.events.title} | ${SITE_CONFIG.companyName}`,
+        description: seo?.metaDescription || SITE_CONFIG.pages.events.description,
+        keywords: seo?.keywords || SITE_CONFIG.defaultKeywords.join(", "),
     };
 }
 

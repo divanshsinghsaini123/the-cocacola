@@ -3,6 +3,8 @@
 import React from "react";
 import Image from "next/image";
 
+import { SITE_CONFIG } from "@/src/config/site";
+
 const Hero2 = () => {
     const cards = [
         {
@@ -41,7 +43,7 @@ const Hero2 = () => {
             {/* Top Text Content */}
             <div className="relative z-10 max-w-3xl mx-auto text-center text-white mb-20 space-y-4">
                 <p className="text-base md:text-20px opacity-90">
-                    The Cloud9 manufacturing complex is one of the region’s most advanced integrated beverage production facilities. The plant operates on 8 high-speed filling lines with a total annual capacity exceeding 6 billion units. Every product passes through more than 100 automated inspection and quality control checkpoints during production. As active beverage brand owners with established products in the market, Cloud9 operates on infrastructure proven by real commercial demand.
+                    The {SITE_CONFIG.companyName} manufacturing complex is one of the region’s most advanced integrated beverage production facilities. The plant operates on 8 high-speed filling lines with a total annual capacity exceeding 6 billion units. Every product passes through more than 100 automated inspection and quality control checkpoints during production. As active beverage brand owners with established products in the market, {SITE_CONFIG.companyName} operates on infrastructure proven by real commercial demand.
                 </p>
             </div>
 
