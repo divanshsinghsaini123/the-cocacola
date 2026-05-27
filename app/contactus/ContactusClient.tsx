@@ -6,6 +6,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Modal from "../../components/ui/Modal";
+import { SITE_CONFIG } from "@/src/config/site";
 
 interface ContactData {
     Contact_email: string;
@@ -483,7 +484,7 @@ export default function ContactusClient({ data }: ContactusProps) {
 
                                     <div className="md:flex justify-between items-start">
                                         <div>
-                                            <h4 className="text-xl font-bold mb-2">Coca-Cola India</h4>
+                                            <h4 className="text-xl font-bold mb-2">{SITE_CONFIG.companyName}</h4>
                                             <p className="text-lg">For consumer related queries, please mail us at: <a href={`mailto:${email}`} className="font-bold underline">{email}</a></p>
                                             <p className="text-lg mt-1">Or contact the consumer helpline at: <span className="font-bold">{mobile}</span></p>
                                         </div>
