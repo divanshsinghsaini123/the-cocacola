@@ -6,15 +6,15 @@ import { SITE_CONFIG } from "@/src/config/site";
 
 export default function AdminPortalPage() {
     return (
-        <div className="min-h-screen w-full bg-black text-white flex flex-col items-center justify-center relative overflow-hidden font-sans">
+        <div className="min-h-screen w-full bg-black text-white flex flex-col justify-between items-center relative overflow-hidden font-sans">
             {/* Background Gradients */}
             <div className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-red-600 rounded-full blur-[150px] opacity-20" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-red-800 rounded-full blur-[150px] opacity-20" />
             </div>
 
-            <main className="relative z-10 w-full max-w-5xl px-6 flex flex-col items-center gap-12">
-                <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <main className="relative z-10 w-full max-w-5xl px-6 flex flex-col items-center gap-4 my-auto py-2">
+                <div className="text-center space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <div className="h-42 w-64 relative mx-auto mb-1">
                         {/* Assuming this asset exists as it was used in login page */}
                         <Image
@@ -100,6 +100,24 @@ export default function AdminPortalPage() {
                     </a>
                 </div>
             </main>
+
+            {/* Portal Footer */}
+            <footer className="relative z-10 w-full py-6 border-t border-neutral-900/50 text-center text-xs text-neutral-500 font-medium tracking-wide">
+                <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div>
+                        {SITE_CONFIG.copyrightText}
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Link href="/" className="hover:text-white transition-colors">
+                            Back to Website
+                        </Link>
+                        <span className="text-neutral-800">•</span>
+                        <Link href="/admin/dashboard" className="hover:text-white transition-colors">
+                            Admin Dashboard
+                        </Link>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 }
