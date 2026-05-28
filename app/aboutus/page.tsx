@@ -6,14 +6,16 @@ import Mainpage_aboutus from "./_components/Mainpage_aboutus";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SectionItem } from "@/types/home";
+import { SITE_CONFIG } from "@/src/config/site";
+
 export async function generateMetadata(): Promise<Metadata> {
     const strapioutput = await GetAboutUsPageData();
     const seo = strapioutput?.seo;
 
     return {
-        title: seo?.metaTitle || "About Us | Cloud9 Beverages",
-        description: seo?.metaDescription || "Learn about The Cloud9 Beverages Company, our history, and our mission to refresh the world.",
-        keywords: seo?.keywords || "about Cloud9, company history, our vision, corporate values, beverage industry",
+        title: seo?.metaTitle || `${SITE_CONFIG.pages.about.title} | ${SITE_CONFIG.companyName}`,
+        description: seo?.metaDescription || SITE_CONFIG.pages.about.description,
+        keywords: seo?.keywords || SITE_CONFIG.defaultKeywords.join(", "),
     };
 }
 

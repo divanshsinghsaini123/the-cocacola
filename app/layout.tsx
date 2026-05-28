@@ -5,7 +5,9 @@ import Footer from "../components/layout/Footer";
 import NavbarServer from "@/components/layout/NavbarServer";
 import StoreProvider from "@/src/providers/StoreProvider";
 import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
+import { GetHomePageData } from "@/src/lib/strapi";
 
+import { SITE_CONFIG } from "@/src/config/site";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -16,7 +18,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-import { GetHomePageData } from "@/src/lib/strapi";
+
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await GetHomePageData();
@@ -26,13 +28,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL("https://thecoco-cola-e7tww.ondigitalocean.app"), // Replace with actual domain
     title: {
-      default: "The Cloud9 Beverages Company",
-      template: "%s | The Cloud9 Beverages Company",
+      default: SITE_CONFIG.companyName,
+      template: `%s | ${SITE_CONFIG.companyName}`,
     },
     description: "Powering the World's Favorite Beverage Brands. We are a leading beverage company dedicated to refreshing the world and making a difference.",
-    keywords: ["beverages", "drinks", "soda", "coca-cola", "refreshment", "cloud9", "manufacturing", "distribution"],
-    authors: [{ name: "The Cloud9 Beverages Company" }],
-    creator: "The Cloud9 Beverages Company",
+    keywords: SITE_CONFIG.defaultKeywords,
+    authors: [{ name: SITE_CONFIG.companyName }],
+    creator: SITE_CONFIG.companyName,
     icons: {
       icon: fullFaviconUrl,
       shortcut: fullFaviconUrl,
@@ -42,21 +44,21 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "en_US",
       url: "https://thecoco-cola-e7tww.ondigitalocean.app",
-      title: "The Cloud9 Beverages Company",
+      title: SITE_CONFIG.companyName,
       description: "Powering the World's Favorite Beverage Brands.",
-      siteName: "The Cloud9 Beverages Company",
+      siteName: SITE_CONFIG.companyName,
       images: [
         {
           url: "/assets/Home/logo-white-large.svg", // Ideally use an absolute URL or a specific OG image
           width: 1200,
           height: 630,
-          alt: "The Cloud9 Beverages Company",
+          alt: SITE_CONFIG.companyName,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "The Cloud9 Beverages Company",
+      title: SITE_CONFIG.companyName,
       description: "Powering the World's Favorite Beverage Brands.",
       images: ["/assets/Home/logo-white-large.svg"], // Ideally use an absolute URL or a specific OG image
     },

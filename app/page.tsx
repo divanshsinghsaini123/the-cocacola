@@ -7,14 +7,16 @@ import ExploreBrands from "../components/home/ExploreBrands";
 import { GetHomePageData } from "@/src/lib/strapi";
 import { notFound } from "next/navigation";
 
+import { SITE_CONFIG } from "@/src/config/site";
+
 export async function generateMetadata(): Promise<Metadata> {
   const strapioutput = await GetHomePageData();
   const seo = strapioutput?.SEO;
 
   return {
-    title: seo?.metaTitle || "Home | Cloud9 Beverages",
-    description: seo?.metaDescription || "Experience the refreshing taste of our world-class beverages. Discover our brands, latest products, and our commitment to sustainability.",
-    keywords: seo?.keywords || "Cloud9, beverages, refreshing, brands, products, sustainability",
+    title: seo?.metaTitle || `${SITE_CONFIG.pages.home.title} | ${SITE_CONFIG.companyName}`,
+    description: seo?.metaDescription || SITE_CONFIG.pages.home.description,
+    keywords: seo?.keywords || SITE_CONFIG.defaultKeywords.join(", "),
   };
 }
 
