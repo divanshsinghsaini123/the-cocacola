@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useGetExtraDataQuery } from "@/src/store/slices/api";
+import { SITE_CONFIG } from "@/src/config/site";
 
 export default function AdminLoginPage() {
     const router = useRouter();
@@ -169,7 +170,7 @@ export default function AdminLoginPage() {
                 {/* Content */}
                 <div className="relative z-10">
                     <div className="h-35 w-62 relative">
-                        <Image src="/assets/Home/logo-white-large.svg" alt="Coca-Cola" fill className="object-contain object-left" />
+                        <Image src="/assets/Home/logo-white-large.svg" alt={SITE_CONFIG.companyName} fill className="object-contain object-left" />
                     </div>
                 </div>
 

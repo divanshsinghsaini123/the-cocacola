@@ -112,7 +112,7 @@ export default function StoreForm({ store }: StoreProps) {
                         value={formData.name}
                         onChange={handleChange}
                         className="input-field"
-                        placeholder="e.g. Coca-Cola Downtown"
+                        placeholder="e.g. Main Street Outlet"
                         required
                     />
                 </div>
