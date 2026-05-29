@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, Megaphone, CheckCircle2, Map, Phone, Mail } from "lucide-react";
 import Accordion from "./Accordion";
 import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
@@ -369,7 +370,14 @@ export default function DistributorClientView({
         <div className="w-full flex flex-col items-center">
             {/* Custom Navbar just for this page */}
             <nav className="absolute top-0 left-0 w-full z-50 flex flex-wrap lg:flex-nowrap items-center justify-between gap-y-4 px-4 py-4 md:px-6 md:py-6 lg:px-10">
-                <div className="flex items-center shrink-0">
+                <div className="flex items-center shrink-0 gap-3 md:gap-4">
+                    <Link
+                        href="/"
+                        className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/25 transition-all shadow-lg backdrop-blur-md"
+                        title="Back to Home"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    </Link>
                     {/* The screenshot shows 'Cloud9 ENERGY DRINK' logo. We use the one from Hero or standard img. */}
                     {Hero?.Logo ? (
                         <Image
