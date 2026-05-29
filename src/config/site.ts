@@ -17,6 +17,12 @@ export const SITE_CONFIG = {
   // Copyright
   copyrightText: process.env.NEXT_PUBLIC_COPYRIGHT || "© 2025 The Cloud9 Beverages Company. All rights reserved.",
   
+  // Analytics tracking options
+  analytics: {
+    googleAnalyticsId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "",
+    metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID || "",
+  },
+  
   // Page defaults
   pages: {
     home: {

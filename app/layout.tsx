@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "../components/layout/Footer";
+import Script from "next/script";
 import NavbarServer from "@/components/layout/NavbarServer";
 import StoreProvider from "@/src/providers/StoreProvider";
 import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
@@ -118,6 +119,42 @@ export default async function RootLayout({
             socialLinks={socialLinksData}
             footerBgColor={footerBgColor}
           />
+          
+          {/* Google Analytics Tracking */}
+          {SITE_CONFIG.analytics.googleAnalyticsId && (
+            <>
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.analytics.googleAnalyticsId}`}
+                strategy="afterInteractive"
+              />
+              <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${SITE_CONFIG.analytics.googleAnalyticsId}');
+                `}
+              </Script>
+            </>
+          )}
+
+          {/* Meta Pixel (Facebook) Tracking */}
+          {SITE_CONFIG.analytics.metaPixelId && (
+            <Script id="meta-pixel" strategy="afterInteractive">
+              {`
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '${SITE_CONFIG.analytics.metaPixelId}');
+                fbq('track', 'PageView');
+              `}
+            </Script>
+          )}
         </StoreProvider>
       </body>
     </html>
