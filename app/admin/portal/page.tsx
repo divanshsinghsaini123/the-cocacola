@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { projectCompilationEventsSubscribe } from "next/dist/build/swc/generated-native";
+import { SITE_CONFIG } from "@/src/config/site";
 
 export default function AdminPortalPage() {
     return (
@@ -19,7 +19,7 @@ export default function AdminPortalPage() {
                         {/* Assuming this asset exists as it was used in login page */}
                         <Image
                             src="/assets/Home/logo-white-large.svg"
-                            alt="Coca-Cola"
+                            alt={SITE_CONFIG.companyName}
                             fill
                             className="object-contain"
                             priority
