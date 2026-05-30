@@ -1,6 +1,9 @@
-# Project Setup & Configuration Guide
+# Project Setup, Configuration, & Architecture Guide
 
 Welcome to the comprehensive setup guide for this project. This documentation explains step-by-step how to configure your Database (MongoDB), CDN & Cloud Storage (Gcore), and Headless CMS (Strapi). 
+
+> [!NOTE]
+> For a visual and detailed technical breakdown of the production deployment, database pipelines, triggers, and automated GitHub Action cron backup workflows, please check the [System Architecture Guide](file:///d:/the-cocacola/ARCHITECTURE.md).
 
 Before starting, ensure you have Node.js and a package manager (npm) installed on your machine.
 
@@ -8,7 +11,7 @@ Before starting, ensure you have Node.js and a package manager (npm) installed o
 
 ## Environment Variables (`.env`)
 
-At the root of your project, you must create a `.env` file. You will gradually fill this in as you complete the setup steps below. Here is the template:
+At the root of your project, you must create a `.env` file. You will gradually fill this in as you configure the services below. Here is the comprehensive template:
 
 ```env
 # MONGODB SETTINGS
@@ -21,7 +24,7 @@ JWT_SECRET="your_secure_jwt_secret"
 # Local Development: NEXT_PUBLIC_STRAPI_URL="http://localhost:1337"
 NEXT_PUBLIC_STRAPI_URL="your_strapi_cloud_url"  
 
-#The below url must be null if we want to use , strapi cloud , its only for custom hosting 
+# The below url must be null if we want to use Strapi Cloud; it's only for custom hosting
 NEXT_PUBLIC_STRAPICONTENT_PREFIX="https://strapicloud9-k6ghp.ondigitalocean.app"
 
 # GCORE CDN & S3 STORAGE SETTINGS
@@ -35,6 +38,48 @@ NEXT_PUBLIC_GCORE_CDN_URL="https://cdn.yourdomain.com"
 
 # DEV ENVIRONMENT SSL FIX
 NODE_TLS_REJECT_UNAUTHORIZED="0"
+
+# GITHUB WORKFLOWS AUTOMATED DISPATCHERS
+GITHUB_OWNER="github_username_or_organization"
+GITHUB_REPO="github_repository_name"
+GITHUB_TOKEN="your_github_personal_access_token"
+
+# TRANSACTIONAL EMAIL & BACKUP CRONS
+EMAIL_USER="your_sending_gmail_address@gmail.com"
+EMAIL_PASS="your_gmail_app_password"
+REPORT_EMAIL_TO="recipient_email_address_1@gmail.com, recipient_email_address_2@gmail.com"
+
+# COMPANY INFORMATION & MULTI-BRANDING CONFIGURATION
+NEXT_PUBLIC_COMPANY_NAME="The Cloud9 Beverages Company"
+NEXT_PUBLIC_COMPANY_EMAIL="info@cloud9beverages.com"
+NEXT_PUBLIC_COMPANY_PHONE=""
+NEXT_PUBLIC_COMPANY_ADDRESS="Cloud9 Beverages 101, Bhakti Park, R.H.B. Road, Mulund West, Mumbai, Maharashtra - 400080"
+
+# SEO & GLOBAL DEFAULT METADATA
+NEXT_PUBLIC_DEFAULT_KEYWORDS="beverages,drinks,refreshment,manufacturing,distribution"
+NEXT_PUBLIC_COPYRIGHT="© 2025 The Cloud9 Beverages Company. All rights reserved."
+
+# DYNAMIC PAGE METADATA defaults
+NEXT_PUBLIC_HOME_TITLE="Home"
+NEXT_PUBLIC_HOME_DESCRIPTION="Experience the refreshing taste of our world-class beverages."
+NEXT_PUBLIC_ABOUT_TITLE="About Us"
+NEXT_PUBLIC_ABOUT_DESCRIPTION="Learn about our company, our history, and our mission to refresh the world."
+NEXT_PUBLIC_BRANDS_TITLE="Our Brands"
+NEXT_PUBLIC_BRANDS_DESCRIPTION="Explore our portfolio of world-class beverage brands."
+NEXT_PUBLIC_CONTACT_TITLE="Contact Us"
+NEXT_PUBLIC_CONTACT_DESCRIPTION="Get in touch with us. Find our contact info, location, and send us a message."
+NEXT_PUBLIC_EVENTS_TITLE="Events"
+NEXT_PUBLIC_EVENTS_DESCRIPTION="Join us at our events and stay updated with community happenings."
+NEXT_PUBLIC_EXTENSION_TITLE="Extension"
+NEXT_PUBLIC_EXTENSION_DESCRIPTION="Explore our extensions and additional offerings."
+NEXT_PUBLIC_COBRANDING_TITLE="Cobranding"
+NEXT_PUBLIC_COBRANDING_DESCRIPTION="Partner with us for successful cobranding campaigns."
+NEXT_PUBLIC_MANUFACTURING_TITLE="Manufacturing"
+NEXT_PUBLIC_MANUFACTURING_DESCRIPTION="Learn about our manufacturing processes, facilities, and high standards."
+
+# TRACKING ANALYTICS PIXELS
+NEXT_PUBLIC_GA_MEASUREMENT_ID=""
+NEXT_PUBLIC_META_PIXEL_ID=""
 ```
 
 --- npm install
