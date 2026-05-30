@@ -9,7 +9,7 @@ export async function POST() {
                 Accept: "application/vnd.github+json",
             },
             body: JSON.stringify({
-                ref: "main",
+                ref: process.env.GITHUB_BRANCH || "digitaloccean",
             }),
         }
     );
