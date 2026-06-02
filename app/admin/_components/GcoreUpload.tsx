@@ -9,6 +9,7 @@ interface GcoreUploadProps {
     multiple?: boolean;
     className?: string;
     maxSizeMB?: number; // Added optional prop
+    accept?: string; // Added optional accept prop
 }
 
 export default function GcoreUpload({
@@ -16,7 +17,8 @@ export default function GcoreUpload({
     onSuccess,
     children,
     multiple = false,
-    maxSizeMB = 5 // Default to 5MB
+    maxSizeMB = 5, // Default to 5MB
+    accept = "image/*" // Default to image/*
 }: GcoreUploadProps) {
     const [isLoading, setIsLoading] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +69,7 @@ export default function GcoreUpload({
             }
         } catch (error: any) {
             console.error("Upload error:", error);
-            alert(error.message || "Failed to upload image. Please try again.");
+            alert(error.message || "Failed to upload file. Please try again.");
         } finally {
             setIsLoading(false);
             if (inputRef.current) {
@@ -82,7 +84,7 @@ export default function GcoreUpload({
                 type="file"
                 ref={inputRef}
                 className="hidden"
-                accept="image/*" // Restrict to images for now as used in BrandForm
+                accept={accept}
                 multiple={multiple}
                 onChange={handleFileChange}
             />

@@ -22,11 +22,16 @@ export async function GET(req: NextRequest) {
         
         let csvContent = "Shop Name,Area,Pincode,Mobile,Email,ASM Name,SE Name,Image URL,Upload Date,Upload Time\n";
         
-        const shopName = `"${shopData.name.replace(/"/g, '""')}"`;
-        const area = `"${shopData.area.replace(/"/g, '""')}"`;
-        const pincode = shopData.pincode;
-        const mobile = shopData.mobileNumber || "N/A";
-        const email = shopData.email ? `"${shopData.email}"` : "N/A";
+        const nameStr = shopData.outletDetails?.shopName || "N/A";
+        const areaStr = shopData.outletDetails?.area || "N/A";
+        const emailStr = shopData.outletDetails?.email || "N/A";
+        const mobileStr = shopData.outletDetails?.mobileNumber || "N/A";
+
+        const shopName = `"${nameStr.replace(/"/g, '""')}"`;
+        const area = `"${areaStr.replace(/"/g, '""')}"`;
+        const pincode = shopData.outletDetails?.pincode || "N/A";
+        const mobile = mobileStr || "N/A";
+        const email = emailStr ? `"${emailStr}"` : "N/A";
         const asm = shopData.asm ? `"${shopData.asm.replace(/"/g, '""')}"` : "N/A";
         const se = shopData.se ? `"${shopData.se.replace(/"/g, '""')}"` : "N/A";
 
@@ -45,7 +50,7 @@ export async function GET(req: NextRequest) {
         const headers = new Headers();
         headers.set('Content-Type', 'text/csv');
         // Force browser to download the file instead of displaying it
-        headers.set('Content-Disposition', `attachment; filename="${shopData.name.replace(/\s+/g, '_')}_Report.csv"`);
+        headers.set('Content-Disposition', `attachment; filename="${nameStr.replace(/\s+/g, '_')}_Report.csv"`);
 
         return new NextResponse(csvContent, { status: 200, headers });
 
