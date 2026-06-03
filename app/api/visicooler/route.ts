@@ -12,14 +12,14 @@ export async function GET(req: NextRequest) {
         const id = searchParams.get("id");
 
         if (id) {
-            const singleShop = await shop.findById(id);
+            const singleShop = await shop.findOne({ _id: id, isActive: true });
             if (!singleShop) {
                 return NextResponse.json({ success: false, message: "Shop not found" }, { status: 404 });
             }
             return NextResponse.json({ success: true, data: singleShop });
         }
 
-        const shops = await shop.find({});
+        const shops = await shop.find({ isActive: true });
         return NextResponse.json({ success: true, data: shops });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
