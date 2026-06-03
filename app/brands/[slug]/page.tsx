@@ -62,17 +62,11 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
 
     return (
         <main className="min-h-screen bg-[#EEEEEE]">
-            {/* Header / Logo Section */}
+            {/* Header / Brand Name Section */}
             <div className="w-full bg-white py-6 border-b border-gray-100 flex justify-center">
-                <div className="relative w-[48px] h-[48px]">
-                    <Image
-                        src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
-                        alt={`${brand.name} logo`}
-                        fill
-                        className="object-contain"
-                        priority
-                    />
-                </div>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+                    {brand.name}
+                </h1>
             </div>
 
 
@@ -95,7 +89,7 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
                 {/* Products Section */}
                 {products.length > 0 && (
                     <div className="space-y-6">
-                        <h2 className="text-[36px] font-bold text-center tracking-tight">Products</h2>
+                        <h2 className="text-[28px] font-bold text-center tracking-tight">Products</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 justify-center max-w-[800px] mx-auto">
                             {products.map((product: IProduct) => (
                                 <Link

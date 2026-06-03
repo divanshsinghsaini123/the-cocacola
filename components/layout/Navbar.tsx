@@ -200,11 +200,16 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
 
                 {/* Mobile Menu */}
                 {isOpen && (
-                    <div className="fixed inset-0 z-50 bg-[var(--component)]" id="mobile-menu">
+                    <div
+                        className="fixed inset-0 z-50"
+                        id="mobile-menu"
+                        style={{ backgroundColor: navbarColor || "var(--component)" }}
+                    >
                         <div className="flex justify-end p-4">
                             <button
                                 onClick={toggleMenu}
-                                className="p-2 text-black hover:text-gray-700"
+                                className="p-2 hover:opacity-80"
+                                style={{ color: navbarFontColor || "black" }}
                             >
                                 <svg
                                     className="w-6 h-6"
@@ -228,10 +233,17 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
                                 const isActiveMobile = activeMobileDropdown === name;
 
                                 return (
-                                    <div key={name} className="border-b border-gray-100 last:border-0 pb-4">
+                                    <div
+                                        key={name}
+                                        className="border-b last:border-0 pb-4"
+                                        style={{ borderColor: navbarFontColor ? `${navbarFontColor}22` : "#f3f4f6" }}
+                                    >
                                         {link.dropdownContent ? (
                                             <div onClick={() => setActiveMobileDropdown(isActiveMobile ? "" : name)}>
-                                                <div className="flex justify-between items-center w-full text-[22px] font-bold text-black cursor-pointer">
+                                                <div
+                                                    className="flex justify-between items-center w-full text-[22px] font-bold cursor-pointer"
+                                                    style={{ color: navbarFontColor || "black" }}
+                                                >
                                                     {link.name}
                                                     {link.hasChevron && (
                                                         <svg
@@ -254,12 +266,16 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
                                                     className={`overflow-hidden transition-all duration-300 ease-in-out ${isActiveMobile ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
                                                         }`}
                                                 >
-                                                    <div className="flex flex-col space-y-3 pl-2 border-l-2 border-black ml-1">
+                                                    <div
+                                                        className="flex flex-col space-y-3 pl-2 border-l-2 ml-1"
+                                                        style={{ borderColor: navbarFontColor || "black" }}
+                                                    >
                                                         {link.dropdownContent.map((item) => (
                                                             <Link
                                                                 key={item.name}
                                                                 href={item.link}
-                                                                className="text-lg font-medium text-gray-600 hover:text-black block py-1"
+                                                                className="text-lg font-medium block py-1 hover:opacity-100 transition-opacity"
+                                                                style={{ color: navbarFontColor || "#4b5563", opacity: 0.8 }}
                                                                 onClick={() => setIsOpen(false)}
                                                             >
                                                                 {item.name}
@@ -271,7 +287,8 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
                                         ) : (
                                             <Link
                                                 href={link.href}
-                                                className="block text-[22px] font-bold text-black"
+                                                className="block text-[22px] font-bold"
+                                                style={{ color: navbarFontColor || "black" }}
                                                 onClick={() => setIsOpen(false)}
                                             >
                                                 <div className="flex justify-between items-center w-full">
