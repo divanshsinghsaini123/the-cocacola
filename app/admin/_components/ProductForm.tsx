@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import GcoreUpload from "./GcoreUpload";
+import { useUnsavedChanges } from "./useUnsavedChanges";
 
 export interface Store {
     _id: string;
@@ -50,11 +51,12 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
     const isEditMode = !!initialData;
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
+    const [isSaved, setIsSaved] = useState(false);
 
     // If editing, brandId might be in initialData.brand
     const finalBrandId = brandId || initialData?.brand;
 
-    const [formData, setFormData] = useState({
+    const initialFormState = {
         brand: finalBrandId || "",
         stores: initialData?.stores || [],
         name: initialData?.name || "",
@@ -70,7 +72,24 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
             nutritionfacts: initialData?.nutrition?.nutritionfacts || [],
         },
         isActive: initialData?.isActive ?? true,
-    });
+    };
+
+    const [formData, setFormData] = useState(initialFormState);
+
+    // Determine if form is dirty by comparing JSON representations
+    const isDirty = !isSaved && JSON.stringify(formData) !== JSON.stringify(initialFormState);
+
+    // Call the navigation guard hook
+    useUnsavedChanges(isDirty);
+
+    // Handler for safely going back
+    const handleGoBack = () => {
+        if (isDirty) {
+            const confirmLeave = window.confirm("You have unsaved changes. Are you sure you want to go back?");
+            if (!confirmLeave) return;
+        }
+        router.back();
+    };
 
     const handleStoreToggle = (storeId: string) => {
         setFormData((prev) => ({
@@ -175,6 +194,7 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
                 throw new Error(error.error || "Something went wrong");
             }
 
+            setIsSaved(true);
             setSuccess("Product saved successfully!");
 
             router.push(`/admin/brands/edit/${finalBrandId}`);
@@ -381,11 +401,29 @@ export default function ProductForm({ initialData, brandId, stores = [] }: Produ
                 </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t">
-                <button type="button" onClick={() => router.back()} className="px-5 py-2.5 bg-gray-100 rounded-lg font-semibold text-gray-600 hover:bg-gray-200">Go Back</button>
-                <button type="submit" disabled={loading} className="px-6 py-2.5 bg-black text-white rounded-lg font-bold hover:bg-gray-800 disabled:opacity-50">
-                    {loading ? "Saving..." : "Save Product"}
-                </button>
+            <div className="flex items-center justify-between pt-4 border-t">
+                {/* Toggle Active */}
+                <div className="flex items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, isActive: !prev.isActive }))}
+                        className={`w-12 h-6 flex items-center rounded-full p-1 duration-300 ${formData.isActive ? "bg-black" : "bg-gray-300"
+                            }`}
+                    >
+                        <div
+                            className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${formData.isActive ? "translate-x-6" : "translate-x-0"
+                                }`}
+                        />
+                    </button>
+                    <span className="text-sm font-medium text-gray-700">Publicly Visible (Active)</span>
+                </div>
+
+                <div className="flex justify-end gap-3">
+                    <button type="button" onClick={handleGoBack} className="px-5 py-2.5 bg-gray-100 rounded-lg font-semibold text-gray-600 hover:bg-gray-200">Go Back</button>
+                    <button type="submit" disabled={loading} className="px-6 py-2.5 bg-black text-white rounded-lg font-bold hover:bg-gray-800 disabled:opacity-50">
+                        {loading ? "Saving..." : "Save Product"}
+                    </button>
+                </div>
             </div>
 
             <style jsx>{`

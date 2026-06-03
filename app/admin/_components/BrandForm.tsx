@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import GcoreUpload from "./GcoreUpload";
 import Toast from "./Toast";
+import { useUnsavedChanges } from "./useUnsavedChanges";
 
 export interface BrandDescriptions {
     d1: string;
@@ -37,14 +38,14 @@ interface BrandFormProps {
 }
 
 export default function BrandForm({ initialData }: BrandFormProps) {
-
     const router = useRouter();
     const isEditMode = !!initialData;
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
+    const [isSaved, setIsSaved] = useState(false);
 
-    // Initialize state with all schema fields
-    const [formData, setFormData] = useState({
+    // Initial form state definition
+    const initialFormState = {
         name: initialData?.name || "",
         slug: initialData?.slug || "",
         logo: initialData?.logo || "",
@@ -62,7 +63,15 @@ export default function BrandForm({ initialData }: BrandFormProps) {
         },
         youtubeVideos: initialData?.youtubeVideos || [], // Array of strings
         isActive: initialData?.isActive ?? true,
-    });
+    };
+
+    const [formData, setFormData] = useState(initialFormState);
+
+    // Determine if form is dirty by comparing JSON representations
+    const isDirty = !isSaved && JSON.stringify(formData) !== JSON.stringify(initialFormState);
+
+    // Call the navigation guard hook
+    useUnsavedChanges(isDirty);
 
     // Helper for simple text inputs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -136,6 +145,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
                 throw new Error(error.error || "Something went wrong");
             }
 
+            setIsSaved(true);
             setSuccess("Data saved successfully!");
             if (!isEditMode) {
                 setTimeout(() => {
