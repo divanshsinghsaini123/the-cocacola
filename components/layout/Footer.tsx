@@ -158,9 +158,9 @@ export default function Footer(props: FooterProps) {
                         <Image
                             src={getStrapiMediaUrl(FooterImageUrl)}
                             alt="Company Logo"
-                            width={249}
-                            height={60}
-                            className="h-[40px] md:h-[45px] w-auto object-contain object-left"
+                            width={125}
+                            height={20}
+                            className="h-[43px] w-[125px] object-contain object-left"
                             unoptimized={isLocal}
                         />
                     </Link>
