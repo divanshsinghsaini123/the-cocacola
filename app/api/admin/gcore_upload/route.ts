@@ -74,31 +74,39 @@ export async function PUT(req: Request) {
         }
 
         // Validate folder
-        if (!["brands", "products", "stores", "visicooler"].includes(folder)) {
+        if (!["brands", "products", "stores", "visicooler", "visicooler_docs", "visicooler_monthly"].includes(folder)) {
             return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
         }
 
         // Original buffer
         const buffer = Buffer.from(await file.arrayBuffer());
 
-        // 🔥 CONVERT TO WEBP HERE
-        const webpBuffer = await sharp(buffer)
-            .webp({ quality: 80 })
-            .toBuffer();
-
-        // Clean filename & force .webp
-        const baseName = file.name
+        const isImage = file.type && file.type.startsWith("image/");
+        let uploadBuffer: any = buffer;
+        let fileContentType = file.type || "application/octet-stream";
+        let baseName = file.name
             .replace(/\s+/g, "-")
-            .replace(/[^a-zA-Z0-9.-]/g, "")
-            .replace(/\.[^.]+$/, "");
+            .replace(/[^a-zA-Z0-9.-]/g, "");
 
-        const filePath = `${folder}/${Date.now()}-${baseName}.webp`;
+        if (isImage) {
+            try {
+                uploadBuffer = await sharp(buffer)
+                    .webp({ quality: 80 })
+                    .toBuffer();
+                fileContentType = "image/webp";
+                baseName = baseName.replace(/\.[^.]+$/, "") + ".webp";
+            } catch (sharpErr) {
+                console.error("Failed to convert image to webp, uploading raw:", sharpErr);
+            }
+        }
+
+        const filePath = `${folder}/${Date.now()}-${baseName}`;
 
         const uploadParams = {
             Bucket: process.env.GCORE_BUCKET_NAME,
             Key: filePath,
-            Body: webpBuffer,
-            ContentType: "image/webp",
+            Body: uploadBuffer,
+            ContentType: fileContentType,
         };
 
         await s3.send(new PutObjectCommand(uploadParams));

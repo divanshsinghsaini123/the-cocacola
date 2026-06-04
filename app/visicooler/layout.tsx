@@ -22,6 +22,13 @@ export default function VisicoolerLayout({
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [sessionUser, setSessionUser] = useState<UserSession | null>(null);
 
+    // Super Admin Authentication State
+    const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
+    const [superAdminUsername, setSuperAdminUsername] = useState("");
+    const [superAdminPassword, setSuperAdminPassword] = useState("");
+    const [superAdminLoading, setSuperAdminLoading] = useState(false);
+    const [superAdminError, setSuperAdminError] = useState<string | null>(null);
+
     // Session duration: 12 hours (12 * 60 * 60 * 1000)
     const SESSION_DURATION = 12 * 60 * 60 * 1000;
 
@@ -95,12 +102,72 @@ export default function VisicoolerLayout({
         }
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            if (sessionUser?.role === "Superadmin") {
+                await fetch("/api/admin/auth", { method: "DELETE" });
+            }
+        } catch (err) {
+            console.error("Failed to delete admin token cookie:", err);
+        }
         localStorage.removeItem("visicooler_session");
         setIsAuthenticated(false);
         setSessionUser(null);
         setNameInput("");
         toast.success("Successfully logged out");
+    };
+
+    const openSuperAdminModal = () => {
+        setSuperAdminUsername("");
+        setSuperAdminPassword("");
+        setSuperAdminError(null);
+        setShowSuperAdminModal(true);
+    };
+
+    const handleSuperAdminLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!superAdminUsername.trim() || !superAdminPassword.trim()) {
+            setSuperAdminError("Username and Password are required");
+            return;
+        }
+
+        setSuperAdminLoading(true);
+        setSuperAdminError(null);
+
+        try {
+            const res = await fetch("/api/admin/auth", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: superAdminUsername,
+                    password: superAdminPassword,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                const session: UserSession = {
+                    name: superAdminUsername,
+                    role: "Superadmin",
+                    loginTime: Date.now(),
+                };
+
+                localStorage.setItem("visicooler_session", JSON.stringify(session));
+                setSessionUser(session);
+                setIsAuthenticated(true);
+                setShowSuperAdminModal(false);
+                toast.success(`Welcome, Super Admin ${superAdminUsername}!`);
+            } else {
+                setSuperAdminError(data.error || "Invalid credentials.");
+                toast.error("Access Denied");
+            }
+        } catch (err) {
+            setSuperAdminError("Network error. Please try again.");
+            toast.error("Authentication Error");
+        } finally {
+            setSuperAdminLoading(false);
+        }
     };
 
     if (loading) {
@@ -195,6 +262,21 @@ export default function VisicoolerLayout({
                                     </>
                                 )}
                             </button>
+
+                            <div className="relative flex py-2 items-center">
+                                <div className="flex-grow border-t border-white/10"></div>
+                                <span className="flex-shrink mx-4 text-gray-500 text-xs font-semibold uppercase tracking-wider">Or</span>
+                                <div className="flex-grow border-t border-white/10"></div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={openSuperAdminModal}
+                                className="w-full relative flex items-center justify-center gap-2 overflow-hidden bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white py-3.5 px-6 rounded-2xl font-bold tracking-wide transition-all group"
+                            >
+                                <Lock className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform" />
+                                <span>Login as Super Admin</span>
+                            </button>
                         </form>
                     </div>
 
@@ -205,6 +287,123 @@ export default function VisicoolerLayout({
                         </p>
                     </div>
                 </div>
+
+                {/* Super Admin Login Modal Overlay */}
+                {showSuperAdminModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-all duration-300">
+                        <div className="w-full max-w-md bg-[#0a0f1d] border border-white/[0.08] rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.6)] relative animate-in fade-in zoom-in duration-200">
+
+                            {/* Close button */}
+                            <button
+                                type="button"
+                                onClick={() => setShowSuperAdminModal(false)}
+                                className="absolute top-5 right-5 text-gray-500 hover:text-white transition-colors p-1 hover:bg-white/5 rounded-full"
+                            >
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+
+                            {/* Header */}
+                            <div className="text-center mb-6">
+                                <div className="inline-flex items-center justify-center p-3 bg-red-500/10 border border-red-500/20 rounded-2xl shadow-[0_0_15px_rgba(239,68,68,0.1)] mb-3">
+                                    <Lock className="w-6 h-6 text-red-500" />
+                                </div>
+                                <h2 className="text-2xl font-bold text-white tracking-tight">Super Admin Access</h2>
+                                <p className="text-gray-400 text-xs mt-1">Enter your admin panel credentials to authorize</p>
+                            </div>
+
+                            {/* Form */}
+                            <form onSubmit={handleSuperAdminLogin} className="space-y-4">
+
+                                {/* Error Display */}
+                                {superAdminError && (
+                                    <div className="p-3 bg-red-950/40 border border-red-500/30 rounded-xl flex items-start gap-2.5 text-red-200 text-xs animate-shake">
+                                        <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                                        <div>
+                                            <span className="font-semibold text-red-400">Error: </span>
+                                            <span className="opacity-90">{superAdminError}</span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Username Input */}
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-bold text-gray-400 tracking-wide uppercase">
+                                        Username
+                                    </label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                            <User className="h-4 w-4 text-gray-500 group-focus-within:text-red-500 transition-colors" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={superAdminUsername}
+                                            onChange={(e) => {
+                                                setSuperAdminUsername(e.target.value);
+                                                setSuperAdminError(null);
+                                            }}
+                                            placeholder="Enter username"
+                                            className="block w-full pl-10 pr-4 py-3 border border-white/[0.08] rounded-xl text-sm bg-white/[0.02] placeholder-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-500/50 transition-all shadow-inner"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Password Input */}
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-bold text-gray-400 tracking-wide uppercase">
+                                        Password
+                                    </label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                            <Lock className="h-4 w-4 text-gray-500 group-focus-within:text-red-500 transition-colors" />
+                                        </div>
+                                        <input
+                                            type="password"
+                                            required
+                                            value={superAdminPassword}
+                                            onChange={(e) => {
+                                                setSuperAdminPassword(e.target.value);
+                                                setSuperAdminError(null);
+                                            }}
+                                            placeholder="Enter password"
+                                            className="block w-full pl-10 pr-4 py-3 border border-white/[0.08] rounded-xl text-sm bg-white/[0.02] placeholder-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-500/50 transition-all shadow-inner"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Submit button */}
+                                <div className="pt-2 flex gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowSuperAdminModal(false)}
+                                        className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/5 hover:border-white/10 py-3 rounded-xl text-sm font-semibold transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={superAdminLoading}
+                                        className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 disabled:opacity-75 text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-[0_4px_15px_rgba(220,38,38,0.2)] flex items-center justify-center gap-1.5"
+                                    >
+                                        {superAdminLoading ? (
+                                            <>
+                                                <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin"></div>
+                                                <span>Authenticating...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>Login</span>
+                                                <ArrowRight className="w-4 h-4" />
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
