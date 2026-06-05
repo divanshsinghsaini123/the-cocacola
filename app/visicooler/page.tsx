@@ -7,10 +7,14 @@ import { toast } from "react-hot-toast";
 
 interface Shop {
     _id: string;
-    name: string;
-    pincode: number;
-    area: string;
-    visicooler: string[];
+    outletDetails: {
+        shopName: string;
+        pincode: number;
+        area: string;
+    };
+    businessDetails: {
+        visicooler: string[];
+    };
     isActive: boolean;
 }
 
@@ -41,19 +45,22 @@ export default function VisicoolerPage() {
 
     const filteredShops = shops.filter((shop) => {
         const query = searchQuery.toLowerCase();
-        const visicoolerString = shop.visicooler?.join(", ").toLowerCase() || "";
+        const shopName = shop.outletDetails?.shopName || "";
+        const pincode = shop.outletDetails?.pincode?.toString() || "";
+        const area = shop.outletDetails?.area || "";
+        const visicoolerString = shop.businessDetails?.visicooler?.join(", ").toLowerCase() || "";
 
         return (
-            shop.name.toLowerCase().includes(query) ||
-            shop.pincode.toString().includes(query) ||
-            shop.area.toLowerCase().includes(query) ||
+            shopName.toLowerCase().includes(query) ||
+            pincode.includes(query) ||
+            area.toLowerCase().includes(query) ||
             visicoolerString.includes(query)
         );
     });
 
     const handleExport = (shop: Shop) => {
         window.open(`/api/admin/cron/manual-report?shopId=${shop._id}`, "_blank");
-        toast.success(`Downloading report for ${shop.name}...`);
+        toast.success(`Downloading report for ${shop.outletDetails?.shopName || 'Shop'}...`);
     };
 
     return (
@@ -115,12 +122,12 @@ export default function VisicoolerPage() {
                                     <div className="col-span-3 flex items-center gap-3 w-full">
                                         <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
                                             <span className="text-blue-700 font-bold text-lg">
-                                                {shop.name.charAt(0).toUpperCase()}
+                                                {(shop.outletDetails?.shopName || 'S').charAt(0).toUpperCase()}
                                             </span>
                                         </div>
                                         <div>
-                                            <h2 className="text-base font-bold text-gray-900 truncate max-w-[200px]" title={shop.name}>
-                                                {shop.name}
+                                            <h2 className="text-base font-bold text-gray-900 truncate max-w-[200px]" title={shop.outletDetails?.shopName}>
+                                                {shop.outletDetails?.shopName}
                                             </h2>
                                         </div>
                                     </div>
@@ -128,21 +135,21 @@ export default function VisicoolerPage() {
                                     {/* Area */}
                                     <div className="col-span-2 flex items-center gap-2 text-gray-600 text-sm">
                                         <MapPin size={16} className="text-gray-400 lg:hidden" />
-                                        <span className="truncate" title={shop.area}>{shop.area}</span>
+                                        <span className="truncate" title={shop.outletDetails?.area}>{shop.outletDetails?.area}</span>
                                     </div>
 
                                     {/* Pincode */}
                                     <div className="col-span-2 flex items-center gap-2 text-gray-600 text-sm">
                                         <Hash size={16} className="text-gray-400 lg:hidden" />
-                                        <span>{shop.pincode}</span>
+                                        <span>{shop.outletDetails?.pincode}</span>
                                     </div>
 
                                     {/* Visicoolers */}
                                     <div className="col-span-2 flex items-center gap-2 text-gray-600 text-sm">
                                         <Package size={16} className="text-gray-400 lg:hidden" />
-                                        <span className="truncate" title={shop.visicooler?.join(', ')}>
-                                            {shop.visicooler && shop.visicooler.length > 0
-                                                ? shop.visicooler.join(', ')
+                                        <span className="truncate" title={shop.businessDetails?.visicooler?.join(', ')}>
+                                            {shop.businessDetails?.visicooler && shop.businessDetails.visicooler.length > 0
+                                                ? shop.businessDetails.visicooler.join(', ')
                                                 : <span className="text-gray-400 italic">None</span>}
                                         </span>
                                     </div>

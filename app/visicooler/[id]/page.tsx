@@ -15,13 +15,34 @@ interface ShopImage {
 
 interface Shop {
   _id: string;
-  name: string;
-  pincode: number;
-  area: string;
-  mobileNumber: string;
-  email?: string;
-  visicooler: string[];
+  outletDetails?: {
+    shopName: string;
+    ownerName: string;
+    date: string;
+    gender: string;
+    age: number;
+    address: string;
+    pincode: number;
+    area: string;
+    mobileNumber: string;
+    email?: string;
+  };
+  distributorDetails?: {
+    distributorName: string;
+    accountNumber: number;
+    hubName: string;
+  };
+  businessDetails?: {
+    outletType: string;
+    visibility: string;
+    competitors: boolean;
+    nearbyAreaFootfall: string;
+    fridgeType?: string;
+    visicooler: string[];
+    branding: string;
+  };
   isActive: boolean;
+  status?: string;
   images: ShopImage[];
   asm?: string;
   se?: string;
@@ -310,10 +331,19 @@ export default function ShopViewPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="px-5 sm:px-8 py-5 sm:py-6 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{shop.name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                {shop.outletDetails?.shopName || "Shop Details"}
+              </h1>
               <div className="flex items-center gap-2 mt-2">
                 <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${shop.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                   {shop.isActive ? "Active" : "Inactive"}
+                </span>
+                <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+                  shop.status === 'approved' ? 'bg-blue-100 text-blue-700' : 
+                  shop.status === 'rejected' ? 'bg-red-100 text-red-700' : 
+                  'bg-yellow-100 text-yellow-700'
+                }`}>
+                  {shop.status ? shop.status.toUpperCase() : "PENDING"}
                 </span>
                 <span className="text-gray-500 text-sm font-mono">ID: {shop._id}</span>
               </div>
@@ -342,7 +372,7 @@ export default function ShopViewPage() {
               <MapPin className="text-blue-500 mt-1" size={24} />
               <div>
                 <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Area</p>
-                <p className="text-lg font-medium text-gray-900 mt-1">{shop.area}</p>
+                <p className="text-lg font-medium text-gray-900 mt-1">{shop.outletDetails?.area || "N/A"}</p>
               </div>
             </div>
 
@@ -350,7 +380,7 @@ export default function ShopViewPage() {
               <Hash className="text-blue-500 mt-1" size={24} />
               <div>
                 <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Pincode</p>
-                <p className="text-lg font-medium text-gray-900 mt-1">{shop.pincode}</p>
+                <p className="text-lg font-medium text-gray-900 mt-1">{shop.outletDetails?.pincode || "N/A"}</p>
               </div>
             </div>
 
@@ -358,7 +388,7 @@ export default function ShopViewPage() {
               <svg xmlns="http://www.w3.org/2000/svg" className="text-blue-500 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               <div>
                 <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Mobile</p>
-                <p className="text-lg font-medium text-gray-900 mt-1">{shop.mobileNumber}</p>
+                <p className="text-lg font-medium text-gray-900 mt-1">{shop.outletDetails?.mobileNumber || "N/A"}</p>
               </div>
             </div>
 
@@ -366,7 +396,7 @@ export default function ShopViewPage() {
               <svg xmlns="http://www.w3.org/2000/svg" className="text-blue-500 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
               <div className="overflow-hidden">
                 <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Email</p>
-                <p className="text-lg font-medium text-gray-900 mt-1 truncate" title={shop.email}>{shop.email || <span className="text-gray-400 italic">N/A</span>}</p>
+                <p className="text-lg font-medium text-gray-900 mt-1 truncate" title={shop.outletDetails?.email}>{shop.outletDetails?.email || <span className="text-gray-400 italic">N/A</span>}</p>
               </div>
             </div>
 
@@ -375,32 +405,114 @@ export default function ShopViewPage() {
               <div>
                 <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Visicoolers</p>
                 <p className="text-lg font-medium text-gray-900 mt-1">
-                  {shop.visicooler && shop.visicooler.length > 0
-                    ? shop.visicooler.join(', ')
+                  {shop.businessDetails?.visicooler && shop.businessDetails.visicooler.length > 0
+                    ? shop.businessDetails.visicooler.join(', ')
                     : <span className="text-gray-400 italic">None registered</span>}
                 </p>
               </div>
             </div>
-
-            {/* ASM Display */}
-            <div className="flex items-start gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="text-blue-500 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-              <div>
-                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">ASM</p>
-                <p className="text-lg font-medium text-gray-900 mt-1 truncate" title={shop.asm}>{shop.asm || <span className="text-gray-400 italic">N/A</span>}</p>
-              </div>
-            </div>
-
-            {/* SE Display */}
-            <div className="flex items-start gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="text-blue-500 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-              <div>
-                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">SE</p>
-                <p className="text-lg font-medium text-gray-900 mt-1 truncate" title={shop.se}>{shop.se || <span className="text-gray-400 italic">N/A</span>}</p>
-              </div>
-            </div>
           </div>
         </div>
+
+        {/* Detailed Sections */}
+        {shop.outletDetails && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Owner & Outlet Details */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h3 className="font-bold text-gray-900">Outlet & Owner Details</h3>
+              </div>
+              <div className="p-6 space-y-4 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Owner Name:</span>
+                  <span className="font-semibold text-gray-900">{shop.outletDetails.ownerName || "N/A"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Gender:</span>
+                  <span className="font-semibold text-gray-900">{shop.outletDetails.gender || "N/A"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Age:</span>
+                  <span className="font-semibold text-gray-900">{shop.outletDetails.age ? `${shop.outletDetails.age} years` : "N/A"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Registration Date:</span>
+                  <span className="font-semibold text-gray-900">
+                    {shop.outletDetails.date ? new Date(shop.outletDetails.date).toLocaleDateString() : "N/A"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Address:</span>
+                  <span className="font-semibold text-gray-900 text-right max-w-[200px] truncate" title={shop.outletDetails.address}>
+                    {shop.outletDetails.address || "N/A"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Distributor Details */}
+            {shop.distributorDetails && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                  <h3 className="font-bold text-gray-900">Distributor Details</h3>
+                </div>
+                <div className="p-6 space-y-4 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Distributor Name:</span>
+                    <span className="font-semibold text-gray-900">{shop.distributorDetails.distributorName || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Account Number:</span>
+                    <span className="font-semibold text-gray-900">{shop.distributorDetails.accountNumber || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Hub Name:</span>
+                    <span className="font-semibold text-gray-900">{shop.distributorDetails.hubName || "N/A"}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Business Details */}
+            {shop.businessDetails && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                  <h3 className="font-bold text-gray-900">Business Details</h3>
+                </div>
+                <div className="p-6 space-y-4 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Outlet Type:</span>
+                    <span className="font-semibold text-gray-900">{shop.businessDetails.outletType || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Visibility:</span>
+                    <span className="font-semibold text-gray-900">{shop.businessDetails.visibility || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Nearby Area Footfall:</span>
+                    <span className="font-semibold text-gray-900">{shop.businessDetails.nearbyAreaFootfall || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Fridge Type:</span>
+                    <span className="font-semibold text-gray-900">{shop.businessDetails.fridgeType || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Branding Type:</span>
+                    <span className="font-semibold text-gray-900">
+                      {Array.isArray(shop.businessDetails.branding)
+                        ? shop.businessDetails.branding.join(", ")
+                        : (shop.businessDetails.branding || "N/A")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Competitors Present:</span>
+                    <span className="font-semibold text-gray-900">{shop.businessDetails.competitors ? "Yes" : "No"}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Images Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">

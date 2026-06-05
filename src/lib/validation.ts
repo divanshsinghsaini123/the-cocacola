@@ -153,19 +153,60 @@ export const CalculatorProductSchema = z.object({
 });
 
 export const ShopValidationSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    pincode: z.number({ message: "Pincode is required" }),
-    area: z.string().min(1, "Area is required"),
-    mobileNumber: z.string().min(1, "Mobile number is required"),
-    email: z.string().optional().or(z.literal('')),
-    visicooler: z.array(z.string()).optional(),
+    outletDetails: z.object({
+        shopName: z.string().min(1, "Shop name is required"),
+        ownerName: z.string().min(1, "Owner name is required"),
+        date: z.preprocess((arg) => {
+            if (typeof arg === "string" && arg) return new Date(arg);
+            return arg;
+        }, z.date({ message: "Date is required" })),
+        gender: z.enum(["Male", "Female", "Other"]),
+        age: z.number().min(18, "Age must be at least 18").max(70, "Age must be at most 70"),
+        address: z.string().min(1, "Address is required"),
+        pincode: z.number().min(1, "Pincode is required"),
+        area: z.string().min(1, "Area is required"),
+        mobileNumber: z.string().min(1, "Mobile number is required"),
+        email: z.string().optional().or(z.literal('')),
+    }),
+    distributorDetails: z.object({
+        distributorName: z.string().min(1, "Distributor name is required"),
+        accountNumber: z.number().min(1, "Account number is required"),
+        hubName: z.string().min(1, "Hub name is required"),
+    }),
+    businessDetails: z.object({
+        outletType: z.string().min(1, "Outlet type is required"),
+        visibility: z.enum(["Main Road", "Internal Road", "Premium"]),
+        competitors: z.boolean().optional().default(true),
+        nearbyAreaFootfall: z.enum(["High", "Medium", "Low"]),
+        fridgeType: z.enum(["255", "280", "360", "450", "mini"]).optional().or(z.literal('')),
+        visicooler: z.array(z.string()).optional(),
+        branding: z.array(z.enum(["ED", "Water", "Other"])).default([]),
+    }),
     images: z.array(
         z.object({
             url: z.string().min(1, "Image URL is required"),
-            uploadedAt: z.date().optional(),
+            uploadedAt: z.preprocess((arg) => {
+                if (typeof arg === "string" && arg) return new Date(arg);
+                return arg;
+            }, z.date().optional()),
         })
     ).optional(),
     isActive: z.boolean().optional(),
+    status: z.enum(["pending", "approved", "rejected"]).optional(),
     asm: z.string().optional(),
     se: z.string().optional(),
+    documentVerification: z.object({
+        documentAttached: z.array(
+            z.object({
+                name: z.enum(["aadhar", "PAN", "Electricity Bill", "Shop Agreement"]),
+                url: z.string().min(1, "Document URL is required")
+            })
+        ).optional(),
+        previousThreeMonthlydata: z.array(
+            z.object({
+                name: z.string().optional(),
+                url: z.string().min(1, "Monthly data URL is required")
+            })
+        ).optional()
+    }).optional()
 });
