@@ -100,10 +100,11 @@ export async function PUT(req: NextRequest) {
         });
 
         // Send email alert to admin asynchronously
-        const protocol = req.nextUrl.protocol || "http:";
-        const host = req.nextUrl.host || "localhost:3000";
+        const protocol = process.env.PROTOCOL || "http:";
+        const host = process.env.HOST || "localhost:3000";
         const redirectUrl = `${protocol}//${host}/visicooler/createshop?requestId=${newRequest._id}`;
-
+        console.log(host + "----------------------");
+        console.log(redirectUrl + "-----------------");
         sendRequestNotificationEmail({
             type: "edit",
             requestId: newRequest._id.toString(),
