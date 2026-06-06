@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from '@/src/lib/mongoose';
 import { shop } from "@/src/models/visicooler/shop";
 import { ShopValidationSchema } from "@/src/lib/validation";
-import { VisicoolerOtp } from "@/src/models/visicooler/otp";
+import { ShopRequest } from "@/src/models/visicooler/request";
+import { sendRequestNotificationEmail } from "@/src/lib/email";
 
 // GET: Get all shops OR get one shop by ID (e.g. ?id=...)
 export async function GET(req: NextRequest) {
@@ -26,40 +27,46 @@ export async function GET(req: NextRequest) {
     }
 }
 
-// POST: Create a new shop
+// POST: Submit a new shop request
 export async function POST(req: NextRequest) {
     try {
         await connectDB();
         const body = await req.json();
-        const { otp, ...shopData } = body;
-
-        // Enforce OTP verification
-        if (!otp) {
-            return NextResponse.json({ success: false, error: { message: "Authorization code (OTP) is required" } }, { status: 400 });
-        }
-
-        const otpRecord = await VisicoolerOtp.findOne({ otp: otp.trim() });
-        if (!otpRecord || new Date() > otpRecord.expiresAt) {
-            return NextResponse.json({ success: false, error: { message: "Invalid or expired authorization code" } }, { status: 400 });
-        }
-
-        // OTP is valid - consume/delete it immediately to prevent replay attacks
-        await VisicoolerOtp.deleteOne({ _id: otpRecord._id });
 
         // Validate using Zod
-        const validation = ShopValidationSchema.safeParse(shopData);
+        const validation = ShopValidationSchema.safeParse(body);
         if (!validation.success) {
             return NextResponse.json({ success: false, error: validation.error.format() }, { status: 400 });
         }
 
-        const newShop = await shop.create(validation.data);
-        return NextResponse.json({ success: true, data: newShop }, { status: 201 });
+        const newRequest = await ShopRequest.create({
+            type: "create",
+            requestedData: validation.data,
+            status: "pending",
+            requestedBy: validation.data.se || "Field Personnel"
+        });
+
+        // Send email alert to admin asynchronously
+        const protocol = req.nextUrl.protocol || "http:";
+        const host = req.nextUrl.host || "localhost:3000";
+        const redirectUrl = `${protocol}//${host}/visicooler/createshop?requestId=${newRequest._id}`;
+
+        sendRequestNotificationEmail({
+            type: "create",
+            requestId: newRequest._id.toString(),
+            shopName: validation.data.outletDetails.shopName,
+            ownerName: validation.data.outletDetails.ownerName,
+            requestedBy: newRequest.requestedBy,
+            redirectUrl
+        }).catch(err => console.error("Error sending admin approval email:", err));
+
+        return NextResponse.json({ success: true, data: newRequest, message: "Creation request submitted successfully!" }, { status: 201 });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }
 
-// PUT: Update an existing shop
+// PUT: Submit an edit shop request
 export async function PUT(req: NextRequest) {
     try {
         await connectDB();
@@ -70,34 +77,43 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ success: false, message: "Shop ID is required" }, { status: 400 });
         }
 
+        // Verify that target shop exists
+        const existingShop = await shop.findById(id);
+        if (!existingShop) {
+            return NextResponse.json({ success: false, message: "Shop not found" }, { status: 404 });
+        }
+
         const body = await req.json();
-        const { otp, ...shopData } = body;
-
-        // Enforce OTP verification
-        if (!otp) {
-            return NextResponse.json({ success: false, error: { message: "Authorization code (OTP) is required" } }, { status: 400 });
-        }
-
-        const otpRecord = await VisicoolerOtp.findOne({ otp: otp.trim() });
-        if (!otpRecord || new Date() > otpRecord.expiresAt) {
-            return NextResponse.json({ success: false, error: { message: "Invalid or expired authorization code" } }, { status: 400 });
-        }
-
-        // OTP is valid - consume/delete it immediately to prevent replay attacks
-        await VisicoolerOtp.deleteOne({ _id: otpRecord._id });
 
         // Validate using Zod
-        const validation = ShopValidationSchema.safeParse(shopData);
+        const validation = ShopValidationSchema.safeParse(body);
         if (!validation.success) {
             return NextResponse.json({ success: false, error: validation.error.format() }, { status: 400 });
         }
 
-        const updatedShop = await shop.findByIdAndUpdate(id, validation.data, { new: true });
-        if (!updatedShop) {
-            return NextResponse.json({ success: false, message: "Shop not found" }, { status: 404 });
-        }
+        const newRequest = await ShopRequest.create({
+            type: "edit",
+            shopId: id,
+            requestedData: validation.data,
+            status: "pending",
+            requestedBy: validation.data.se || "Field Personnel"
+        });
 
-        return NextResponse.json({ success: true, data: updatedShop }, { status: 200 });
+        // Send email alert to admin asynchronously
+        const protocol = req.nextUrl.protocol || "http:";
+        const host = req.nextUrl.host || "localhost:3000";
+        const redirectUrl = `${protocol}//${host}/visicooler/createshop?requestId=${newRequest._id}`;
+
+        sendRequestNotificationEmail({
+            type: "edit",
+            requestId: newRequest._id.toString(),
+            shopName: validation.data.outletDetails.shopName,
+            ownerName: validation.data.outletDetails.ownerName,
+            requestedBy: newRequest.requestedBy,
+            redirectUrl
+        }).catch(err => console.error("Error sending admin approval email:", err));
+
+        return NextResponse.json({ success: true, data: newRequest, message: "Edit request submitted successfully!" }, { status: 201 });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

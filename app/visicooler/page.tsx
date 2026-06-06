@@ -22,6 +22,21 @@ export default function VisicoolerPage() {
     const [shops, setShops] = useState<Shop[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const sessionStr = localStorage.getItem("visicooler_session");
+        if (sessionStr) {
+            try {
+                const session = JSON.parse(sessionStr);
+                if (session.role === "Superadmin") {
+                    setIsAdmin(true);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }, []);
 
     useEffect(() => {
         const fetchShops = async () => {
@@ -71,13 +86,24 @@ export default function VisicoolerPage() {
                         <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Visicooler Shops</h1>
                         <p className="text-gray-500 mt-1">Manage and export all registered shop data.</p>
                     </div>
-                    <Link
-                        href="/visicooler/createshop"
-                        className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm w-full sm:w-auto mt-2 sm:mt-0"
-                    >
-                        <Plus size={20} />
-                        Add New Shop
-                    </Link>
+                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+                        {isAdmin && (
+                            <Link
+                                href="/visicooler/requests"
+                                className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-5 py-2.5 rounded-lg font-semibold transition-all shadow-sm w-full sm:w-auto"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                Review Requests
+                            </Link>
+                        )}
+                        <Link
+                            href="/visicooler/createshop"
+                            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm w-full sm:w-auto"
+                        >
+                            <Plus size={20} />
+                            Add New Shop
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Search Bar */}

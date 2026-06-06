@@ -11,15 +11,11 @@ function CreateShopForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
+  const requestId = searchParams.get("requestId");
 
   const [loading, setLoading] = useState(false);
-  const [initialFetchLoading, setInitialFetchLoading] = useState(!!editId);
-
-  // OTP administrative security authorization states
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [otpCode, setOtpCode] = useState("");
-  const [otpLoading, setOtpLoading] = useState(false);
-  const [maskedEmail, setMaskedEmail] = useState("");
+  const [initialFetchLoading, setInitialFetchLoading] = useState(!!editId || !!requestId);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Document attachments
   const [documents, setDocuments] = useState<Array<{ name: string; url: string }>>([]);
@@ -63,7 +59,22 @@ function CreateShopForm() {
     se: "",
   });
 
-  // Fetch data if we are in Edit mode
+  // Check if current session user is Superadmin
+  useEffect(() => {
+    const sessionStr = localStorage.getItem("visicooler_session");
+    if (sessionStr) {
+      try {
+        const session = JSON.parse(sessionStr);
+        if (session.role === "Superadmin") {
+          setIsAdmin(true);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  // Fetch data if we are in Edit mode or Admin review mode
   useEffect(() => {
     if (editId) {
       const fetchShop = async () => {
@@ -118,8 +129,62 @@ function CreateShopForm() {
         }
       };
       fetchShop();
+    } else if (requestId) {
+      const fetchRequest = async () => {
+        try {
+          const res = await fetch(`/api/visicooler/requests?id=${requestId}`);
+          const data = await res.json();
+          if (data.success) {
+            const reqItem = data.data;
+            const shop = reqItem.requestedData;
+            setFormData({
+              shopName: shop.outletDetails?.shopName || "",
+              ownerName: shop.outletDetails?.ownerName || "",
+              date: shop.outletDetails?.date ? new Date(shop.outletDetails.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+              gender: shop.outletDetails?.gender || "Male",
+              age: shop.outletDetails?.age || 18,
+              address: shop.outletDetails?.address || "",
+              pincode: shop.outletDetails?.pincode?.toString() || "",
+              area: shop.outletDetails?.area || "",
+              mobileNumber: shop.outletDetails?.mobileNumber || "",
+              email: shop.outletDetails?.email || "",
+              distributorName: shop.distributorDetails?.distributorName || "",
+              accountNumber: shop.distributorDetails?.accountNumber?.toString() || "",
+              hubName: shop.distributorDetails?.hubName || "",
+
+              outletType: shop.businessDetails?.outletType || "",
+              visibility: shop.businessDetails?.visibility || "Main Road",
+              competitors: shop.businessDetails?.competitors ?? true,
+              nearbyAreaFootfall: shop.businessDetails?.nearbyAreaFootfall || "Medium",
+              fridgeType: shop.businessDetails?.fridgeType || "280",
+              visicooler: shop.businessDetails?.visicooler ? shop.businessDetails.visicooler.join(", ") : "",
+              branding: shop.businessDetails?.branding || [],
+              isActive: shop.isActive ?? true,
+              asm: shop.asm || "",
+              se: shop.se || "",
+            });
+
+            // Fetch documents
+            setDocuments(shop.documentVerification?.documentAttached || []);
+            // Fetch monthly data
+            setMonthlyData(shop.documentVerification?.previousThreeMonthlydata || [
+              { name: "Month 1", url: "" },
+              { name: "Month 2", url: "" },
+              { name: "Month 3", url: "" },
+            ]);
+          } else {
+            toast.error("Request not found");
+            router.push("/visicooler/requests");
+          }
+        } catch (error) {
+          toast.error("Error loading request data");
+        } finally {
+          setInitialFetchLoading(false);
+        }
+      };
+      fetchRequest();
     }
-  }, [editId, router]);
+  }, [editId, requestId, router]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -148,7 +213,7 @@ function CreateShopForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation before dispatching verification code
+    // Basic validation
     if (!formData.shopName.trim()) {
       toast.error("Shop name is required");
       return;
@@ -166,72 +231,26 @@ function CreateShopForm() {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      // 1. Dispatch dynamic OTP to all designated admin emails with full shop details payload
-      const res = await fetch("/api/visicooler/otp/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: editId ? "UPDATE" : "CREATE",
-          name: formData.shopName,
-          pincode: Number(formData.pincode),
-          area: formData.area,
-          mobileNumber: formData.mobileNumber,
-          email: formData.email,
-          visicooler: formData.visicooler,
-          asm: formData.asm,
-          se: formData.se,
-        })
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        setMaskedEmail(data.email || "");
-        toast.success("Transaction authorization code dispatched!");
-        setShowOtpModal(true);
-      } else {
-        toast.error(data.error || "Failed to dispatch verification code");
-      }
-    } catch (error) {
-      toast.error("Could not connect to the transaction authorization server.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyAndSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (otpCode.length !== 6) {
-      toast.error("Please enter a valid 6-digit verification code");
-      return;
-    }
-
-    setOtpLoading(true);
-
-    if (!editId) {
-      // Enforce that all 3 monthly data slots must have a name selected and a file uploaded
+    // If a create request, enforce that all 3 monthly data slots must have a name selected and a file uploaded
+    if (!editId && !requestId) {
       for (let i = 0; i < 3; i++) {
         const m = monthlyData[i];
         if (!m || !m.url) {
           toast.error(`Please upload the data file for Month ${i + 1}`);
-          setOtpLoading(false);
           return;
         }
         if (!m.name || m.name === `Month ${i + 1}` || m.name === `Month1`) {
           toast.error(`Please select the month name for Month ${i + 1}`);
-          setOtpLoading(false);
           return;
         }
       }
     }
 
+    setLoading(true);
+
     try {
       // Process data to match schema
       const payload = {
-        otp: otpCode.trim(), // include authorization code
         outletDetails: {
           shopName: formData.shopName,
           ownerName: formData.ownerName,
@@ -269,30 +288,48 @@ function CreateShopForm() {
         },
       };
 
-      const url = editId ? `/api/visicooler?id=${editId}` : "/api/visicooler";
-      const method = editId ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        toast.success(editId ? "Shop updated successfully!" : "Shop created successfully!");
-        setShowOtpModal(false);
-        setOtpCode("");
-        // If we edited, take them back to the shop view, otherwise list
-        router.push(editId ? `/visicooler/${editId}` : "/visicooler");
+      if (requestId) {
+        // Admin approving request
+        const res = await fetch("/api/visicooler/requests", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            requestId,
+            action: "approve",
+            approvedData: payload
+          })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          toast.success("Request approved and database updated successfully!");
+          router.push("/visicooler/requests");
+        } else {
+          toast.error(data.error?.message || data.message || "Failed to approve request");
+        }
       } else {
-        toast.error(data.error?.message || data.message || "Failed to save shop");
+        // Normal user submitting edit or creation request
+        const url = editId ? `/api/visicooler?id=${editId}` : "/api/visicooler";
+        const method = editId ? "PUT" : "POST";
+
+        const res = await fetch(url, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          toast.success(editId ? "Shop edit request submitted for admin approval!" : "Shop creation request submitted for admin approval!");
+          router.push(editId ? `/visicooler/${editId}` : "/visicooler");
+        } else {
+          toast.error(data.error?.message || data.message || "Failed to submit request");
+        }
       }
     } catch (error) {
-      toast.error("An error occurred while saving the shop.");
+      toast.error("An error occurred while saving the shop details.");
     } finally {
-      setOtpLoading(false);
+      setLoading(false);
     }
   };
 
@@ -955,74 +992,14 @@ function CreateShopForm() {
               ) : (
                 <Save size={20} />
               )}
-              {loading ? "Saving..." : (editId ? "Request Update" : "Request Create")}
+              {loading 
+                ? (requestId ? "Approving..." : "Saving...") 
+                : (requestId ? "Approve & Save Details" : (editId ? "Request Update" : "Request Create"))
+              }
             </button>
           </div>
         </form>
       </div>
-
-      {/* OTP administrative security authorization overlay modal */}
-      {showOtpModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-in fade-in duration-300">
-          <div className="bg-white p-8 rounded-3xl shadow-[0_12px_40px_rgba(0,0,0,0.15)] border border-gray-100 max-w-[420px] w-full text-center relative animate-in zoom-in-95 duration-200">
-            <button
-              onClick={() => {
-                setShowOtpModal(false);
-                setOtpCode("");
-              }}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors font-semibold text-lg"
-            >
-              ✕
-            </button>
-            <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-              </svg>
-            </div>
-            <h3 className="text-2xl font-extrabold text-gray-900 mb-2">Authorize CMS Transaction</h3>
-            <p className="text-gray-500 text-sm mb-6 leading-relaxed">
-              Please enter the 6-digit OTP code sent to: <br />
-              <span className="font-bold text-gray-800">{maskedEmail}</span>
-            </p>
-
-            <form onSubmit={handleVerifyAndSubmit} className="space-y-6">
-              <div>
-                <input
-                  type="text"
-                  required
-                  maxLength={6}
-                  value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                  placeholder="000000"
-                  className="w-full p-4 border border-gray-200 rounded-xl text-2xl font-bold text-center tracking-[8px] outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20"
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowOtpModal(false);
-                    setOtpCode("");
-                  }}
-                  className="flex-1 py-3.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={otpLoading}
-                  className="flex-1 py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
-                >
-                  {otpLoading ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  ) : "Verify & Save"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </>
   );
 }
