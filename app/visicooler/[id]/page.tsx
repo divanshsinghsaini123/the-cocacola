@@ -13,6 +13,12 @@ interface ShopImage {
   uploadedAt: string;
 }
 
+interface DocumentItem {
+  _id?: string;
+  name: string;
+  url: string;
+}
+
 interface Shop {
   _id: string;
   outletDetails?: {
@@ -39,13 +45,17 @@ interface Shop {
     nearbyAreaFootfall: string;
     fridgeType?: string;
     visicooler: string[];
-    branding: string;
+    branding: string | string[];
   };
   isActive: boolean;
   status?: string;
   images: ShopImage[];
   asm?: string;
   se?: string;
+  documentVerification?: {
+    documentAttached?: DocumentItem[];
+    previousThreeMonthlydata?: DocumentItem[];
+  };
 }
 
 export default function ShopViewPage() {
@@ -338,11 +348,10 @@ export default function ShopViewPage() {
                 <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${shop.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                   {shop.isActive ? "Active" : "Inactive"}
                 </span>
-                <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
-                  shop.status === 'approved' ? 'bg-blue-100 text-blue-700' : 
-                  shop.status === 'rejected' ? 'bg-red-100 text-red-700' : 
-                  'bg-yellow-100 text-yellow-700'
-                }`}>
+                <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${shop.status === 'approved' ? 'bg-blue-100 text-blue-700' :
+                  shop.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                    'bg-yellow-100 text-yellow-700'
+                  }`}>
                   {shop.status ? shop.status.toUpperCase() : "PENDING"}
                 </span>
                 <span className="text-gray-500 text-sm font-mono">ID: {shop._id}</span>
@@ -511,6 +520,100 @@ export default function ShopViewPage() {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Document Verification Section */}
+        {shop.documentVerification && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="px-5 sm:px-8 py-5 sm:py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                <h2 className="text-xl font-bold text-gray-900">Document Verification</h2>
+              </div>
+            </div>
+
+            <div className="p-5 sm:p-8 bg-gray-50/30 space-y-8">
+              {/* Part 1: Attached Documents */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Verification Documents</h3>
+                {!shop.documentVerification.documentAttached || shop.documentVerification.documentAttached.length === 0 ? (
+                  <p className="text-gray-400 italic text-sm">No verification documents attached.</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    {shop.documentVerification.documentAttached.map((doc, idx) => {
+                      const isPdf = doc.url.toLowerCase().endsWith('.pdf');
+                      return (
+                        <div key={idx} className="bg-white p-4 rounded-xl border border-gray-200 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className={`p-2 rounded-lg ${isPdf ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
+                              {isPdf ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><path d="M9 15v2" /><path d="M12 13v4" /><path d="M15 11v6" /></svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                              )}
+                            </div>
+                            <div className="overflow-hidden">
+                              <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Document Type</p>
+                              <h4 className="text-sm font-semibold text-gray-900 mt-0.5 capitalize truncate" title={doc.name}>{doc.name}</h4>
+                            </div>
+                          </div>
+                          <a
+                            href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + doc.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full text-center bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium py-2 rounded-lg text-xs transition-colors border border-gray-200 flex items-center justify-center gap-1.5"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            View Document
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Part 2: Monthly Data */}
+              <div className="pt-6 border-t border-gray-150">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Previous 3 Months Data</h3>
+                {!shop.documentVerification.previousThreeMonthlydata || shop.documentVerification.previousThreeMonthlydata.length === 0 ? (
+                  <p className="text-gray-400 italic text-sm">No monthly sales data uploaded.</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {shop.documentVerification.previousThreeMonthlydata.map((month, idx) => {
+                      const isExcel = month.url.toLowerCase().endsWith('.xlsx') || month.url.toLowerCase().endsWith('.xls') || month.url.toLowerCase().endsWith('.csv');
+                      return (
+                        <div key={idx} className="bg-white p-4 rounded-xl border border-gray-200 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className={`p-2 rounded-lg ${isExcel ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600'}`}>
+                              {isExcel ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="3" y1="15" x2="21" y2="15" /></svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><line x1="10" y1="9" x2="8" y2="9" /></svg>
+                              )}
+                            </div>
+                            <div className="overflow-hidden">
+                              <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Report Month</p>
+                              <h4 className="text-sm font-semibold text-gray-900 mt-0.5 truncate" title={month.name || `Month ${idx + 1}`}>{month.name || `Month ${idx + 1}`}</h4>
+                            </div>
+                          </div>
+                          <a
+                            href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + month.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full text-center bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium py-2 rounded-lg text-xs transition-colors border border-gray-200 flex items-center justify-center gap-1.5"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            View/Download
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 

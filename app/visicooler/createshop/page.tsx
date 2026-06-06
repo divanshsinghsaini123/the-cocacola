@@ -329,7 +329,7 @@ function CreateShopForm() {
             {/* Show Outlet Details Section (Full for Create, Partial/Main for Edit) */}
             <div className="md:col-span-2">
               <h3 className="text-lg font-bold text-gray-900 border-b border-gray-150 pb-2">
-                {editId ? "Main Shop Details" : "1. Outlet Details"}
+                1. Outlet Details
               </h3>
             </div>
 
@@ -350,97 +350,93 @@ function CreateShopForm() {
               />
             </div>
 
-            {!editId && (
-              <>
-                {/* Owner Name */}
-                <div>
-                  <label htmlFor="ownerName" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Owner Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="ownerName"
-                    name="ownerName"
-                    required
-                    value={formData.ownerName}
-                    onChange={handleChange}
-                    placeholder="e.g. John Doe"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  />
-                </div>
+            {/* Owner Name */}
+            <div>
+              <label htmlFor="ownerName" className="block text-sm font-semibold text-gray-700 mb-2">
+                Owner Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="ownerName"
+                name="ownerName"
+                required
+                value={formData.ownerName}
+                onChange={handleChange}
+                placeholder="e.g. John Doe"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
 
-                {/* Date */}
-                <div>
-                  <label htmlFor="date" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Date <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    id="date"
-                    name="date"
-                    required
-                    value={formData.date}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  />
-                </div>
+            {/* Date */}
+            <div>
+              <label htmlFor="date" className="block text-sm font-semibold text-gray-700 mb-2">
+                Date <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                required
+                value={formData.date}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
 
-                {/* Gender */}
-                <div>
-                  <label htmlFor="gender" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Gender <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="gender"
-                    name="gender"
-                    required
-                    value={formData.gender}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-white"
-                  >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
+            {/* Gender */}
+            <div>
+              <label htmlFor="gender" className="block text-sm font-semibold text-gray-700 mb-2">
+                Gender <span className="text-red-500">*</span>
+              </label>
+              <select
+                id="gender"
+                name="gender"
+                required
+                value={formData.gender}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-white"
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
 
-                {/* Age */}
-                <div>
-                  <label htmlFor="age" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Age <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    id="age"
-                    name="age"
-                    required
-                    min={18}
-                    max={70}
-                    value={formData.age}
-                    onChange={handleChange}
-                    placeholder="e.g. 25"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  />
-                </div>
+            {/* Age */}
+            <div>
+              <label htmlFor="age" className="block text-sm font-semibold text-gray-700 mb-2">
+                Age <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                required
+                min={18}
+                max={70}
+                value={formData.age}
+                onChange={handleChange}
+                placeholder="e.g. 25"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
 
-                {/* Address */}
-                <div className="md:col-span-2">
-                  <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    required
-                    value={formData.address}
-                    onChange={handleChange}
-                    placeholder="e.g. 123 Main St"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  />
-                </div>
-              </>
-            )}
+            {/* Address */}
+            <div className="md:col-span-2">
+              <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
+                Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                required
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="e.g. 123 Main St"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
 
             {/* Area */}
             <div>
@@ -509,195 +505,187 @@ function CreateShopForm() {
               />
             </div>
 
-            {/* Distributor Details Section (Create Only) */}
-            {!editId && (
-              <>
-                <div className="md:col-span-2 mt-4">
-                  <h3 className="text-lg font-bold text-gray-900 border-b border-gray-150 pb-2">
-                    2. Distributor Details
-                  </h3>
-                </div>
+            {/* Distributor Details Section */}
+            <div className="md:col-span-2 mt-4">
+              <h3 className="text-lg font-bold text-gray-900 border-b border-gray-150 pb-2">
+                2. Distributor Details
+              </h3>
+            </div>
 
-                {/* Distributor Name */}
-                <div>
-                  <label htmlFor="distributorName" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Distributor Name <span className="text-red-500">*</span>
+            {/* Distributor Name */}
+            <div>
+              <label htmlFor="distributorName" className="block text-sm font-semibold text-gray-700 mb-2">
+                Distributor Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="distributorName"
+                name="distributorName"
+                required
+                value={formData.distributorName}
+                onChange={handleChange}
+                placeholder="e.g. Coca-Cola Distributors"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
+
+            {/* Account Number */}
+            <div>
+              <label htmlFor="accountNumber" className="block text-sm font-semibold text-gray-700 mb-2">
+                Account Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                id="accountNumber"
+                name="accountNumber"
+                required
+                value={formData.accountNumber}
+                onChange={handleChange}
+                placeholder="e.g. 12345678"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
+
+            {/* Hub Name */}
+            <div className="md:col-span-2">
+              <label htmlFor="hubName" className="block text-sm font-semibold text-gray-700 mb-2">
+                Hub Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="hubName"
+                name="hubName"
+                required
+                value={formData.hubName}
+                onChange={handleChange}
+                placeholder="e.g. Central Mumbai Hub"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
+
+            {/* Business Details Section */}
+            <div className="md:col-span-2 mt-4">
+              <h3 className="text-lg font-bold text-gray-900 border-b border-gray-150 pb-2">
+                3. Business Details
+              </h3>
+            </div>
+
+            {/* Outlet Type */}
+            <div>
+              <label htmlFor="outletType" className="block text-sm font-semibold text-gray-700 mb-2">
+                Outlet Type <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="outletType"
+                name="outletType"
+                required
+                value={formData.outletType}
+                onChange={handleChange}
+                placeholder="e.g. Kirana Shop, Supermarket"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              />
+            </div>
+
+            {/* Visibility */}
+            <div>
+              <label htmlFor="visibility" className="block text-sm font-semibold text-gray-700 mb-2">
+                Visibility <span className="text-red-500">*</span>
+              </label>
+              <select
+                id="visibility"
+                name="visibility"
+                required
+                value={formData.visibility}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-white"
+              >
+                <option value="Main Road">Main Road</option>
+                <option value="Internal Road">Internal Road</option>
+                <option value="Premium">Premium</option>
+              </select>
+            </div>
+
+            {/* Nearby Area Footfall */}
+            <div>
+              <label htmlFor="nearbyAreaFootfall" className="block text-sm font-semibold text-gray-700 mb-2">
+                Nearby Area Footfall <span className="text-red-500">*</span>
+              </label>
+              <select
+                id="nearbyAreaFootfall"
+                name="nearbyAreaFootfall"
+                required
+                value={formData.nearbyAreaFootfall}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-white"
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+
+            {/* Fridge Type */}
+            <div>
+              <label htmlFor="fridgeType" className="block text-sm font-semibold text-gray-700 mb-2">
+                Fridge Type
+              </label>
+              <select
+                id="fridgeType"
+                name="fridgeType"
+                value={formData.fridgeType}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-white"
+              >
+                <option value="255">255 ltr</option>
+                <option value="280">280 ltr</option>
+                <option value="360">360 ltr</option>
+                <option value="450">450 ltr</option>
+                <option value="mini">mini</option>
+              </select>
+            </div>
+
+            {/* Branding */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Branding Type <span className="text-red-500">*</span>
+              </label>
+              <div className="flex flex-wrap gap-4">
+                {["ED", "Water", "Other"].map((option) => (
+                  <label key={option} className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-100 transition-colors">
+                    <input
+                      type="checkbox"
+                      name="branding"
+                      value={option}
+                      checked={formData.branding.includes(option)}
+                      onChange={handleBrandingCheckboxChange}
+                      className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-sm font-semibold text-gray-700">{option}</span>
                   </label>
-                  <input
-                    type="text"
-                    id="distributorName"
-                    name="distributorName"
-                    required
-                    value={formData.distributorName}
-                    onChange={handleChange}
-                    placeholder="e.g. Coca-Cola Distributors"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  />
-                </div>
+                ))}
+              </div>
+            </div>
 
-                {/* Account Number */}
-                <div>
-                  <label htmlFor="accountNumber" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Account Number <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    id="accountNumber"
-                    name="accountNumber"
-                    required
-                    value={formData.accountNumber}
-                    onChange={handleChange}
-                    placeholder="e.g. 12345678"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  />
-                </div>
-
-                {/* Hub Name */}
-                <div className="md:col-span-2">
-                  <label htmlFor="hubName" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Hub Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="hubName"
-                    name="hubName"
-                    required
-                    value={formData.hubName}
-                    onChange={handleChange}
-                    placeholder="e.g. Central Mumbai Hub"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  />
-                </div>
-              </>
-            )}
-
-            {/* Business Details Section (Create Only) */}
-            {!editId && (
-              <>
-                <div className="md:col-span-2 mt-4">
-                  <h3 className="text-lg font-bold text-gray-900 border-b border-gray-150 pb-2">
-                    3. Business Details
-                  </h3>
-                </div>
-
-                {/* Outlet Type */}
-                <div>
-                  <label htmlFor="outletType" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Outlet Type <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="outletType"
-                    name="outletType"
-                    required
-                    value={formData.outletType}
-                    onChange={handleChange}
-                    placeholder="e.g. Kirana Shop, Supermarket"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  />
-                </div>
-
-                {/* Visibility */}
-                <div>
-                  <label htmlFor="visibility" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Visibility <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="visibility"
-                    name="visibility"
-                    required
-                    value={formData.visibility}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-white"
-                  >
-                    <option value="Main Road">Main Road</option>
-                    <option value="Internal Road">Internal Road</option>
-                    <option value="Premium">Premium</option>
-                  </select>
-                </div>
-
-                {/* Nearby Area Footfall */}
-                <div>
-                  <label htmlFor="nearbyAreaFootfall" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Nearby Area Footfall <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="nearbyAreaFootfall"
-                    name="nearbyAreaFootfall"
-                    required
-                    value={formData.nearbyAreaFootfall}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-white"
-                  >
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                  </select>
-                </div>
-
-                {/* Fridge Type */}
-                <div>
-                  <label htmlFor="fridgeType" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Fridge Type
-                  </label>
-                  <select
-                    id="fridgeType"
-                    name="fridgeType"
-                    value={formData.fridgeType}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-white"
-                  >
-                    <option value="255">255 ltr</option>
-                    <option value="280">280 ltr</option>
-                    <option value="360">360 ltr</option>
-                    <option value="450">450 ltr</option>
-                    <option value="mini">mini</option>
-                  </select>
-                </div>
-
-                {/* Branding */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
-                    Branding Type <span className="text-red-500">*</span>
-                  </label>
-                  <div className="flex flex-wrap gap-4">
-                    {["ED", "Water", "Other"].map((option) => (
-                      <label key={option} className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input
-                          type="checkbox"
-                          name="branding"
-                          value={option}
-                          checked={formData.branding.includes(option)}
-                          onChange={handleBrandingCheckboxChange}
-                          className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                        />
-                        <span className="text-sm font-semibold text-gray-700">{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Competitors Toggle */}
-                <div className="flex items-center mt-6">
-                  <input
-                    type="checkbox"
-                    id="competitors"
-                    name="competitors"
-                    checked={formData.competitors}
-                    onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                  />
-                  <label htmlFor="competitors" className="ml-3 text-sm font-semibold text-gray-700">
-                    Competitors Present
-                  </label>
-                </div>
-              </>
-            )}
+            {/* Competitors Toggle */}
+            <div className="flex items-center mt-6">
+              <input
+                type="checkbox"
+                id="competitors"
+                name="competitors"
+                checked={formData.competitors}
+                onChange={handleChange}
+                className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+              />
+              <label htmlFor="competitors" className="ml-3 text-sm font-semibold text-gray-700">
+                Competitors Present
+              </label>
+            </div>
 
             {/* Shared/Common Visicooler and Admin Info */}
             <div className="md:col-span-2 mt-4">
               <h3 className="text-lg font-bold text-gray-900 border-b border-gray-150 pb-2">
-                {editId ? "Additional Shop Info" : "4. Administrative & Visicooler Details"}
+                4. Administrative & Visicooler Details
               </h3>
             </div>
 
@@ -765,14 +753,12 @@ function CreateShopForm() {
               </label>
             </div>
 
-            {/* Document Verification Section (Create Only) */}
-            {!editId && (
-              <>
-                <div className="md:col-span-2 mt-6">
-                  <h3 className="text-lg font-bold text-gray-900 border-b border-gray-150 pb-2">
-                    5. Document Verification
-                  </h3>
-                </div>
+            {/* Document Verification Section */}
+            <div className="md:col-span-2 mt-6">
+              <h3 className="text-lg font-bold text-gray-900 border-b border-gray-150 pb-2">
+                5. Document Verification
+              </h3>
+            </div>
 
                 {/* Part 1: documentAttached */}
                 <div className="md:col-span-2 space-y-4">
@@ -956,8 +942,6 @@ function CreateShopForm() {
                     })}
                   </div>
                 </div>
-              </>
-            )}
           </div>
 
           <div className="pt-6 mt-6 border-t border-gray-100 flex justify-end">
