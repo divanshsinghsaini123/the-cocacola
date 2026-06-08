@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { updateProductOrder } from "../brands/actions";
+import { updateProductOrder, toggleProductActive } from "../brands/actions";
 
 interface BrandProductsProps {
     brandId: string;
@@ -24,6 +24,12 @@ export default function BrandProducts({ brandId, brandName }: BrandProductsProps
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [saving, setSaving] = useState(false);
     const [hasChanged, setHasChanged] = useState(false);
+    const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+    const showToast = (message: string, type: "success" | "error") => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 4000);
+    };
 
     useEffect(() => {
         fetchProducts();
@@ -213,7 +219,7 @@ export default function BrandProducts({ brandId, brandName }: BrandProductsProps
                                 onDragStart={(e) => handleDragStart(e, index)}
                                 onDragOver={(e) => handleDragOver(e, index)}
                                 onDragEnd={handleDragEnd}
-                                className={`group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white border rounded-xl shadow-sm transition-all duration-200 ${
+                                className={`group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white border rounded-xl shadow-sm transition-all duration-200 ${
                                     rearrangeMode
                                         ? isDragged
                                             ? "border-red-500 ring-2 ring-red-500/20 opacity-40 scale-[0.98]"
@@ -228,10 +234,40 @@ export default function BrandProducts({ brandId, brandName }: BrandProductsProps
                                     </div>
                                 )}
 
+                                {/* Toggle active status button */}
+                                {!rearrangeMode && (
+                                    <button
+                                        onClick={async (e) => {
+                                            e.preventDefault();
+                                            const newStatus = !product.isActive;
+                                            setProducts(prev => prev.map(p => p._id === product._id ? { ...p, isActive: newStatus } : p));
+                                            try {
+                                                const res = await toggleProductActive(product._id, newStatus);
+                                                if (res.success) {
+                                                    showToast(`${product.name} is now ${newStatus ? 'Active' : 'Inactive'}`, "success");
+                                                } else {
+                                                    setProducts(prev => prev.map(p => p._id === product._id ? { ...p, isActive: !newStatus } : p));
+                                                    showToast(res.error || "Failed to update product status", "error");
+                                                }
+                                            } catch (err) {
+                                                console.error(err);
+                                                setProducts(prev => prev.map(p => p._id === product._id ? { ...p, isActive: !newStatus } : p));
+                                                showToast("Something went wrong", "error");
+                                            }
+                                        }}
+                                        className="absolute top-2 left-2 z-20 flex items-center justify-center p-1 bg-white/95 backdrop-blur-sm rounded-full shadow-sm hover:shadow-md border border-gray-200 transition-all outline-none"
+                                        title={product.isActive ? "Click to Deactivate" : "Click to Activate"}
+                                    >
+                                        <div className={`relative w-9 h-5 rounded-full transition-colors duration-200 ${product.isActive ? "bg-green-500" : "bg-gray-300"}`}>
+                                            <div className={`absolute top-[2px] left-[2px] w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200 ${product.isActive ? "translate-x-4" : "translate-x-0"}`} />
+                                        </div>
+                                    </button>
+                                )}
+
                                 {/* Image */}
                                 <div className="relative w-full sm:w-20 h-32 sm:h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
                                     {product.images && product.images.length > 0 ? (
-                                        <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.images[0]} alt={product.name} fill className="object-contain p-2 hover:scale-110 transition-transform duration-300" draggable={false} />
+                                        <Image src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + product.images[0]} alt={product.name} fill className={`object-contain p-2 hover:scale-110 transition-transform duration-300 ${!product.isActive ? "opacity-45 grayscale" : ""}`} draggable={false} />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">No Img</div>
                                     )}
@@ -244,6 +280,11 @@ export default function BrandProducts({ brandId, brandName }: BrandProductsProps
                                         {rearrangeMode && (
                                             <span className="text-[10px] font-bold px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full border border-gray-200">
                                                 Position {index + 1}
+                                            </span>
+                                        )}
+                                        {!product.isActive && (
+                                            <span className="text-[10px] font-bold px-2.5 py-0.5 bg-red-50 text-red-600 rounded-full border border-red-100 uppercase tracking-wider">
+                                                Inactive
                                             </span>
                                         )}
                                     </div>
@@ -341,6 +382,23 @@ export default function BrandProducts({ brandId, brandName }: BrandProductsProps
                                 ) : "Delete"}
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+            {/* Custom Premium Toast Alert */}
+            {toast && (
+                <div className="fixed bottom-5 right-5 z-50 animate-in slide-in-from-bottom-5 duration-300">
+                    <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border text-sm font-medium ${
+                        toast.type === "success"
+                            ? "bg-green-50 border-green-200 text-green-800"
+                            : "bg-red-50 border-red-200 text-red-800"
+                    }`}>
+                        {toast.type === "success" ? (
+                            <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        ) : (
+                            <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        )}
+                        <span>{toast.message}</span>
                     </div>
                 </div>
             )}

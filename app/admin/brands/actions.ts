@@ -78,3 +78,35 @@ export async function toggleBrandActive(id: string, isActive: boolean) {
     }
 }
 
+export async function toggleProductActive(id: string, isActive: boolean) {
+    try {
+        await connectDB();
+        const product = await Product.findById(id).populate("brand");
+        if (!product) {
+            return { success: false, error: "Product not found" };
+        }
+        await Product.updateOne({ _id: id }, { isActive });
+
+        const brandId = product.brand?._id?.toString() || "";
+        const brandSlug = product.brand?.slug || "";
+        const productSlug = product.slug || "";
+
+        // Revalidate specific paths
+        if (brandId) {
+            revalidatePath(`/admin/brands/edit/${brandId}`);
+        }
+        if (brandSlug) {
+            revalidatePath(`/brands/${brandSlug}`);
+            if (productSlug) {
+                revalidatePath(`/brands/${brandSlug}/${productSlug}`);
+            }
+        }
+        revalidatePath("/brands");
+        revalidatePath("/");
+
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to toggle product status:", error);
+        return { success: false, error: "Failed to toggle product status" };
+    }
+}
