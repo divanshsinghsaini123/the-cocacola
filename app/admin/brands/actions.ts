@@ -28,12 +28,12 @@ export async function updateBrandOrder(brandIds: string[]) {
             }
         }));
         await Brand.bulkWrite(bulkOps);
-        
+
         // Revalidate layout and public pages
         revalidatePath("/admin/brands");
         revalidatePath("/brands");
         revalidatePath("/");
-        
+
         return { success: true };
     } catch (error) {
         console.error("Failed to update brand order:", error);
@@ -51,14 +51,30 @@ export async function updateProductOrder(productIds: string[], brandId: string) 
             }
         }));
         await Product.bulkWrite(bulkOps);
-        
+
         // Revalidate specific pages
         revalidatePath(`/admin/brands/edit/${brandId}`);
         revalidatePath(`/brands/${brandId}`);
-        
+
         return { success: true };
     } catch (error) {
         console.error("Failed to update product order:", error);
         return { success: false, error: "Failed to update product order" };
     }
 }
+
+export async function toggleBrandActive(id: string, isActive: boolean) {
+    try {
+        await connectDB();
+        await Brand.updateOne({ _id: id }, { isActive });
+        //iska use kiya cache clear krne ke liye , ye next js ko bolte hain, clear the old cache and reload 
+        revalidatePath("/admin/brands");
+        revalidatePath("/brands");
+        revalidatePath("/");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to toggle brand status:", error);
+        return { success: false, error: "Failed to toggle brand status" };
+    }
+}
+

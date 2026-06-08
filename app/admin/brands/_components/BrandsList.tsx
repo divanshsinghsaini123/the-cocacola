@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import DeleteBrandButton from "../DeleteBrandButton";
-import { updateBrandOrder } from "../actions";
+import { updateBrandOrder, toggleBrandActive } from "../actions";
 
 interface Brand {
     _id: string;
@@ -184,12 +184,42 @@ export default function BrandsList({ initialBrands }: BrandsListProps) {
                                 </div>
                             )}
 
+                            {/* Toggle active status button */}
+                            {!rearrangeMode && (
+                                <button
+                                    onClick={async (e) => {
+                                        e.preventDefault();
+                                        const newStatus = !brand.isActive;
+                                        setBrands(prev => prev.map(b => b._id === brand._id ? { ...b, isActive: newStatus } : b));
+                                        try {
+                                            const res = await toggleBrandActive(brand._id, newStatus);
+                                            if (res.success) {
+                                                showToast(`${brand.name} is now ${newStatus ? 'Active' : 'Inactive'}`, "success");
+                                            } else {
+                                                setBrands(prev => prev.map(b => b._id === brand._id ? { ...b, isActive: !newStatus } : b));
+                                                showToast(res.error || "Failed to update brand status", "error");
+                                            }
+                                        } catch (err) {
+                                            console.error(err);
+                                            setBrands(prev => prev.map(b => b._id === brand._id ? { ...b, isActive: !newStatus } : b));
+                                            showToast("Something went wrong", "error");
+                                        }
+                                    }}
+                                    className="absolute top-2 left-2 z-20 flex items-center justify-center p-1 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:shadow-md border border-gray-200 transition-all outline-none"
+                                    title={brand.isActive ? "Click to Deactivate" : "Click to Activate"}
+                                >
+                                    <div className={`relative w-9 h-5 rounded-full transition-colors duration-200 ${brand.isActive ? "bg-green-500" : "bg-gray-300"}`}>
+                                        <div className={`absolute top-[2px] left-[2px] w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200 ${brand.isActive ? "translate-x-4" : "translate-x-0"}`} />
+                                    </div>
+                                </button>
+                            )}
+
                             {/* Delete Button (disabled in rearrange mode) */}
                             {!rearrangeMode && <DeleteBrandButton id={brand._id} />}
 
                             {/* Image Area */}
                             <div className="relative flex items-center justify-center w-full h-48 p-6 bg-gray-50 group-hover:bg-gray-100/80 transition-colors">
-                                <div className="relative w-full h-full">
+                                <div className={`relative w-full h-full ${!brand.isActive ? "opacity-45 grayscale" : ""}`}>
                                     <Image
                                         src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
                                         alt={brand.name}
@@ -198,6 +228,11 @@ export default function BrandsList({ initialBrands }: BrandsListProps) {
                                         draggable={false}
                                     />
                                 </div>
+                                {!brand.isActive && (
+                                    <span className="absolute bottom-2 left-2 z-10 px-2.5 py-0.5 text-[10px] font-bold text-gray-500 bg-gray-200 border border-gray-300 rounded-md uppercase tracking-wider">
+                                        Inactive
+                                    </span>
+                                )}
                             </div>
 
                             {/* Content Area */}
