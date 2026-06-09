@@ -16,6 +16,7 @@ export const BrandSchema = z.object({
         d3: z.string().optional(),
     }).optional(),
     socialLinks: z.object({
+        title: z.string().optional(),
         facebook: z.string().optional(),
         x: z.string().optional(),
         instagram: z.string().optional(),

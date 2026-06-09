@@ -32,6 +32,7 @@ const BrandSchema = new Schema(
         },
 
         socialLinks: {
+            title: String,
             facebook: String,
             x: String,
             instagram: String,

@@ -15,6 +15,7 @@ export interface BrandDescriptions {
 }
 
 export interface BrandSocialLinks {
+    title: string;
     facebook: string;
     x: string;
     instagram: string;
@@ -56,6 +57,7 @@ export default function BrandForm({ initialData }: BrandFormProps) {
             d3: initialData?.descriptions?.d3 || "",
         },
         socialLinks: {
+            title: initialData?.socialLinks?.title || (initialData?.socialLinks as any)?.tittle || "",
             facebook: initialData?.socialLinks?.facebook || "",
             x: initialData?.socialLinks?.x || "",
             instagram: initialData?.socialLinks?.instagram || "",
@@ -382,7 +384,19 @@ export default function BrandForm({ initialData }: BrandFormProps) {
 
             <section className="space-y-6">
                 <h3 className="text-xl font-bold text-gray-900 border-l-4 border-blue-500 pl-4">Social Media</h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-sm font-semibold text-gray-700">Section Title</label>
+                        <input
+                            type="text"
+                            value={formData.socialLinks.title}
+                            onChange={(e) => handleNestedChange("socialLinks", "title", e.target.value)}
+                            placeholder="e.g. Follow the bottle / Keep in touch with"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-black outline-none transition-shadow"
+                        />
+                    </div>
+
                     {(["facebook", "x", "instagram", "youtube"] as const).map((platform) => (
                         <div key={platform} className="space-y-2">
                             <label className="text-xs uppercase font-bold text-gray-500 flex items-center gap-2">
