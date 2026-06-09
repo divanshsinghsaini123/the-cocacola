@@ -3,7 +3,7 @@ import Image from "next/image";
 import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
 import type { Metadata } from "next";
-
+import { GetBrandPageData } from "@/src/lib/strapi";
 import { SITE_CONFIG } from "@/src/config/site";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,13 +29,14 @@ interface IBrand {
 export default async function BrandsPage() {
     await connectDB();
     const brands = await Brand.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).lean();
+    const pagedata = await GetBrandPageData();
 
     return (
         <main className="w-full bg-[#EEEEEE] min-h-screen py-10">
             <div className="max-w-3xl mx-auto px-6 sm:px-6">
-                <h1 className="text-[31px] md:text-[38px] font-bold text-center mb-2 text-black">Explore Our Brands</h1>
+                <h1 className="text-[31px] md:text-[38px] font-bold text-center mb-2 text-black">{pagedata?.Heading || "Explore Our Brands"}</h1>
                 <p className="text-center text-gray-600 mb-8 max-w-lg mx-auto">
-                    Select a brand to explore its unique products, flavors, and nutritional information.
+                    {pagedata?.subheading || "Select a brand to explore its unique products, flavors, and nutritional information."}
                 </p>
 
                 {brands.length === 0 ? (
