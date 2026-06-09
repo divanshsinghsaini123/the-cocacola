@@ -51,7 +51,7 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
         "Cofilling": { href: "/cofilling" },
         "Become Our Distributor": { href: "/become-our-distributor" },
         "VisiCooler": { href: "/visicooler" },
-        "Promos & Offers": { href: "/promos&offers" },
+        // "Promos & Offers": { href: "/promos&offers" },
         "Contact Us": { href: "/contactus" }
     };
 
@@ -63,7 +63,7 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
             }
         });
     }
-    console.log('DEBUG: stickyNav', stickyNav);
+    // console.log('DEBUG: stickyNav', stickyNav);
     // console.log('navbarColor', navbarColor);
     return (
         <>
