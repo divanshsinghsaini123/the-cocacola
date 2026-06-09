@@ -3,7 +3,7 @@ import { connectDB } from "@/src/lib/mongoose";
 import { Brand } from "@/src/models/Brand";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://thecoco-cola-e7tww.ondigitalocean.app";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cloud9website-x6hfd.ondigitalocean.app/";
 
     const staticRoutes = [
         "",
@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     try {
         await connectDB();
-        
+
         // Fetch active brands to render dynamic slugs
         const brands = await Brand.find({ isActive: true }).select("slug").lean();
         const brandRoutes = brands.map((brand: any) => ({

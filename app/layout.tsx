@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const fullFaviconUrl = faviconUrl ? getStrapiMediaUrl(faviconUrl) : "/favicon.ico";
 
   return {
-    metadataBase: new URL("https://thecoco-cola-e7tww.ondigitalocean.app"), // Replace with actual domain
+    metadataBase: new URL("https://cloud9website-x6hfd.ondigitalocean.app/"), // Replace with actual domain
     title: {
       default: SITE_CONFIG.companyName,
       template: `%s | ${SITE_CONFIG.companyName}`,
@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: "website",
       locale: "en_US",
-      url: "https://thecoco-cola-e7tww.ondigitalocean.app",
+      url: "https://cloud9website-x6hfd.ondigitalocean.app/",
       title: SITE_CONFIG.companyName,
       description: "Powering the World's Favorite Beverage Brands.",
       siteName: SITE_CONFIG.companyName,
@@ -119,7 +119,7 @@ export default async function RootLayout({
             socialLinks={socialLinksData}
             footerBgColor={footerBgColor}
           />
-          
+
           {/* Google Analytics Tracking */}
           {SITE_CONFIG.analytics.googleAnalyticsId && (
             <>
