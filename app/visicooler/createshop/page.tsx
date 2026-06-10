@@ -520,10 +520,7 @@ function CreateShopForm() {
                 <div class="checkbox-item"><span class="checkbox-box"></span> Other</div>
               </div>
             </div>
-            <div class="field">
-              <span class="field-label">Age *</span>
-              <div class="field-value-line"></div>
-            </div>
+            
             <div class="field grid-full">
               <span class="field-label">Address *</span>
               <div class="field-value-line"></div>
