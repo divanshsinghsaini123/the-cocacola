@@ -492,7 +492,7 @@ function CreateShopForm() {
             <p>Application Form for Outlet Enrollment</p>
           </div>
           <div class="logo">
-            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />
+            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 120px; object-fit: contain;" />
           </div>
         </div>
 
@@ -705,7 +705,7 @@ function CreateShopForm() {
             className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm shrink-0"
           >
             <Download size={18} className="text-gray-500" />
-            Download Empty Form
+            Download Form
           </button>
         </div>
 
@@ -811,15 +811,15 @@ function CreateShopForm() {
               <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
                 Address <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
+              <textarea
                 id="address"
                 name="address"
                 required
+                rows={3}
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="e.g. 123 Main St"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-y min-h-[100px]"
               />
             </div>
 

@@ -275,7 +275,7 @@ export default function ShopViewPage() {
             <p>Outlet Enrollment Data & Verification Summary</p>
           </div>
           <div class="logo">
-            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />
+            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 80px; object-fit: contain;" />
           </div>
         </div>
 
@@ -701,7 +701,7 @@ export default function ShopViewPage() {
             <p>Outlet Enrollment Data & Verification Summary</p>
           </div>
           <div class="logo">
-            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />
+            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 120px; object-fit: contain;" />
           </div>
         </div>
 
@@ -874,14 +874,7 @@ export default function ShopViewPage() {
           </div>
         </div>
 
-        <!-- Signatures -->
-        <div class="sign-area">
-          
-          <div class="sign-box">
-            <div class="sign-line">Approved System-wide</div>
-            <div class="sign-title">Sales Representative / ASM Signature</div>
-          </div>
-        </div>
+      
 
         
 
@@ -1199,7 +1192,7 @@ export default function ShopViewPage() {
               className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200 shadow-sm"
             >
               <Download size={16} className="text-gray-500" />
-              Download Form + Files
+              Download Form
             </button>
             <Link
               href={`/visicooler/createshop?edit=${shop._id}`}
