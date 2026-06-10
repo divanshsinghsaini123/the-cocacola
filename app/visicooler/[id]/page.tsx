@@ -732,10 +732,7 @@ export default function ShopViewPage() {
                 </div>
               </div>
             </div>
-            <div class="field">
-              <span class="field-label">Age</span>
-              <div class="field-value">${shop.outletDetails?.age || "N/A"} years</div>
-            </div>
+            
             <div class="field grid-full">
               <span class="field-label">Address</span>
               <div class="field-value">${shop.outletDetails?.address || "N/A"}</div>
