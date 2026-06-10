@@ -6,11 +6,9 @@ import { ArrowLeft, Save, Download, AppWindowMacIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import GcoreUpload from "@/app/admin/_components/GcoreUpload";
-import { GetHomePageData } from "@/src/lib/strapi";
-import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 function CreateShopForm() {
-  const [logoUrl, setLogoUrl] = useState<string>("");
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
@@ -20,20 +18,6 @@ function CreateShopForm() {
   const [initialFetchLoading, setInitialFetchLoading] = useState(!!editId || !!requestId);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    const fetchLogo = async () => {
-      try {
-        const data = await GetHomePageData();
-        const navbarUrl = data?.NavbarImage?.url || data?.attributes?.NavbarImage?.url;
-        if (navbarUrl) {
-          setLogoUrl(getStrapiMediaUrl(navbarUrl));
-        }
-      } catch (err) {
-        console.error("Failed to load logo:", err);
-      }
-    };
-    fetchLogo();
-  }, []);
 
   // Document attachments
   const [documents, setDocuments] = useState<Array<{ name: string; url: string }>>([]);
@@ -358,6 +342,8 @@ function CreateShopForm() {
       return;
     }
 
+    const logoUrl = typeof window !== 'undefined' ? window.location.origin + '/C9LOGO_BevPartner_BLACK.png' : '/C9LOGO_BevPartner_BLACK.png';
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -506,7 +492,7 @@ function CreateShopForm() {
             <p>Application Form for Outlet Enrollment</p>
           </div>
           <div class="logo">
-            ${logoUrl ? '<img src="' + logoUrl + '" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />' : 'Cloud9'}
+            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />
           </div>
         </div>
 

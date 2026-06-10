@@ -6,8 +6,6 @@ import { ArrowLeft, Trash2, MapPin, Hash, Package, Image as ImageIcon, Plus, Max
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import GcoreUpload from "@/app/admin/_components/GcoreUpload";
-import { GetHomePageData } from "@/src/lib/strapi";
-import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 interface ShopImage {
   _id?: string;
@@ -66,7 +64,6 @@ export default function ShopViewPage() {
 
   const [shop, setShop] = useState<Shop | null>(null);
   const [loading, setLoading] = useState(true);
-  const [logoUrl, setLogoUrl] = useState<string>("");
 
   // Admin Verification Modal State
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -99,54 +96,6 @@ export default function ShopViewPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  useEffect(() => {
-    const fetchLogo = async () => {
-      try {
-        const data = await GetHomePageData();
-        const navbarUrl = data?.NavbarImage?.url || data?.attributes?.NavbarImage?.url;
-        if (navbarUrl) {
-          setLogoUrl(getStrapiMediaUrl(navbarUrl));
-        }
-      } catch (err) {
-        console.error("Failed to load logo:", err);
-      }
-    };
-    fetchLogo();
-  }, []);
-
-  const downloadFile = (url: string, filename: string) => {
-    return new Promise<void>((resolve) => {
-      try {
-        fetch(url)
-          .then(res => res.blob())
-          .then(blob => {
-            const blobUrl = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
-            resolve();
-          })
-          .catch(() => {
-            // Fallback if fetch fails (CORS, etc.)
-            const link = document.createElement('a');
-            link.href = url;
-            link.target = "_blank";
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            resolve();
-          });
-      } catch (e) {
-        resolve();
-      }
-    });
-  };
-
   const handlePrintForm = () => {
     if (!shop) return;
     const printWindow = window.open("", "_blank");
@@ -154,6 +103,8 @@ export default function ShopViewPage() {
       toast.error("Popup blocked! Please allow popups to download the form.");
       return;
     }
+
+    const logoUrl = typeof window !== 'undefined' ? window.location.origin + '/C9LOGO_BevPartner_BLACK.png' : '/C9LOGO_BevPartner_BLACK.png';
 
     const brandingString = Array.isArray(shop.businessDetails?.branding)
       ? shop.businessDetails.branding.join(", ")
@@ -324,7 +275,7 @@ export default function ShopViewPage() {
             <p>Outlet Enrollment Data & Verification Summary</p>
           </div>
           <div class="logo">
-            ${logoUrl ? '<img src="' + logoUrl + '" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />' : 'Cloud9'}
+            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />
           </div>
         </div>
 
@@ -530,6 +481,8 @@ export default function ShopViewPage() {
       toast.error("Popup blocked! Please allow popups to download the form.");
       return;
     }
+
+    const logoUrl = typeof window !== 'undefined' ? window.location.origin + '/C9LOGO_BevPartner_BLACK.png' : '/C9LOGO_BevPartner_BLACK.png';
 
     const brandingString = Array.isArray(shop.businessDetails?.branding)
       ? shop.businessDetails.branding.join(", ")
@@ -755,7 +708,7 @@ export default function ShopViewPage() {
             <p>Outlet Enrollment Data & Verification Summary</p>
           </div>
           <div class="logo">
-            ${logoUrl ? '<img src="' + logoUrl + '" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />' : 'Cloud9'}
+            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />
           </div>
         </div>
 
@@ -930,19 +883,14 @@ export default function ShopViewPage() {
 
         <!-- Signatures -->
         <div class="sign-area">
-          <div class="sign-box">
-            <div class="sign-line">Signed digitally</div>
-            <div class="sign-title">Shop Owner Signature</div>
-          </div>
+          
           <div class="sign-box">
             <div class="sign-line">Approved System-wide</div>
             <div class="sign-title">Sales Representative / ASM Signature</div>
           </div>
         </div>
 
-        <div class="footer">
-          Cloud9 Commercial & Distribution Network &copy; ${new Date().getFullYear()} | Internal Business Document
-        </div>
+        
 
         <!-- Section 6: Attached Documents & Images -->
         ${docs.length > 0 || monthly.length > 0 || images.length > 0 ? `
