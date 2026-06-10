@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Trash2, MapPin, Hash, Package, Image as ImageIcon, Plus, Maximize, X, ShieldAlert } from "lucide-react";
+import { ArrowLeft, Trash2, MapPin, Hash, Package, Image as ImageIcon, Plus, Maximize, X, ShieldAlert, Download } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import GcoreUpload from "@/app/admin/_components/GcoreUpload";
+import { GetHomePageData } from "@/src/lib/strapi";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 interface ShopImage {
   _id?: string;
@@ -64,6 +66,7 @@ export default function ShopViewPage() {
 
   const [shop, setShop] = useState<Shop | null>(null);
   const [loading, setLoading] = useState(true);
+  const [logoUrl, setLogoUrl] = useState<string>("");
 
   // Admin Verification Modal State
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -95,6 +98,498 @@ export default function ShopViewPage() {
     if (id) fetchShop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const data = await GetHomePageData();
+        const navbarUrl = data?.NavbarImage?.url || data?.attributes?.NavbarImage?.url;
+        if (navbarUrl) {
+          setLogoUrl(getStrapiMediaUrl(navbarUrl));
+        }
+      } catch (err) {
+        console.error("Failed to load logo:", err);
+      }
+    };
+    fetchLogo();
+  }, []);
+
+  const downloadFile = (url: string, filename: string) => {
+    return new Promise<void>((resolve) => {
+      try {
+        fetch(url)
+          .then(res => res.blob())
+          .then(blob => {
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+            resolve();
+          })
+          .catch(() => {
+            // Fallback if fetch fails (CORS, etc.)
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = "_blank";
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            resolve();
+          });
+      } catch (e) {
+        resolve();
+      }
+    });
+  };
+
+  const handlePrintForm = () => {
+    if (!shop) return;
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      toast.error("Popup blocked! Please allow popups to download the form.");
+      return;
+    }
+
+    const brandingString = Array.isArray(shop.businessDetails?.branding)
+      ? shop.businessDetails.branding.join(", ")
+      : (shop.businessDetails?.branding || "N/A");
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Shop Registration Details - ${shop.outletDetails?.shopName || 'Details'}</title>
+        <style>
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+              margin: 0;
+            }
+            .no-print {
+              display: none;
+            }
+          }
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1f2937;
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+            background-color: #ffffff;
+          }
+          .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #e60000;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+          }
+          .title-area h1 {
+            color: #e60000;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .title-area p {
+            margin: 4px 0 0 0;
+            color: #4b5563;
+            font-size: 13px;
+          }
+          .logo {
+            font-size: 26px;
+            font-weight: 900;
+            color: #e60000;
+            font-style: italic;
+          }
+          .section {
+            margin-bottom: 24px;
+            page-break-inside: avoid;
+          }
+          .section-title {
+            background-color: #fef2f2;
+            color: #991b1b;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-left: 4px solid #e60000;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .grid {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 12px 24px;
+          }
+          .grid-full {
+            grid-column: span 2;
+          }
+          .field {
+            display: flex;
+            flex-direction: column;
+          }
+          .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #4b5563;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .field-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+            padding: 6px 0;
+            border-bottom: 1px solid #e5e7eb;
+          }
+          .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 4px;
+          }
+          .checkbox-item {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #1f2937;
+          }
+          .checkbox-box {
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid #4b5563;
+            margin-right: 6px;
+            display: inline-block;
+            border-radius: 2px;
+            text-align: center;
+            line-height: 10px;
+            font-size: 9px;
+            font-weight: bold;
+          }
+          .checkbox-box.checked {
+            background-color: #e60000;
+            border-color: #e60000;
+            color: white;
+          }
+          .footer {
+            margin-top: 40px;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 12px;
+            text-align: center;
+            font-size: 10px;
+            color: #9ca3af;
+          }
+          .sign-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+            page-break-inside: avoid;
+          }
+          .sign-box {
+            width: 45%;
+            text-align: center;
+          }
+          .sign-line {
+            border-bottom: 1px solid #9ca3af;
+            margin-bottom: 6px;
+            height: 36px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 12px;
+            color: #9ca3af;
+            font-style: italic;
+          }
+          .sign-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #4b5563;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="title-area">
+            <h1>Visicooler Shop Details</h1>
+            <p>Outlet Enrollment Data & Verification Summary</p>
+          </div>
+          <div class="logo">
+            ${logoUrl ? '<img src="' + logoUrl + '" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />' : 'Cloud9'}
+          </div>
+        </div>
+
+        <!-- Section 1: Outlet Details -->
+        <div class="section">
+          <div class="section-title">1. Outlet Details</div>
+          <div class="grid">
+            <div class="field grid-full">
+              <span class="field-label">Shop Name</span>
+              <div class="field-value">${shop.outletDetails?.shopName || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Owner Name</span>
+              <div class="field-value">${shop.outletDetails?.ownerName || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Date Registered</span>
+              <div class="field-value">${shop.outletDetails?.date ? new Date(shop.outletDetails.date).toLocaleDateString() : "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Gender</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.outletDetails?.gender === 'Male' ? 'checked' : ''}">${shop.outletDetails?.gender === 'Male' ? '✓' : ''}</span> Male
+                </div>
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.outletDetails?.gender === 'Female' ? 'checked' : ''}">${shop.outletDetails?.gender === 'Female' ? '✓' : ''}</span> Female
+                </div>
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.outletDetails?.gender === 'Other' ? 'checked' : ''}">${shop.outletDetails?.gender === 'Other' ? '✓' : ''}</span> Other
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Age</span>
+              <div class="field-value">${shop.outletDetails?.age || "N/A"} years</div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Address</span>
+              <div class="field-value">${shop.outletDetails?.address || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Area</span>
+              <div class="field-value">${shop.outletDetails?.area || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Pincode</span>
+              <div class="field-value">${shop.outletDetails?.pincode || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Mobile Number</span>
+              <div class="field-value">${shop.outletDetails?.mobileNumber || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Email Address</span>
+              <div class="field-value">${shop.outletDetails?.email || "N/A"}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Distributor Details -->
+        <div class="section">
+          <div class="section-title">2. Distributor Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Distributor Name</span>
+              <div class="field-value">${shop.distributorDetails?.distributorName || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Account Number</span>
+              <div class="field-value">${shop.distributorDetails?.accountNumber || "N/A"}</div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Hub Name</span>
+              <div class="field-value">${shop.distributorDetails?.hubName || "N/A"}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Business Details -->
+        <div class="section">
+          <div class="section-title">3. Business Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Outlet Type</span>
+              <div class="field-value">${shop.businessDetails?.outletType || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Visibility</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.businessDetails?.visibility === 'Main Road' ? 'checked' : ''}">${shop.businessDetails?.visibility === 'Main Road' ? '✓' : ''}</span> Main Road
+                </div>
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.businessDetails?.visibility === 'Internal Road' ? 'checked' : ''}">${shop.businessDetails?.visibility === 'Internal Road' ? '✓' : ''}</span> Internal Road
+                </div>
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.businessDetails?.visibility === 'Premium' ? 'checked' : ''}">${shop.businessDetails?.visibility === 'Premium' ? '✓' : ''}</span> Premium
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Nearby Area Footfall</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.businessDetails?.nearbyAreaFootfall === 'High' ? 'checked' : ''}">${shop.businessDetails?.nearbyAreaFootfall === 'High' ? '✓' : ''}</span> High
+                </div>
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.businessDetails?.nearbyAreaFootfall === 'Medium' ? 'checked' : ''}">${shop.businessDetails?.nearbyAreaFootfall === 'Medium' ? '✓' : ''}</span> Medium
+                </div>
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.businessDetails?.nearbyAreaFootfall === 'Low' ? 'checked' : ''}">${shop.businessDetails?.nearbyAreaFootfall === 'Low' ? '✓' : ''}</span> Low
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Fridge Type</span>
+              <div class="field-value">${shop.businessDetails?.fridgeType || 'N/A'} ltr</div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Branding Type</span>
+              <div class="field-value">${brandingString}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Competitors Present</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.businessDetails?.competitors === true ? 'checked' : ''}">${shop.businessDetails?.competitors === true ? '✓' : ''}</span> Yes
+                </div>
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${shop.businessDetails?.competitors === false ? 'checked' : ''}">${shop.businessDetails?.competitors === false ? '✓' : ''}</span> No
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Administrative & Visicooler Details -->
+        <div class="section">
+          <div class="section-title">4. Administrative & Visicooler Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Area Sales Manager (ASM) Name</span>
+              <div class="field-value">${shop.asm || "N/A"}</div>
+            </div>
+            <div class="field">
+              <span class="field-label">Sales Executive (SE) Name</span>
+              <div class="field-value">${shop.se || "N/A"}</div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Visicooler Sizes Registered</span>
+              <div class="field-value">${shop.businessDetails?.visicooler && shop.businessDetails.visicooler.length > 0 ? shop.businessDetails.visicooler.join(', ') : "None"}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5: Verification Documents Attached Status -->
+        <div class="section" style="page-break-inside: avoid;">
+          <div class="section-title">5. Attached Verification Documents</div>
+          <div class="checkbox-group" style="flex-direction: column; gap: 6px;">
+            ${["aadhar", "PAN", "Electricity Bill", "Shop Agreement"].map((docName) => {
+              const hasDoc = shop.documentVerification?.documentAttached?.some(d => d.name === docName);
+              return `
+                <div class="checkbox-item">
+                  <span class="checkbox-box ${hasDoc ? 'checked' : ''}">${hasDoc ? '✓' : ''}</span> ${docName.toUpperCase()}
+                  <span style="font-size: 10px; color: #6b7280; margin-left: 10px;">${hasDoc ? '(Attached & Verified)' : '(Missing)'}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Signatures -->
+        <div class="sign-area">
+          <div class="sign-box">
+            <div class="sign-line">Signed digitally</div>
+            <div class="sign-title">Shop Owner Signature</div>
+          </div>
+          <div class="sign-box">
+            <div class="sign-line">Approved System-wide</div>
+            <div class="sign-title">Sales Representative / ASM Signature</div>
+          </div>
+        </div>
+
+        <div class="footer">
+          Cloud9 Commercial & Distribution Network &copy; ${new Date().getFullYear()} | Internal Business Document
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() {
+              window.close();
+            }, 500);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+  };
+
+  const handleDownloadAll = async () => {
+    if (!shop) return;
+
+    // 1. Trigger printable form
+    handlePrintForm();
+
+    // 2. Extract CDN and documents
+    const cdnUrl = process.env.NEXT_PUBLIC_GCORE_CDN_URL || "";
+    const docs = shop.documentVerification?.documentAttached || [];
+    const monthly = shop.documentVerification?.previousThreeMonthlydata || [];
+    const images = shop.images || [];
+
+    if (docs.length === 0 && monthly.length === 0 && images.length === 0) {
+      toast.success("Form print triggered. No additional attachments found to download.");
+      return;
+    }
+
+    toast.loading("Downloading attachments, please allow multiple downloads if prompted...", { id: "downloading_toast" });
+
+    let fileCount = 0;
+
+    // Download Verification Docs with a small delay to allow browser queuing
+    for (const doc of docs) {
+      if (doc.url) {
+        const fullUrl = `${cdnUrl}/${doc.url}`;
+        const ext = doc.url.split('.').pop() || 'png';
+        const filename = `${shop.outletDetails?.shopName || 'Shop'}_Doc_${doc.name}.${ext}`.replace(/\s+/g, '_');
+        await downloadFile(fullUrl, filename);
+        fileCount++;
+        await new Promise(r => setTimeout(r, 450));
+      }
+    }
+
+    // Download Monthly Data Docs
+    for (const item of monthly) {
+      if (item.url) {
+        const fullUrl = `${cdnUrl}/${item.url}`;
+        const ext = item.url.split('.').pop() || 'csv';
+        const filename = `${shop.outletDetails?.shopName || 'Shop'}_Monthly_${item.name}.${ext}`.replace(/\s+/g, '_');
+        await downloadFile(fullUrl, filename);
+        fileCount++;
+        await new Promise(r => setTimeout(r, 450));
+      }
+    }
+
+    // Download Gallery Images
+    for (let i = 0; i < images.length; i++) {
+      const img = images[i];
+      if (img.url) {
+        const fullUrl = `${cdnUrl}/${img.url}`;
+        const ext = img.url.split('.').pop() || 'webp';
+        const filename = `${shop.outletDetails?.shopName || 'Shop'}_Image_${i + 1}.${ext}`.replace(/\s+/g, '_');
+        await downloadFile(fullUrl, filename);
+        fileCount++;
+        await new Promise(r => setTimeout(r, 450));
+      }
+    }
+
+    toast.dismiss("downloading_toast");
+    toast.success(`Downloaded ${fileCount} attachment(s) along with the form!`);
+  };
 
   const handleImageUpload = async (url: string) => {
     try {
@@ -321,6 +816,13 @@ export default function ShopViewPage() {
             Back to Shops
           </Link>
           <div className="flex flex-wrap items-center justify-end gap-2 mt-2 sm:mt-0">
+            <button
+              onClick={handleDownloadAll}
+              className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200 shadow-sm"
+            >
+              <Download size={16} className="text-gray-500" />
+              Download Form + Files
+            </button>
             <Link
               href={`/visicooler/createshop?edit=${shop._id}`}
               className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200"

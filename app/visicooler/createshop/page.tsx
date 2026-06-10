@@ -2,12 +2,15 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Download, AppWindowMacIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import GcoreUpload from "@/app/admin/_components/GcoreUpload";
+import { GetHomePageData } from "@/src/lib/strapi";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 function CreateShopForm() {
+  const [logoUrl, setLogoUrl] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
@@ -16,6 +19,21 @@ function CreateShopForm() {
   const [loading, setLoading] = useState(false);
   const [initialFetchLoading, setInitialFetchLoading] = useState(!!editId || !!requestId);
   const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const data = await GetHomePageData();
+        const navbarUrl = data?.NavbarImage?.url || data?.attributes?.NavbarImage?.url;
+        if (navbarUrl) {
+          setLogoUrl(getStrapiMediaUrl(navbarUrl));
+        }
+      } catch (err) {
+        console.error("Failed to load logo:", err);
+      }
+    };
+    fetchLogo();
+  }, []);
 
   // Document attachments
   const [documents, setDocuments] = useState<Array<{ name: string; url: string }>>([]);
@@ -333,6 +351,348 @@ function CreateShopForm() {
     }
   };
 
+  const handleDownloadEmptyForm = () => {
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      toast.error("Popup blocked! Please allow popups to download the form.");
+      return;
+    }
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Empty Shop Registration Form</title>
+        <style>
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+              margin: 0;
+            }
+            .no-print {
+              display: none;
+            }
+          }
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1f2937;
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+            background-color: #ffffff;
+          }
+          .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #e60000;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+          }
+          .title-area h1 {
+            color: #e60000;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .title-area p {
+            margin: 4px 0 0 0;
+            color: #4b5563;
+            font-size: 13px;
+          }
+          .logo {
+            font-size: 26px;
+            font-weight: 900;
+            color: #e60000;
+            font-style: italic;
+          }
+          .section {
+            margin-bottom: 24px;
+            page-break-inside: avoid;
+          }
+          .section-title {
+            background-color: #fef2f2;
+            color: #991b1b;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-left: 4px solid #e60000;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .grid {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 12px 24px;
+          }
+          .grid-full {
+            grid-column: span 2;
+          }
+          .field {
+            display: flex;
+            flex-direction: column;
+          }
+          .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #4b5563;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .field-value-line {
+            border-bottom: 1px dotted #9ca3af;
+            height: 24px;
+            margin-top: 2px;
+          }
+          .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 4px;
+          }
+          .checkbox-item {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #1f2937;
+          }
+          .checkbox-box {
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid #4b5563;
+            margin-right: 6px;
+            display: inline-block;
+            border-radius: 2px;
+          }
+          .footer {
+            margin-top: 40px;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 12px;
+            text-align: center;
+            font-size: 10px;
+            color: #9ca3af;
+          }
+          .sign-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+            page-break-inside: avoid;
+          }
+          .sign-box {
+            width: 45%;
+            text-align: center;
+          }
+          .sign-line {
+            border-bottom: 1px solid #9ca3af;
+            margin-bottom: 6px;
+            height: 36px;
+          }
+          .sign-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #4b5563;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="title-area">
+            <h1>Visicooler Shop Registration</h1>
+            <p>Application Form for Outlet Enrollment</p>
+          </div>
+          <div class="logo">
+            ${logoUrl ? '<img src="' + logoUrl + '" alt="Cloud9 Logo" style="max-height: 45px; object-fit: contain;" />' : 'Cloud9'}
+          </div>
+        </div>
+
+        <!-- Section 1: Outlet Details -->
+        <div class="section">
+          <div class="section-title">1. Outlet Details</div>
+          <div class="grid">
+            <div class="field grid-full">
+              <span class="field-label">Shop Name *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Owner Name *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Date (DD/MM/YYYY) *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Gender *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> Male</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Female</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Other</div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Age *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Address *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Area *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Pincode *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Mobile Number *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Email Address</span>
+              <div class="field-value-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Distributor Details -->
+        <div class="section">
+          <div class="section-title">2. Distributor Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Distributor Name *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Account Number *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Hub Name *</span>
+              <div class="field-value-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Business Details -->
+        <div class="section">
+          <div class="section-title">3. Business Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Outlet Type *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Visibility *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> Main Road</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Internal Road</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Premium</div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Nearby Area Footfall *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> High</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Medium</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Low</div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Fridge Type</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> 255 ltr</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> 280 ltr</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> 360 ltr</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> 450 ltr</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Mini</div>
+              </div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Branding Type *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> ED</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Water</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Other</div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Competitors Present *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> Yes</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> No</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Administrative & Visicooler Details -->
+        <div class="section">
+          <div class="section-title">4. Administrative & Visicooler Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Area Sales Manager (ASM) Name</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Sales Executive (SE) Name</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Visicooler Sizes (Comma separated)</span>
+              <div class="field-value-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5: Documents Required -->
+        <div class="section" style="page-break-inside: avoid;">
+          <div class="section-title">5. Verification Documents Checklist</div>
+          <div style="font-size: 12px; color: #4b5563; margin-bottom: 8px;">
+            Please ensure physical/digital copies of the following are attached:
+          </div>
+          <div class="checkbox-group" style="flex-direction: column; gap: 6px;">
+            <div class="checkbox-item"><span class="checkbox-box"></span> Aadhar Card</div>
+            <div class="checkbox-item"><span class="checkbox-box"></span> PAN Card</div>
+            <div class="checkbox-item"><span class="checkbox-box"></span> Electricity Bill</div>
+            <div class="checkbox-item"><span class="checkbox-box"></span> Shop Agreement</div>
+            <div class="checkbox-item"><span class="checkbox-box"></span> Previous 3 Months Sales/Operating Data (Data sheet / invoices)</div>
+          </div>
+        </div>
+
+        <!-- Signatures -->
+        <div class="sign-area">
+          
+          <div class="sign-box">
+            <div class="sign-line"></div>
+            <div class="sign-title">Sales Representative / ASM Signature</div>
+          </div>
+        </div>
+
+        
+
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() {
+              window.close();
+            }, 500);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+  };
+
   if (initialFetchLoading) {
     return (
       <div className="flex justify-center items-center h-48">
@@ -352,13 +712,23 @@ function CreateShopForm() {
       </Link>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="px-5 sm:px-8 py-5 sm:py-6 border-b border-gray-100 bg-gray-50/50">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {editId ? "Edit Shop Details" : "Create New Shop"}
-          </h1>
-          <p className="text-gray-500 mt-1">
-            {editId ? "Update the details for this visicooler shop." : "Enter the details for the new visicooler shop below."}
-          </p>
+        <div className="px-5 sm:px-8 py-5 sm:py-6 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {editId ? "Edit Shop Details" : "Create New Shop"}
+            </h1>
+            <p className="text-gray-500 mt-1">
+              {editId ? "Update the details for this visicooler shop." : "Enter the details for the new visicooler shop below."}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleDownloadEmptyForm}
+            className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm shrink-0"
+          >
+            <Download size={18} className="text-gray-500" />
+            Download Empty Form
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-6">
@@ -797,188 +1167,188 @@ function CreateShopForm() {
               </h3>
             </div>
 
-                {/* Part 1: documentAttached */}
-                <div className="md:col-span-2 space-y-4">
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Required Verification Documents
-                  </label>
+            {/* Part 1: documentAttached */}
+            <div className="md:col-span-2 space-y-4">
+              <label className="block text-sm font-semibold text-gray-700">
+                Required Verification Documents
+              </label>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {["aadhar", "PAN", "Electricity Bill", "Shop Agreement"].map((docName) => {
-                      const attachedDoc = documents.find((d) => d.name === docName);
-                      const isUploaded = !!attachedDoc?.url;
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {["aadhar", "PAN", "Electricity Bill", "Shop Agreement"].map((docName) => {
+                  const attachedDoc = documents.find((d) => d.name === docName);
+                  const isUploaded = !!attachedDoc?.url;
 
-                      return (
-                        <div key={docName} className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 flex flex-col justify-between gap-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-semibold text-gray-800 uppercase">
-                              {docName}
-                            </span>
-                            {isUploaded && (
-                              <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
-                                Uploaded
-                              </span>
-                            )}
-                          </div>
+                  return (
+                    <div key={docName} className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 flex flex-col justify-between gap-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-gray-800 uppercase">
+                          {docName}
+                        </span>
+                        {isUploaded && (
+                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
+                            Uploaded
+                          </span>
+                        )}
+                      </div>
 
-                          {isUploaded ? (
-                            <div className="flex items-center justify-between gap-2 bg-white p-2.5 rounded-lg border border-gray-150">
-                              <a
-                                href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + attachedDoc.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-blue-600 hover:underline font-medium truncate max-w-[150px]"
-                              >
-                                View File
-                              </a>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setDocuments((prev) => prev.filter((d) => d.name !== docName));
-                                }}
-                                className="text-xs text-red-500 hover:text-red-700 font-bold"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          ) : (
-                            <GcoreUpload
-                              folder="visicooler_docs"
-                              accept=".pdf,.jpg,.jpeg,.png"
-                              onSuccess={(url) => {
-                                setDocuments((prev) => [
-                                  ...prev.filter((d) => d.name !== docName),
-                                  { name: docName, url },
-                                ]);
-                                toast.success(`${docName} uploaded!`);
-                              }}
-                            >
-                              {({ open, isLoading }) => (
-                                <button
-                                  type="button"
-                                  onClick={open}
-                                  disabled={isLoading}
-                                  className="w-full bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1"
-                                >
-                                  {isLoading ? (
-                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-700"></div>
-                                  ) : (
-                                    <span>Upload File</span>
-                                  )}
-                                </button>
-                              )}
-                            </GcoreUpload>
-                          )}
+                      {isUploaded ? (
+                        <div className="flex items-center justify-between gap-2 bg-white p-2.5 rounded-lg border border-gray-150">
+                          <a
+                            href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + attachedDoc.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline font-medium truncate max-w-[150px]"
+                          >
+                            View File
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setDocuments((prev) => prev.filter((d) => d.name !== docName));
+                            }}
+                            className="text-xs text-red-500 hover:text-red-700 font-bold"
+                          >
+                            Remove
+                          </button>
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                      ) : (
+                        <GcoreUpload
+                          folder="visicooler_docs"
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          onSuccess={(url) => {
+                            setDocuments((prev) => [
+                              ...prev.filter((d) => d.name !== docName),
+                              { name: docName, url },
+                            ]);
+                            toast.success(`${docName} uploaded!`);
+                          }}
+                        >
+                          {({ open, isLoading }) => (
+                            <button
+                              type="button"
+                              onClick={open}
+                              disabled={isLoading}
+                              className="w-full bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1"
+                            >
+                              {isLoading ? (
+                                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-700"></div>
+                              ) : (
+                                <span>Upload File</span>
+                              )}
+                            </button>
+                          )}
+                        </GcoreUpload>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-                {/* Part 2: previousThreeMonthlydata */}
-                <div className="md:col-span-2 space-y-4 pt-4 border-t border-gray-100">
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Previous 3 Months Sales/Operating Data <span className="text-red-500">*</span>
-                  </label>
+            {/* Part 2: previousThreeMonthlydata */}
+            <div className="md:col-span-2 space-y-4 pt-4 border-t border-gray-100">
+              <label className="block text-sm font-semibold text-gray-700">
+                Previous 3 Months Sales/Operating Data <span className="text-red-500">*</span>
+              </label>
 
-                  <div className="space-y-4">
-                    {[0, 1, 2].map((idx) => {
-                      const currentMonthData = monthlyData[idx] || { name: `Month ${idx + 1}`, url: "" };
-                      const isUploaded = !!currentMonthData.url;
+              <div className="space-y-4">
+                {[0, 1, 2].map((idx) => {
+                  const currentMonthData = monthlyData[idx] || { name: `Month ${idx + 1}`, url: "" };
+                  const isUploaded = !!currentMonthData.url;
 
-                      return (
-                        <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-gray-200 rounded-xl bg-gray-50/50">
-                          <div className="flex-1 flex items-center gap-3">
-                            <span className="text-sm font-bold text-gray-400">Month {idx + 1}:</span>
-                            <select
-                              value={currentMonthData.name}
-                              onChange={(e) => {
-                                const newName = e.target.value;
+                  return (
+                    <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-gray-200 rounded-xl bg-gray-50/50">
+                      <div className="flex-1 flex items-center gap-3">
+                        <span className="text-sm font-bold text-gray-400">Month {idx + 1}:</span>
+                        <select
+                          value={currentMonthData.name}
+                          onChange={(e) => {
+                            const newName = e.target.value;
+                            setMonthlyData((prev) => {
+                              const copy = [...prev];
+                              copy[idx] = { ...copy[idx], name: newName };
+                              return copy;
+                            });
+                          }}
+                          disabled={isUploaded}
+                          className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white outline-none focus:border-blue-500 font-semibold text-gray-700"
+                        >
+                          <option value={`Month ${idx + 1}`}>Select Month...</option>
+                          {[
+                            "January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                          ].map((m) => (
+                            <option key={m} value={m}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {isUploaded ? (
+                          <div className="flex items-center gap-3 bg-white px-3 py-2 rounded-lg border border-gray-150 text-xs">
+                            <span className="text-green-600 font-bold">✓ Uploaded</span>
+                            <a
+                              href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + currentMonthData.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline font-semibold"
+                            >
+                              View
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => {
                                 setMonthlyData((prev) => {
                                   const copy = [...prev];
-                                  copy[idx] = { ...copy[idx], name: newName };
+                                  copy[idx] = { ...copy[idx], url: "" };
                                   return copy;
                                 });
                               }}
-                              disabled={isUploaded}
-                              className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white outline-none focus:border-blue-500 font-semibold text-gray-700"
+                              className="text-red-500 hover:text-red-700 font-bold"
                             >
-                              <option value={`Month ${idx + 1}`}>Select Month...</option>
-                              {[
-                                "January", "February", "March", "April", "May", "June",
-                                "July", "August", "September", "October", "November", "December"
-                              ].map((m) => (
-                                <option key={m} value={m}>{m}</option>
-                              ))}
-                            </select>
+                              Clear
+                            </button>
                           </div>
+                        ) : (
+                          <GcoreUpload
+                            folder="visicooler_monthly"
+                            accept=".csv,.xlsx,.xls,.pdf,.jpg,.jpeg,.png"
+                            onSuccess={(url) => {
+                              // Automatically set default name if not selected yet
+                              const finalName = currentMonthData.name === `Month ${idx + 1}` || currentMonthData.name === `Month1`
+                                ? `Month ${idx + 1}`
+                                : currentMonthData.name;
 
-                          <div className="flex items-center gap-2">
-                            {isUploaded ? (
-                              <div className="flex items-center gap-3 bg-white px-3 py-2 rounded-lg border border-gray-150 text-xs">
-                                <span className="text-green-600 font-bold">✓ Uploaded</span>
-                                <a
-                                  href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + currentMonthData.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-blue-600 hover:underline font-semibold"
-                                >
-                                  View
-                                </a>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setMonthlyData((prev) => {
-                                      const copy = [...prev];
-                                      copy[idx] = { ...copy[idx], url: "" };
-                                      return copy;
-                                    });
-                                  }}
-                                  className="text-red-500 hover:text-red-700 font-bold"
-                                >
-                                  Clear
-                                </button>
-                              </div>
-                            ) : (
-                              <GcoreUpload
-                                folder="visicooler_monthly"
-                                accept=".csv,.xlsx,.xls,.pdf,.jpg,.jpeg,.png"
-                                onSuccess={(url) => {
-                                  // Automatically set default name if not selected yet
-                                  const finalName = currentMonthData.name === `Month ${idx + 1}` || currentMonthData.name === `Month1`
-                                    ? `Month ${idx + 1}`
-                                    : currentMonthData.name;
-
-                                  setMonthlyData((prev) => {
-                                    const copy = [...prev];
-                                    copy[idx] = { name: finalName, url };
-                                    return copy;
-                                  });
-                                  toast.success(`Month ${idx + 1} data uploaded!`);
-                                }}
+                              setMonthlyData((prev) => {
+                                const copy = [...prev];
+                                copy[idx] = { name: finalName, url };
+                                return copy;
+                              });
+                              toast.success(`Month ${idx + 1} data uploaded!`);
+                            }}
+                          >
+                            {({ open, isLoading }) => (
+                              <button
+                                type="button"
+                                onClick={open}
+                                disabled={isLoading}
+                                className="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5"
                               >
-                                {({ open, isLoading }) => (
-                                  <button
-                                    type="button"
-                                    onClick={open}
-                                    disabled={isLoading}
-                                    className="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5"
-                                  >
-                                    {isLoading ? (
-                                      <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-gray-700"></div>
-                                    ) : (
-                                      <span>Upload Data</span>
-                                    )}
-                                  </button>
+                                {isLoading ? (
+                                  <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-gray-700"></div>
+                                ) : (
+                                  <span>Upload Data</span>
                                 )}
-                              </GcoreUpload>
+                              </button>
                             )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                          </GcoreUpload>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           <div className="pt-6 mt-6 border-t border-gray-100 flex justify-end">
@@ -992,8 +1362,8 @@ function CreateShopForm() {
               ) : (
                 <Save size={20} />
               )}
-              {loading 
-                ? (requestId ? "Approving..." : "Saving...") 
+              {loading
+                ? (requestId ? "Approving..." : "Saving...")
                 : (requestId ? "Approve & Save Details" : (editId ? "Request Update" : "Request Create"))
               }
             </button>
