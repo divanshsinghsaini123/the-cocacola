@@ -652,15 +652,7 @@ function CreateShopForm() {
           </div>
         </div>
 
-        <!-- Signatures -->
-        <div class="sign-area">
-          
-          <div class="sign-box">
-            <div class="sign-line"></div>
-            <div class="sign-title">Sales Representative / ASM Signature</div>
-          </div>
-        </div>
-
+      
         
 
         <script>

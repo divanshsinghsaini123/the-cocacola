@@ -448,14 +448,7 @@ export default function ShopViewPage() {
           </div>
         </div>
 
-        <!-- Signatures -->
-        <div class="sign-area">
-         
-          <div class="sign-box">
-            <div class="sign-line">Approved System-wide</div>
-            <div class="sign-title">Sales Representative / ASM Signature</div>
-          </div>
-        </div>
+     
 
       
         <script>
