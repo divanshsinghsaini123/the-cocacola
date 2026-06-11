@@ -44,7 +44,7 @@ export default function ReplacementRequestPage() {
     const [fridgeType, setFridgeType] = useState("280");
     const [branding, setBranding] = useState<string[]>([]);
     const [currentSerial, setCurrentSerial] = useState("");
-    const [currentMfgdDate, setCurrentMfgdDate] = useState("");
+    const [currentMfgdDate, setCurrentMfgdDate] = useState(new Date().toISOString().split("T")[0]);
 
     // Load shops
     useEffect(() => {
@@ -154,8 +154,8 @@ export default function ReplacementRequestPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50/50 py-10 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto space-y-6">
+        <div className="min-h-screen bg-gray-50/50 py-6 px-3 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto space-y-5 sm:space-y-6">
 
                 {/* Back Link */}
                 <div>
@@ -169,18 +169,18 @@ export default function ReplacementRequestPage() {
                 </div>
 
                 {/* Header */}
-                <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+                <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl relative overflow-hidden">
                     <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-white/10 rounded-full blur-2xl" />
-                    <h1 className="text-3xl font-bold tracking-tight">Request Cooler Replacement</h1>
-                    <p className="text-red-100 mt-2 max-w-xl text-sm md:text-base">
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Request Cooler Replacement</h1>
+                    <p className="text-red-100 mt-2 max-w-xl text-xs sm:text-sm md:text-base">
                         Select a shop to fetch its details, provide replacement specifications, and submit the request for admin verification.
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
                     {/* Shop Selector Card */}
-                    <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-4">
-                        <label htmlFor="shop-select" className="block text-sm font-bold text-gray-900 uppercase tracking-wider">
+                    <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-200 shadow-sm space-y-3 sm:space-y-4">
+                        <label htmlFor="shop-select" className="block text-xs sm:text-sm font-bold text-gray-900 uppercase tracking-wider">
                             Select Shop *
                         </label>
                         {loadingShops ? (
@@ -204,18 +204,18 @@ export default function ReplacementRequestPage() {
                     </div>
 
                     {selectedShop && (
-                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                        <div className="space-y-5 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
                             {/* Outlet Details Card */}
-                            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-6">
+                            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-200 shadow-sm space-y-4 sm:space-y-6">
                                 <div className="border-b border-gray-150 pb-2 flex items-center gap-2">
-                                    <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wide">
+                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 uppercase tracking-wide">
                                         1. Outlet Details
                                     </h3>
-                                    <span className="text-xs bg-gray-100 text-gray-500 font-bold px-2 py-0.5 rounded-md">
+                                    <span className="text-[10px] sm:text-xs bg-gray-100 text-gray-500 font-bold px-2 py-0.5 rounded-md">
                                         Auto-filled (Read-Only)
                                     </span>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                                     <div>
                                         <label className="block text-xs font-semibold text-gray-400 uppercase mb-2">Shop Name</label>
                                         <input
@@ -289,16 +289,16 @@ export default function ReplacementRequestPage() {
                             </div>
 
                             {/* Distributor Details Card */}
-                            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-6">
+                            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-200 shadow-sm space-y-4 sm:space-y-6">
                                 <div className="border-b border-gray-150 pb-2 flex items-center gap-2">
-                                    <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wide">
+                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 uppercase tracking-wide">
                                         2. Distributor Details
                                     </h3>
-                                    <span className="text-xs bg-gray-100 text-gray-500 font-bold px-2 py-0.5 rounded-md">
+                                    <span className="text-[10px] sm:text-xs bg-gray-100 text-gray-500 font-bold px-2 py-0.5 rounded-md">
                                         Auto-filled (Read-Only)
                                     </span>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                                     <div className="md:col-span-2">
                                         <label className="block text-xs font-semibold text-gray-400 uppercase mb-2">Distributor Name</label>
                                         <input
@@ -330,9 +330,9 @@ export default function ReplacementRequestPage() {
                             </div>
 
                             {/* Visicooler Details Card */}
-                            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-6">
+                            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-200 shadow-sm space-y-4 sm:space-y-6">
                                 <div className="border-b border-gray-150 pb-2">
-                                    <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wide">
+                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 uppercase tracking-wide">
                                         3. Information About the Visicooler
                                     </h3>
                                 </div>
@@ -405,7 +405,7 @@ export default function ReplacementRequestPage() {
                                         <label className="block text-xs font-bold text-gray-700 uppercase mb-3">
                                             Branding Types
                                         </label>
-                                        <div className="flex flex-wrap gap-4">
+                                        <div className="flex flex-wrap gap-2.5 sm:gap-4">
                                             {["ED", "Water", "Other"].map((type) => {
                                                 const isChecked = branding.includes(type);
                                                 return (
@@ -413,15 +413,15 @@ export default function ReplacementRequestPage() {
                                                         key={type}
                                                         type="button"
                                                         onClick={() => handleBrandingCheckbox(type)}
-                                                        className={`flex items-center gap-2 px-5 py-3 rounded-xl border font-bold transition-all text-sm ${isChecked
+                                                        className={`flex-1 sm:flex-initial flex items-center gap-2 px-4 py-2.5 rounded-lg border font-bold transition-all text-xs sm:text-sm justify-center ${isChecked
                                                                 ? "bg-red-50 border-red-500 text-red-700 shadow-sm"
                                                                 : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
                                                             }`}
                                                     >
                                                         {isChecked ? (
-                                                            <CheckSquare className="w-5 h-5 text-red-600" />
+                                                            <CheckSquare className="w-4.5 h-4.5 text-red-600" />
                                                         ) : (
-                                                            <Square className="w-5 h-5 text-gray-400" />
+                                                            <Square className="w-4.5 h-4.5 text-gray-400" />
                                                         )}
                                                         {type}
                                                     </button>
@@ -450,10 +450,9 @@ export default function ReplacementRequestPage() {
                                                 Current Fridge Mfgd Date <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                type="text"
+                                                type="date"
                                                 id="mfg-date"
                                                 required
-                                                placeholder="e.g. MM/YYYY or Year"
                                                 value={currentMfgdDate}
                                                 onChange={(e) => setCurrentMfgdDate(e.target.value)}
                                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all font-medium text-gray-800"
@@ -463,25 +462,25 @@ export default function ReplacementRequestPage() {
                                 </div>
                             </div>
 
-                            {/* Submit Area */}
-                            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-gray-50 border border-gray-200 rounded-2xl p-6">
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                             {/* Submit Area */}
+                            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-gray-50 border border-gray-200 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+                                <div className="flex items-center gap-2 text-[11px] sm:text-xs text-gray-500">
                                     <Info className="w-4 h-4 text-red-500 shrink-0" />
                                     <span>Submitting will log request to database and notify admins.</span>
                                 </div>
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold px-8 py-3.5 rounded-xl transition-colors shadow-lg shadow-red-600/20"
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold px-6 py-3 rounded-lg text-sm sm:text-base transition-colors shadow-lg shadow-red-600/20"
                                 >
                                     {submitting ? (
                                         <>
-                                            <div className="w-5 h-5 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+                                            <div className="w-4.5 h-4.5 rounded-full border-2 border-white/20 border-t-white animate-spin" />
                                             <span>Submitting...</span>
                                         </>
                                     ) : (
                                         <>
-                                            <Send size={18} />
+                                            <Send size={16} />
                                             <span>Submit Request</span>
                                         </>
                                     )}

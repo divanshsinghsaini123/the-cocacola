@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
         // Send email alert to admin asynchronously
         const protocol = req.nextUrl.protocol || "http:";
         const host = req.nextUrl.host || "localhost:3000";
-        const redirectUrl = `${protocol}//${host}/admin/replacement-requests`;
+        const redirectUrl = `${protocol}//${host}/visicooler/requests?tab=replacement`;
 
         sendReplacementRequestEmail({
             requestId: newRequest._id.toString(),

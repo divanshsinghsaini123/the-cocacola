@@ -220,5 +220,8 @@ export const ReplacementRequestValidationSchema = z.object({
     fridgeType: z.enum(["255", "280", "360", "450", "mini"]),
     branding: z.array(z.enum(["ED", "Water", "Other"])).default([]),
     currentSerial: z.string().min(1, "Current Serial Number is required"),
-    currentMfgdDate: z.string().min(1, "Current Manufactured Date is required"),
+    currentMfgdDate: z.preprocess((arg) => {
+        if (typeof arg === "string" && arg) return new Date(arg);
+        return arg;
+    }, z.date({ message: "Current Manufactured Date is required" })),
 });

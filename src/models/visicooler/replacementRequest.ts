@@ -41,9 +41,8 @@ const ReplacementRequestSchema = new Schema(
             trim: true
         },
         currentMfgdDate: {
-            type: String,
+            type: Date,
             required: true,
-            trim: true
         },
         status: {
             type: String,
