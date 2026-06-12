@@ -78,6 +78,336 @@ export default function VisicoolerPage() {
         toast.success(`Downloading report for ${shop.outletDetails?.shopName || 'Shop'}...`);
     };
 
+    const handleDownloadEmptyForm = () => {
+        const printWindow = window.open("", "_blank");
+        if (!printWindow) {
+            toast.error("Popup blocked! Please allow popups to download the form.");
+            return;
+        }
+
+        const logoUrl = typeof window !== 'undefined' ? window.location.origin + '/C9LOGO_BevPartner_BLACK.png' : '/C9LOGO_BevPartner_BLACK.png';
+
+        const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Empty Shop Registration Form</title>
+        <style>
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+              margin: 0;
+            }
+            .no-print {
+              display: none;
+            }
+          }
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1f2937;
+            padding: 40px;
+            margin: 0;
+            line-height: 1.6;
+            background-color: #ffffff;
+          }
+          .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #e60000;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+          }
+          .title-area h1 {
+            color: #e60000;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .title-area p {
+            margin: 4px 0 0 0;
+            color: #4b5563;
+            font-size: 13px;
+          }
+          .logo {
+            font-size: 26px;
+            font-weight: 900;
+            color: #e60000;
+            font-style: italic;
+          }
+          .section {
+            margin-bottom: 24px;
+            page-break-inside: avoid;
+          }
+          .section-title {
+            background-color: #fef2f2;
+            color: #991b1b;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-left: 4px solid #e60000;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .grid {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 12px 24px;
+          }
+          .grid-full {
+            grid-column: span 2;
+          }
+          .field {
+            display: flex;
+            flex-direction: column;
+          }
+          .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #4b5563;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .field-value-line {
+            border-bottom: 1px dotted #9ca3af;
+            height: 24px;
+            margin-top: 2px;
+          }
+          .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 4px;
+          }
+          .checkbox-item {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #1f2937;
+          }
+          .checkbox-box {
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid #4b5563;
+            margin-right: 6px;
+            display: inline-block;
+            border-radius: 2px;
+          }
+          .footer {
+            margin-top: 40px;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 12px;
+            text-align: center;
+            font-size: 10px;
+            color: #9ca3af;
+          }
+          .sign-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+            page-break-inside: avoid;
+          }
+          .sign-box {
+            width: 45%;
+            text-align: center;
+          }
+          .sign-line {
+            border-bottom: 1px solid #9ca3af;
+            margin-bottom: 6px;
+            height: 36px;
+          }
+          .sign-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #4b5563;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="title-area">
+            <h1>Visicooler Shop Registration</h1>
+            <p>Application Form for Outlet Enrollment</p>
+          </div>
+          <div class="logo">
+            <img src="${logoUrl}" alt="Cloud9 Logo" style="max-height: 120px; object-fit: contain;" />
+          </div>
+        </div>
+
+        <!-- Section 1: Outlet Details -->
+        <div class="section">
+          <div class="section-title">1. Outlet Details</div>
+          <div class="grid">
+            <div class="field grid-full">
+              <span class="field-label">Shop Name *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Owner Name *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Date (DD/MM/YYYY) *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Gender *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> Male</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Female</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Other</div>
+              </div>
+            </div>
+            
+            <div class="field grid-full">
+              <span class="field-label">Address *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Area *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Pincode *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Mobile Number *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Email Address</span>
+              <div class="field-value-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Distributor Details -->
+        <div class="section">
+          <div class="section-title">2. Distributor Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Distributor Name *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Account Number *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Hub Name *</span>
+              <div class="field-value-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Business Details -->
+        <div class="section">
+          <div class="section-title">3. Business Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Outlet Type *</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Visibility *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> Main Road</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Internal Road</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Premium</div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Nearby Area Footfall *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> High</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Medium</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Low</div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Fridge Type</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> 255 ltr</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> 280 ltr</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> 360 ltr</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> 450 ltr</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Mini</div>
+              </div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Branding Type *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> ED</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Water</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> Other</div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Competitors Present *</span>
+              <div class="checkbox-group">
+                <div class="checkbox-item"><span class="checkbox-box"></span> Yes</div>
+                <div class="checkbox-item"><span class="checkbox-box"></span> No</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Administrative & Visicooler Details -->
+        <div class="section">
+          <div class="section-title">4. Administrative & Visicooler Details</div>
+          <div class="grid">
+            <div class="field">
+              <span class="field-label">Area Sales Manager (ASM) Name</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">Sales Executive (SE) Name</span>
+              <div class="field-value-line"></div>
+            </div>
+            <div class="field grid-full">
+              <span class="field-label">Visicooler Sizes (Comma separated)</span>
+              <div class="field-value-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5: Documents Required -->
+        <div class="section" style="page-break-inside: avoid;">
+          <div class="section-title">5. Verification Documents Checklist</div>
+          <div style="font-size: 12px; color: #4b5563; margin-bottom: 8px;">
+            Please ensure physical/digital copies of the following are attached:
+          </div>
+          <div class="checkbox-group" style="flex-direction: column; gap: 6px;">
+            <div class="checkbox-item"><span class="checkbox-box"></span> Aadhar Card</div>
+            <div class="checkbox-item"><span class="checkbox-box"></span> PAN Card</div>
+            <div class="checkbox-item"><span class="checkbox-box"></span> Electricity Bill</div>
+            <div class="checkbox-item"><span class="checkbox-box"></span> Shop Agreement</div>
+            <div class="checkbox-item"><span class="checkbox-box"></span> Previous 3 Months Sales/Operating Data (Data sheet / invoices)</div>
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() {
+              window.close();
+            }, 500);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+    };
+
     return (
         <div className="min-h-screen bg-gray-50/50 p-4 sm:p-6 md:p-10">
             <div className="max-w-7xl mx-auto">
@@ -96,6 +426,14 @@ export default function VisicoolerPage() {
                                 Review Requests
                             </Link>
                         )}
+                        <button
+                            type="button"
+                            onClick={handleDownloadEmptyForm}
+                            className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-5 py-2.5 rounded-lg font-semibold transition-all shadow-sm w-full sm:w-auto text-sm"
+                        >
+                            <Download size={18} className="text-gray-500" />
+                            Download Form
+                        </button>
                         <Link
                             href="/visicooler/createshop"
                             className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm w-full sm:w-auto"
