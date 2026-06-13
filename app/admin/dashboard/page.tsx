@@ -19,7 +19,7 @@ export default function DashboardPortalPage() {
                 <p className="text-base text-gray-500">Manage your brands, products, and store locations.</p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-3 gap-6">
                 {/* Brands Option */}
                 <Link
                     href="/admin/brands"
@@ -89,6 +89,36 @@ export default function DashboardPortalPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Replacement Requests Option */}
+                <Link
+                    href="/admin/replacement-requests"
+                    className="group relative flex flex-col p-6 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:border-amber-200 transition-all duration-300 overflow-hidden"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                    <div className="relative z-10 flex flex-col h-full gap-4">
+                        <div className="p-3 bg-amber-50 rounded-xl w-fit group-hover:bg-amber-100 transition-colors shadow-sm">
+                            <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.5" />
+                            </svg>
+                        </div>
+
+                        <div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-1.5 group-hover:text-amber-600 transition-colors">Replacement Requests</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed">
+                                Review, track, and complete cooler replacement requests filed by Area Sales Managers and Sales Executives.
+                            </p>
+                        </div>
+
+                        <div className="mt-auto pt-2 flex items-center text-xs font-bold text-amber-600 tracking-wide uppercase">
+                            <span>Manage Requests</span>
+                            <svg className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </div>
+                    </div>
+                </Link>
             </div>
         </div>
     );
