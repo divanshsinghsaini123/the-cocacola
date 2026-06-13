@@ -211,3 +211,14 @@ export const ShopValidationSchema = z.object({
         ).optional()
     }).optional()
 });
+
+export const ReplacementRequestValidationSchema = z.object({
+    shopId: z.string().min(1, "Shop ID is required"),
+    casesPerMonth: z.preprocess((val) => Number(val), z.number().min(0, "Cases per month must be 0 or more")),
+    describeIssue: z.string().min(1, "Please describe the issue"),
+    triedToRepair: z.enum(["Yes", "No"]),
+    fridgeType: z.enum(["255", "280", "360", "450", "mini"]),
+    branding: z.array(z.enum(["ED", "Water", "Other"])).default([]),
+    currentSerial: z.string().min(1, "Current Serial Number is required"),
+    currentMfgdDate: z.string().min(1, "Current Manufactured Date is required"),
+});
