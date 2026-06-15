@@ -699,7 +699,7 @@ function CreateShopForm() {
           <button
             type="button"
             onClick={handleDownloadEmptyForm}
-            className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm shrink-0"
+            className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm shrink-0 w-full sm:w-auto"
           >
             <Download size={18} className="text-gray-500" />
             Download Form
@@ -1233,8 +1233,8 @@ function CreateShopForm() {
 
                   return (
                     <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border border-gray-200 rounded-xl bg-gray-50/50">
-                      <div className="flex-1 flex items-center gap-3">
-                        <span className="text-sm font-bold text-gray-400">Month {idx + 1}:</span>
+                      <div className="flex-1 flex items-center gap-3 w-full">
+                        <span className="text-sm font-bold text-gray-400 shrink-0">Month {idx + 1}:</span>
                         <select
                           value={currentMonthData.name}
                           onChange={(e) => {
@@ -1246,7 +1246,7 @@ function CreateShopForm() {
                             });
                           }}
                           disabled={isUploaded}
-                          className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white outline-none focus:border-blue-500 font-semibold text-gray-700"
+                          className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white outline-none focus:border-blue-500 font-semibold text-gray-700 flex-1 w-full"
                         >
                           <option value={`Month ${idx + 1}`}>Select Month...</option>
                           {[
@@ -1258,31 +1258,33 @@ function CreateShopForm() {
                         </select>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                         {isUploaded ? (
-                          <div className="flex items-center gap-3 bg-white px-3 py-2 rounded-lg border border-gray-150 text-xs">
+                          <div className="flex items-center justify-between w-full sm:w-auto gap-3 bg-white px-3 py-2 rounded-lg border border-gray-150 text-xs">
                             <span className="text-green-600 font-bold">✓ Uploaded</span>
-                            <a
-                              href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + currentMonthData.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline font-semibold"
-                            >
-                              View
-                            </a>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setMonthlyData((prev) => {
-                                  const copy = [...prev];
-                                  copy[idx] = { ...copy[idx], url: "" };
-                                  return copy;
-                                });
-                              }}
-                              className="text-red-500 hover:text-red-700 font-bold"
-                            >
-                              Clear
-                            </button>
+                            <div className="flex gap-2">
+                              <a
+                                href={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + currentMonthData.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline font-semibold"
+                              >
+                                View
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setMonthlyData((prev) => {
+                                    const copy = [...prev];
+                                    copy[idx] = { ...copy[idx], url: "" };
+                                    return copy;
+                                  });
+                                }}
+                                className="text-red-500 hover:text-red-700 font-bold"
+                              >
+                                Clear
+                              </button>
+                            </div>
                           </div>
                         ) : (
                           <GcoreUpload
@@ -1307,7 +1309,7 @@ function CreateShopForm() {
                                 type="button"
                                 onClick={open}
                                 disabled={isLoading}
-                                className="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                                className="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 w-full sm:w-auto"
                               >
                                 {isLoading ? (
                                   <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-gray-700"></div>
@@ -1326,11 +1328,11 @@ function CreateShopForm() {
             </div>
           </div>
 
-          <div className="pt-6 mt-6 border-t border-gray-100 flex justify-end">
+          <div className="pt-6 mt-6 border-t border-gray-100 flex justify-end w-full">
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-medium transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-sm w-full sm:w-auto"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

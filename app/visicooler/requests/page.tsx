@@ -397,7 +397,7 @@ export default function RequestsDashboard() {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0">
+                      <div className="flex items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0 w-full md:w-auto">
                         <Link
                           href={`/visicooler/createshop?requestId=${req._id}`}
                           className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all text-sm shadow-sm"
@@ -408,7 +408,7 @@ export default function RequestsDashboard() {
                         <button
                           onClick={() => handleReject(req._id)}
                           disabled={actionLoading === req._id}
-                          className="inline-flex items-center justify-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2.5 rounded-xl font-bold transition-all text-sm border border-red-100 disabled:opacity-75"
+                          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2.5 rounded-xl font-bold transition-all text-sm border border-red-100 disabled:opacity-75"
                         >
                           {actionLoading === req._id ? (
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
@@ -444,19 +444,21 @@ export default function RequestsDashboard() {
                   {requestHistory.map((item) => (
                     <div
                       key={item._id}
-                      className="flex flex-col md:grid md:grid-cols-12 gap-2 md:gap-4 p-4 sm:p-5 items-start md:items-center text-sm"
+                      className="flex flex-col md:grid md:grid-cols-12 gap-2.5 md:gap-4 p-4 sm:p-5 items-start md:items-center text-sm"
                     >
                       <div className="col-span-3 font-bold text-gray-900">
                         {item.requestedData.outletDetails?.shopName || "N/A"}
                       </div>
 
-                      <div className="col-span-2">
+                      <div className="col-span-2 flex items-center gap-2">
+                        <span className="text-xs font-bold text-gray-400 md:hidden">Request Type:</span>
                         <span className="capitalize font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded text-xs border border-gray-150">
                           {item.type}
                         </span>
                       </div>
 
-                      <div className="col-span-2 flex justify-start md:justify-center">
+                      <div className="col-span-2 flex items-center justify-start md:justify-center gap-2">
+                        <span className="text-xs font-bold text-gray-400 md:hidden">Action:</span>
                         <span
                           className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-full ${item.action === "approved"
                               ? "bg-green-50 text-green-700 border border-green-150"
@@ -475,12 +477,14 @@ export default function RequestsDashboard() {
                         </span>
                       </div>
 
-                      <div className="col-span-2 text-gray-600 font-medium">
-                        {item.actionBy}
+                      <div className="col-span-2 flex items-center gap-2 text-gray-600 font-medium">
+                        <span className="text-xs font-bold text-gray-400 md:hidden">Processed By:</span>
+                        <span>{item.actionBy}</span>
                       </div>
 
-                      <div className="col-span-3 text-right text-gray-400 text-xs font-medium w-full md:w-auto">
-                        {new Date(item.actionAt).toLocaleString()}
+                      <div className="col-span-3 text-left md:text-right text-gray-400 text-xs font-medium w-full md:w-auto flex items-center gap-2">
+                        <span className="text-xs font-bold text-gray-400 md:hidden">Processed At:</span>
+                        <span>{new Date(item.actionAt).toLocaleString()}</span>
                       </div>
                     </div>
                   ))}
@@ -579,7 +583,7 @@ export default function RequestsDashboard() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-3 self-end md:self-center">
+                        <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto mt-3 md:mt-0 pt-3 md:pt-0 border-t border-gray-100 md:border-transparent">
                           {req.status === "pending" && (
                             <button
                               onClick={(e) => {
@@ -605,7 +609,7 @@ export default function RequestsDashboard() {
 
                       {/* Accordion Expanded Snap Details */}
                       {isExpanded && (
-                        <div className="border-t border-gray-100 p-6 bg-gray-50/30 space-y-6 animate-in slide-in-from-top-2 duration-200">
+                        <div className="border-t border-gray-100 p-4 sm:p-6 bg-gray-50/30 space-y-6 animate-in slide-in-from-top-2 duration-200">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
                             {/* Outlet Snapshot */}

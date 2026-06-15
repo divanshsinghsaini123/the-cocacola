@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Lock, User, ArrowRight, LogOut, AlertCircle, CheckCircle2, ShieldCheck } from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface UserSession {
     name: string;
@@ -15,6 +16,7 @@ export default function VisicoolerLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [nameInput, setNameInput] = useState("");
@@ -90,6 +92,7 @@ export default function VisicoolerLayout({
                 setSessionUser(session);
                 setIsAuthenticated(true);
                 toast.success(`Welcome back, ${data.name}!`);
+
             } else {
                 setErrorMsg(data.error || "Authentication failed. Please verify your name.");
                 toast.error("Access Denied");
@@ -158,6 +161,7 @@ export default function VisicoolerLayout({
                 setIsAuthenticated(true);
                 setShowSuperAdminModal(false);
                 toast.success(`Welcome, Super Admin ${superAdminUsername}!`);
+                // router.push("/visicooler/shops");
             } else {
                 setSuperAdminError(data.error || "Invalid credentials.");
                 toast.error("Access Denied");
@@ -413,7 +417,7 @@ export default function VisicoolerLayout({
             <Toaster position="top-right" />
 
             {/* Ultra-Premium Session Header */}
-            <div className="w-full bg-[#0a0f1d] border-b border-white/[0.06] py-3.5 px-4 sm:px-6 md:px-8 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
+            <div className="w-full bg-[#0a0f1d] border-b border-white/[0.06] py-3.5 px-4 sm:px-6 shadow-lg flex flex-row items-center justify-between gap-3 sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
                 <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-600/10 border border-red-500/20">
                         <ShieldCheck className="w-5 h-5 text-red-500" />

@@ -1172,34 +1172,34 @@ export default function ShopViewPage() {
       <div className="max-w-5xl mx-auto space-y-6">
 
         {/* Header */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <Link
-            href="/visicooler"
-            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-medium"
+            href="/visicooler/shops"
+            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-medium self-start"
           >
             <ArrowLeft size={18} />
             Back to Shops
           </Link>
-          <div className="flex flex-wrap items-center justify-end gap-2 mt-2 sm:mt-0">
+          <div className="flex items-center justify-between gap-2 w-full sm:w-auto mt-2 sm:mt-0">
             <button
               onClick={handleDownloadAll}
-              className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200 shadow-sm"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-white hover:bg-gray-50 text-gray-700 px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200 shadow-sm text-xs sm:text-sm"
             >
-              <Download size={16} className="text-gray-500" />
-              Download Form
+              <Download size={14} className="text-gray-500 shrink-0" />
+              <span>Download Form</span>
             </button>
             <Link
               href={`/visicooler/createshop?edit=${shop._id}`}
-              className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200 text-xs sm:text-sm text-center"
             >
               Edit Details
             </Link>
             <button
               onClick={openDeleteShopModal}
-              className="inline-flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg font-medium transition-colors border border-red-100"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors border border-red-100 text-xs sm:text-sm"
             >
-              <Trash2 size={16} />
-              Delete Shop
+              <Trash2 size={14} className="shrink-0" />
+              <span>Delete Shop</span>
             </button>
           </div>
         </div>

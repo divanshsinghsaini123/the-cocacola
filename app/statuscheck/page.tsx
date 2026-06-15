@@ -8,7 +8,9 @@ import {
     GetExtensionData,
     GetCobrandingData,
     GetBecomeOurDistributorData,
-    GetBecomeOurDistributorContactUsData
+    GetBecomeOurDistributorContactUsData,
+    GetBrandPageData,
+    GetStoreLocatorData
 } from "@/src/lib/strapi";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +26,9 @@ export default async function StatusCheck() {
         extensionData,
         cobrandingData,
         becomeOurDistributorData,
-        becomeOurDistributorContactUsData
+        becomeOurDistributorContactUsData,
+        brandData,
+        storeLocatorData
     ] = await Promise.all([
         GetHomePageData(),
         GetAboutUsPageData(),
@@ -35,7 +39,9 @@ export default async function StatusCheck() {
         GetExtensionData(),
         GetCobrandingData(),
         GetBecomeOurDistributorData(),
-        GetBecomeOurDistributorContactUsData()
+        GetBecomeOurDistributorContactUsData(),
+        GetBrandPageData(),
+        GetStoreLocatorData()
     ]);
 
     const statuses = [
@@ -48,7 +54,9 @@ export default async function StatusCheck() {
         { name: "Extension", status: !!extensionData },
         { name: "Cobranding", status: !!cobrandingData },
         { name: "Become Our Distributor", status: !!becomeOurDistributorData },
-        { name: "Become Our Distributor Contact Us", status: !!becomeOurDistributorContactUsData }
+        { name: "Become Our Distributor Contact Us", status: !!becomeOurDistributorContactUsData },
+        { name: "Brand Page", status: !!brandData },
+        { name: "Store Locator", status: !!storeLocatorData }
     ];
 
     return (
@@ -61,7 +69,7 @@ export default async function StatusCheck() {
                     <p className="text-gray-500 mb-8 font-medium">
                         Real-time status of all Strapi endpoints configured in the application.
                     </p>
-                    
+
                     <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
