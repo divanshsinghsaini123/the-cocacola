@@ -24,6 +24,8 @@ export default function VisicoolerShopsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showStepsModal, setShowStepsModal] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
 
   useEffect(() => {
     const sessionStr = localStorage.getItem("visicooler_session");
@@ -32,9 +34,21 @@ export default function VisicoolerShopsPage() {
         const session = JSON.parse(sessionStr);
         if (session.role === "Superadmin") {
           setIsAdmin(true);
+        } else {
+          // If not admin, show steps modal if not dismissed
+          const dismissed = localStorage.getItem("dismissed_visicooler_steps");
+          if (dismissed !== "true") {
+            setShowStepsModal(true);
+          }
         }
       } catch (e) {
         console.error(e);
+      }
+    } else {
+      // If no session is saved yet, open modal as a helpful default
+      const dismissed = localStorage.getItem("dismissed_visicooler_steps");
+      if (dismissed !== "true") {
+        setShowStepsModal(true);
       }
     }
   }, []);
@@ -81,6 +95,13 @@ export default function VisicoolerShopsPage() {
     } catch (error) {
       toast.error("Error saving image");
     }
+  };
+
+  const handleCloseModal = () => {
+    if (dontShowAgain) {
+      localStorage.setItem("dismissed_visicooler_steps", "true");
+    }
+    setShowStepsModal(false);
   };
 
   const filteredShops = shops.filter((shop) => {
@@ -449,8 +470,14 @@ export default function VisicoolerShopsPage() {
                 Back to Dashboard
               </Link>
             )}
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Visicooler Shops</h1>
-            <p className="text-gray-500 mt-1">Manage and export all registered shop data.</p>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+              {isAdmin ? "Visicooler Shops" : "My Outlets & Shops"}
+            </h1>
+            <p className="text-gray-500 mt-1">
+              {isAdmin
+                ? "Manage and export all registered shop data."
+                : "Find your registered shop and upload verification photos."}
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-2.5 w-full sm:flex sm:flex-row sm:items-center sm:gap-3 sm:w-auto mt-2 sm:mt-0">
@@ -489,18 +516,30 @@ export default function VisicoolerShopsPage() {
         </div>
 
         {/* Search Bar */}
-        <div className="relative mb-8 shadow-sm">
+        <div className="relative mb-6">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-gray-400" />
           </div>
           <input
             type="text"
-            className="block w-full pl-11 pr-4 py-4 border border-gray-200 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-base transition-all shadow-sm"
-            placeholder="Search by name, area, pincode, or visicooler capacity..."
+            className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-2xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-500 sm:text-base transition-all shadow-sm"
+            placeholder={isAdmin
+              ? "Search by name, area, pincode, or visicooler capacity..."
+              : "Type shop name or area to search..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+
+        {/* Helpful Banner for non-tech users */}
+        {!isAdmin && (
+          <div className="bg-red-50 border border-red-100 rounded-2xl p-4 mb-6 flex items-start sm:items-center gap-3 shadow-sm text-red-800 animate-in fade-in duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-red-600 shrink-0 mt-0.5 sm:mt-0"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <div className="text-xs sm:text-sm font-medium">
+              <span className="font-bold text-red-700">📸 Easy Photo Upload:</span> Find your shop below and tap the red <strong className="text-red-700 font-extrabold underline decoration-red-300">Upload Photo</strong> button next to it to upload pictures of your visicooler!
+            </div>
+          </div>
+        )}
 
         {/* Horizontal List View */}
         {loading ? (
@@ -508,7 +547,7 @@ export default function VisicoolerShopsPage() {
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
           </div>
         ) : filteredShops.length > 0 ? (
-          <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <div className={!isAdmin ? "lg:bg-white lg:border lg:border-gray-200 lg:rounded-xl lg:shadow-sm lg:overflow-hidden" : "bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden"}>
             {/* List Header (Visible on large screens) */}
             <div className="hidden lg:grid grid-cols-12 gap-4 p-4 sm:p-5 bg-gray-50/80 border-b border-gray-200 text-sm font-semibold text-gray-500 uppercase tracking-wider">
               <div className="col-span-3">Shop Name</div>
@@ -520,11 +559,13 @@ export default function VisicoolerShopsPage() {
             </div>
 
             {/* List Rows */}
-            <div className="divide-y divide-gray-100">
+            <div className={!isAdmin ? "flex flex-col gap-4 lg:block lg:divide-y lg:divide-gray-100 p-1 lg:p-0" : "divide-y divide-gray-100"}>
               {filteredShops.map((shop) => (
                 <div
                   key={shop._id}
-                  className="flex flex-col lg:grid lg:grid-cols-12 gap-3 lg:gap-4 p-4 sm:p-5 items-start lg:items-center hover:bg-gray-50/80 transition-colors"
+                  className={!isAdmin
+                    ? "bg-white border border-gray-200 rounded-2xl shadow-sm p-4 sm:p-5 flex flex-col gap-4 lg:bg-transparent lg:border-0 lg:shadow-none lg:rounded-none lg:p-5 lg:grid lg:grid-cols-12 lg:gap-4 lg:items-center hover:lg:bg-gray-50/80 transition-colors"
+                    : "flex flex-col lg:grid lg:grid-cols-12 gap-3 lg:gap-4 p-4 sm:p-5 items-start lg:items-center hover:bg-gray-50/80 transition-colors"}
                 >
                   {/* Shop Name */}
                   <div className="col-span-3 flex items-center gap-3 w-full">
@@ -573,13 +614,13 @@ export default function VisicoolerShopsPage() {
                     </div>}
 
                   {/* Actions */}
-                  <div className={!isAdmin ? "col-span-7 flex flex-wrap lg:flex-nowrap items-center justify-start lg:justify-end gap-2 w-full lg:w-auto mt-2 lg:mt-0" : "col-span-2 flex items-center justify-start lg:justify-end gap-2 w-full lg:w-auto mt-2 lg:mt-0"}>
+                  <div className={!isAdmin ? "col-span-7 flex flex-wrap lg:flex-nowrap items-center justify-start lg:justify-end gap-2.5 w-full lg:w-auto mt-2 lg:mt-0 pt-2 lg:pt-0 border-t border-gray-100 lg:border-t-0" : "col-span-2 flex items-center justify-start lg:justify-end gap-2 w-full lg:w-auto mt-2 lg:mt-0"}>
                     <Link
                       href={`/visicooler/${shop._id}`}
-                      className="flex-1 lg:flex-initial flex items-center justify-center gap-1.5 bg-white hover:bg-gray-50 text-gray-700 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors text-sm font-semibold shadow-sm w-full lg:w-auto"
+                      className="flex-1 lg:flex-initial flex items-center justify-center gap-1.5 bg-white hover:bg-gray-50 text-gray-700 px-3.5 py-2.5 rounded-xl border border-gray-200 transition-colors text-sm font-bold shadow-sm w-full lg:w-auto text-center"
                     >
                       <Eye size={16} />
-                      View
+                      View Details
                     </Link>
                     {isAdmin &&
                       <button
@@ -595,7 +636,7 @@ export default function VisicoolerShopsPage() {
                           <button
                             onClick={open}
                             disabled={isLoading}
-                            className="flex-1 lg:flex-initial flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-extrabold transition-all text-sm shadow-lg shadow-red-600/35 w-full lg:w-auto active:scale-95 disabled:opacity-75"
+                            className="flex-1 lg:flex-initial flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white lg:px-10 px-6 py-2.5 rounded-xl font-extrabold transition-all text-sm shadow-lg shadow-red-600/35 w-full lg:w-auto active:scale-95 disabled:opacity-75"
                           >
                             {isLoading ? (
                               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -622,6 +663,72 @@ export default function VisicoolerShopsPage() {
           </div>
         )}
       </div>
+
+      {showStepsModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-gray-150 shadow-2xl relative animate-in zoom-in-95 duration-200 flex flex-col gap-5">
+            
+            {/* Modal Header */}
+            <div className="text-center">
+              <div className="w-14 h-14 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">
+                Quick Guide
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+                Upload your visicooler photo in 3 easy steps
+              </p>
+            </div>
+
+            {/* Modal Steps */}
+            <div className="space-y-4 my-2">
+              <div className="flex gap-3.5 items-start bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
+                <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-black shrink-0 shadow-sm mt-0.5">1</span>
+                <div>
+                  <h4 className="font-extrabold text-sm sm:text-base text-gray-950">Search Your Shop</h4>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Type your shop name or area in the search bar above.</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3.5 items-start bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
+                <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-black shrink-0 shadow-sm mt-0.5">2</span>
+                <div>
+                  <h4 className="font-extrabold text-sm sm:text-base text-gray-950">Click Upload Button</h4>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Tap the red <strong className="text-red-600 font-extrabold">Upload Photo</strong> button next to your shop name.</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3.5 items-start bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
+                <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-black shrink-0 shadow-sm mt-0.5">3</span>
+                <div>
+                  <h4 className="font-extrabold text-sm sm:text-base text-gray-950">Select & Upload Image</h4>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Take a live photo or pick an image of the visicooler to upload it.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Don't show again checkbox */}
+            <label className="flex items-center gap-2.5 cursor-pointer text-gray-600 text-xs sm:text-sm font-semibold select-none self-start">
+              <input
+                type="checkbox"
+                checked={dontShowAgain}
+                onChange={(e) => setDontShowAgain(e.target.checked)}
+                className="w-4 h-4 rounded text-red-600 border-gray-300 focus:ring-red-500 focus:ring-opacity-25"
+              />
+              <span>Don't show this guide again</span>
+            </label>
+
+            {/* Action button */}
+            <button
+              onClick={handleCloseModal}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 rounded-2xl transition-all shadow-lg shadow-red-600/25 text-sm sm:text-base tracking-wide active:scale-95"
+            >
+              Got It, Let's Start!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
