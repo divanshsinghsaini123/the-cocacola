@@ -78,6 +78,7 @@ export default function VisicoolerShopsPage() {
         toast.success(`Downloading report for ${shop.outletDetails?.shopName || 'Shop'}...`);
     };
 
+    /*
     const handleDownloadEmptyForm = () => {
         const printWindow = window.open("", "_blank");
         if (!printWindow) {
@@ -407,6 +408,7 @@ export default function VisicoolerShopsPage() {
         printWindow.document.write(htmlContent);
         printWindow.document.close();
     };
+    */
 
     return (
         <div className="min-h-screen bg-gray-50/50 p-4 sm:p-6 md:p-10">
@@ -434,14 +436,14 @@ export default function VisicoolerShopsPage() {
                                 Review Requests
                             </Link>
                         )}
-                        <button
-                            type="button"
-                            onClick={handleDownloadEmptyForm}
+                        <a
+                            href="/Visi Cooler Request Form.pdf"
+                            download="Visi Cooler Request Form.pdf"
                             className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2.5 rounded-lg font-semibold transition-all shadow-sm w-full sm:w-auto text-sm"
                         >
                             <Download size={18} className="text-gray-500" />
                             Download Form
-                        </button>
+                        </a>
                         <Link
                             href="/visicooler/replacement"
                             className="flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors shadow-sm w-full sm:w-auto text-sm"

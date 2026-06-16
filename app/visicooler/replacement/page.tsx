@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Send, CheckSquare, Square, Info } from "lucide-react";
+import { ArrowLeft, Send, CheckSquare, Square, Info, Download } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 
@@ -169,12 +169,22 @@ export default function ReplacementRequestPage() {
                 </div>
 
                 {/* Header */}
-                <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl relative overflow-hidden">
-                    <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-white/10 rounded-full blur-2xl" />
-                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Request Cooler Replacement</h1>
-                    <p className="text-red-100 mt-2 max-w-xl text-xs sm:text-sm md:text-base">
-                        Select a shop to fetch its details, provide replacement specifications, and submit the request for admin verification.
-                    </p>
+                <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl relative overflow-hidden flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-white/10 rounded-full blur-2xl pointer-events-none" />
+                    <div className="relative z-10 flex-1">
+                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Request Cooler Replacement</h1>
+                        <p className="text-red-100 mt-2 max-w-xl text-xs sm:text-sm md:text-base">
+                            Select a shop to fetch its details, provide replacement specifications, and submit the request for admin verification.
+                        </p>
+                    </div>
+                    <a
+                        href="/Visi Cooler Replacement Form.pdf"
+                        download="Visi Cooler Replacement Form.pdf"
+                        className="relative z-10 flex items-center justify-center gap-2 bg-white hover:bg-red-50 text-red-700 px-4 py-2.5 rounded-xl font-bold transition-all shadow-md text-sm shrink-0 w-full md:w-auto"
+                    >
+                        <Download size={18} className="text-red-600" />
+                        Download Form
+                    </a>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">

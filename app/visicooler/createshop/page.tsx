@@ -335,6 +335,7 @@ function CreateShopForm() {
     }
   };
 
+  /*
   const handleDownloadEmptyForm = () => {
     const printWindow = window.open("", "_blank");
     if (!printWindow) {
@@ -667,6 +668,7 @@ function CreateShopForm() {
     printWindow.document.write(htmlContent);
     printWindow.document.close();
   };
+  */
 
   if (initialFetchLoading) {
     return (
@@ -696,14 +698,14 @@ function CreateShopForm() {
               {editId ? "Update the details for this visicooler shop." : "Enter the details for the new visicooler shop below."}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleDownloadEmptyForm}
+          <a
+            href="/Visi Cooler Request Form.pdf"
+            download="Visi Cooler Request Form.pdf"
             className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm shrink-0 w-full sm:w-auto"
           >
             <Download size={18} className="text-gray-500" />
             Download Form
-          </button>
+          </a>
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-6">

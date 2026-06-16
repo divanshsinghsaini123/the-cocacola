@@ -51,33 +51,19 @@ export default function VisicoolerPortalDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50/50 py-4 sm:py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
       <div className="max-w-3xl w-full space-y-6 sm:space-y-8 animate-in fade-in duration-300">
 
         {/* Greeting Card */}
-        <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-          <div className="absolute top-[-20%] right-[-10%] w-[250px] h-[250px] bg-white/10 rounded-full blur-2xl pointer-events-none" />
-          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-red-100 text-xs font-bold uppercase tracking-wider bg-white/10 px-3 py-1 rounded-full">
-                Visicooler Portal
-              </span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2.5">
-                Welcome
-              </h1>
-              <p className="text-red-100 mt-1.5 text-xs sm:text-sm font-medium">
-                What task would you like to perform today? Choose one of the simple options below.
-              </p>
-            </div>
-            {/* {isAdmin && (
-              <Link
-                href="/visicooler/requests"
-                className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-red-700 px-5 py-3 rounded-2xl font-bold transition-all shadow-md text-sm shrink-0 border border-white/20 self-start sm:self-center active:scale-95"
-              >
-                <Shield size={18} />
-                Review Console
-              </Link>
-            )} */}
+        <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
+          <div className="absolute top-[-20%] right-[-10%] w-[180px] h-[180px] bg-white/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="relative z-10">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+              Welcome to Visicooler Portal
+            </h1>
+            <p className="text-red-100 mt-1 text-xs sm:text-sm font-medium">
+              Select a task below to get started.
+            </p>
           </div>
         </div>
 
