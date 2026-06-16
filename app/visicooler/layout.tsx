@@ -161,7 +161,7 @@ export default function VisicoolerLayout({
                 setIsAuthenticated(true);
                 setShowSuperAdminModal(false);
                 toast.success(`Welcome, Super Admin ${superAdminUsername}!`);
-                // router.push("/visicooler/shops");
+                router.push("/visicooler/shops");
             } else {
                 setSuperAdminError(data.error || "Invalid credentials.");
                 toast.error("Access Denied");
