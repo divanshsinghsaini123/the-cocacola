@@ -620,7 +620,7 @@ export default function VisicoolerShopsPage() {
                       className="flex-1 lg:flex-initial flex items-center justify-center gap-1.5 bg-white hover:bg-gray-50 text-gray-700 px-3.5 py-2.5 rounded-xl border border-gray-200 transition-colors text-sm font-bold shadow-sm w-full lg:w-auto text-center"
                     >
                       <Eye size={16} />
-                      View Details
+                      {!isAdmin ? "View Details" : "View"}
                     </Link>
                     {isAdmin &&
                       <button
@@ -667,7 +667,7 @@ export default function VisicoolerShopsPage() {
       {showStepsModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-gray-150 shadow-2xl relative animate-in zoom-in-95 duration-200 flex flex-col gap-5">
-            
+
             {/* Modal Header */}
             <div className="text-center">
               <div className="w-14 h-14 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
