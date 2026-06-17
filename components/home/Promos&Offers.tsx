@@ -34,7 +34,7 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
 
     const offers = (data?.items && data.items.length > 0) ? data.items.slice(0, 2).map((item: SectionItem) => {
         // @ts-ignore
-        const imageUrl = item.image.data?.attributes?.formats?.large?.url || item.image.formats?.large?.url || item.image?.url || "";
+        const imageUrl = item.image?.data?.attributes?.formats?.large?.url || item.image?.formats?.large?.url || item.image?.url || null;
         const button = item.button;
         const showButton = button ? !button.disablebutton : false;
 
@@ -93,7 +93,7 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
 
     interface Offer {
         id: number;
-        image: string;
+        image: string | null;
         title: string;
         description: string;
         link: string;
@@ -120,13 +120,19 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
                     {offers.map((offer: Offer) => (
                         <div key={offer.id} className="min-w-[85%] sm:min-w-0 bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col snap-center shadow-sm select-none">
                             <div className="relative h-[250px] md:h-[430px] sm:h-[350px] w-full">
-                                <Image
-                                    src={getStrapiMediaUrl(offer.image)}
-                                    alt={offer.title}
-                                    fill
-                                    className="object-cover pointer-events-none"
-                                    unoptimized={isLocal}
-                                />
+                                {offer.image ? (
+                                    <Image
+                                        src={getStrapiMediaUrl(offer.image)}
+                                        alt={offer.title || "Offer Banner"}
+                                        fill
+                                        className="object-cover pointer-events-none"
+                                        unoptimized={isLocal}
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 font-bold">
+                                        No Image Available
+                                    </div>
+                                )}
                             </div>
                             <div className="p-6 md:p-8 flex flex-col flex-grow text-left">
                                 <h3 className="text-[20px] md:text-[22px] font-bold mb-3 text-black leading-[1.2]">

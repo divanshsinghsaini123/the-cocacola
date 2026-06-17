@@ -8,7 +8,7 @@ import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 
 interface MoreFromCloud9Item {
     id: number;
-    image: string;
+    image: string | null;
     title: string;
     description: string;
     buttonText: string;
@@ -24,7 +24,7 @@ export default function MoreFromCloud9({ data }: MoreFromCloud9Props) {
     const StrapiItems = (data?.items && data.items.length > 0) ? data.items.map((item: SectionItem) => {
         //sbse phle nikalenge url
         // @ts-ignore
-        const imgurl = item.image.data?.attributes?.formats?.small?.url || item.image.formats?.small?.url || item.image?.url || "";
+        const imgurl = item.image?.data?.attributes?.formats?.small?.url || item.image?.formats?.small?.url || item.image?.url || null;
         const button = item.button;
         const showButton = button ? !button.disablebutton : false;
         return {
@@ -83,13 +83,19 @@ export default function MoreFromCloud9({ data }: MoreFromCloud9Props) {
                         {finalItems.map((item: MoreFromCloud9Item, index: number) => (
                             <div key={`${item.id}-${index}`} className="w-[85vw] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-start bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col shadow-sm group">
                                 <div className="relative h-[200px] md:h-[250px] w-full">
-                                    <Image
-                                        src={getStrapiMediaUrl(item.image)}
-                                        alt={item.title}
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                        unoptimized={isLocal}
-                                    />
+                                    {item.image ? (
+                                        <Image
+                                            src={getStrapiMediaUrl(item.image)}
+                                            alt={item.title || "More from Cloud9"}
+                                            fill
+                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                            unoptimized={isLocal}
+                                        />
+                                    ) : (
+                                        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 font-bold">
+                                            No Image Available
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="p-6 md:p-8 flex flex-col flex-grow text-left">
                                     <h3 className="text-[20px] md:text-[24px] font-bold mb-3 text-black leading-[1.2]">

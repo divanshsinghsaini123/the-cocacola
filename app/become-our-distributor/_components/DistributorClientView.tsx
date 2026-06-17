@@ -17,6 +17,8 @@ export default function DistributorClientView({
     const [activeTab, setActiveTab] = useState<"home" | "contact">("home");
 
     const { Hero, Hero2, Footer, PageButton: buttonStyle } = homeData || {};
+    const buttondata = Hero?.button;
+    const showButton = buttondata ? !buttondata.disablebutton : false;
 
     // Render Home/Main View
     const renderHome = () => (
@@ -54,16 +56,16 @@ export default function DistributorClientView({
                     <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
                         {Hero?.Description}
                     </p>
-
-                    <div className="flex items-center justify-center w-full">
-                        <button onClick={() => setActiveTab("contact")} style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-8 py-3.5 rounded-full font-medium text-base transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:-translate-y-1">
-                            <span>Apply Dealership</span>
-                            <div className="bg-white rounded-full p-1.5 text-[#3FA2F6]">
-                                <ArrowRight size={18} strokeWidth={3} />
-                            </div>
-                        </button>
-                    </div>
-
+                    {showButton &&
+                        <div className="flex items-center justify-center w-full">
+                            <button onClick={() => setActiveTab("contact")} style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-8 py-3.5 rounded-full font-medium text-base transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:-translate-y-1">
+                                <span>{buttondata.buttonText}</span>
+                                <div className="bg-white rounded-full p-1.5 text-[#3FA2F6]">
+                                    <ArrowRight size={18} strokeWidth={3} />
+                                </div>
+                            </button>
+                        </div>
+                    }
                     {/* {Hero?.Logo && (
                         <div className="mt-16 relative opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
                             <Image
@@ -152,7 +154,13 @@ export default function DistributorClientView({
                                             return (
                                                 <li key={bp.id} className="flex gap-4 items-start">
                                                     <div className="mt-1.5 w-1.5 h-1.5 bg-gray-500 rounded-full shrink-0 group-hover:bg-[#3FA2F6] transition-colors duration-300"></div>
-                                                    <span className="leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedPoint }} />
+                                                    {bp.redirectlink ? (
+                                                        <Link href={bp.redirectlink} className="leading-relaxed hover:underline hover:text-[#3FA2F6] transition-colors">
+                                                            <span dangerouslySetInnerHTML={{ __html: formattedPoint }} />
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedPoint }} />
+                                                    )}
                                                 </li>
                                             );
                                         })}

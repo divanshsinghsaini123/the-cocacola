@@ -12,7 +12,7 @@ export default function Features({ data }: FeaturesProps) {
 
     const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: SectionItem, index: number) => {
         // @ts-ignore
-        const imgurl = item.image.data?.attributes?.formats?.large?.url || item.image.formats?.large?.url || item.image?.url || "";
+        const imgurl = item.image?.data?.attributes?.formats?.large?.url || item.image?.formats?.large?.url || item.image?.url || null;
         const button = item.button;
         const showButton = button ? !button.disablebutton : false;
 
@@ -30,7 +30,7 @@ export default function Features({ data }: FeaturesProps) {
 
     interface featuree {
         id: number,
-        image: string,
+        image: string | null,
         title: string,
         description: string,
         buttonText: string,
@@ -48,13 +48,19 @@ export default function Features({ data }: FeaturesProps) {
                         <div key={feature.id} className={`flex flex-col ${feature.alignment === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center relative`}>
                             {/* Image Container */}
                             <div className="w-full lg:w-[660px] h-[400px] lg:h-[540px] relative rounded-none lg:rounded-[16px] overflow-hidden shadow-sm mb-2">
-                                <Image
-                                    src={getStrapiMediaUrl(feature.image)}
-                                    alt={feature.title}
-                                    fill
-                                    className="object-contain"
-                                    unoptimized={isLocal}
-                                />
+                                {feature.image ? (
+                                    <Image
+                                        src={getStrapiMediaUrl(feature.image)}
+                                        alt={feature.title || "Feature Image"}
+                                        fill
+                                        className="object-contain"
+                                        unoptimized={isLocal}
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 font-bold">
+                                        No Image Available
+                                    </div>
+                                )}
                             </div>
 
                             {/* Content Card */}
