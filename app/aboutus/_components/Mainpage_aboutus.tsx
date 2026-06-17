@@ -6,7 +6,7 @@ interface Props {
 }
 interface Feature {
     id: number,
-    image: string,
+    image: string | null,
     title: string,
     description: string,
     buttonText: string,
@@ -24,13 +24,19 @@ export default function Mainpage_aboutus({ feature }: Props) {
         <div key={feature.id} className={`flex flex-col ${feature.alignment === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center relative`}>
             {/* Image Container */}
             <div className="w-full lg:w-[660px] h-[400px] lg:h-[540px] relative rounded-none lg:rounded-[16px] overflow-hidden shadow-sm mb-2">
-                <Image
-                    src={getStrapiMediaUrl(feature.image)}
-                    alt={feature.title}
-                    fill
-                    className="object-fill"
-                    unoptimized={isLocal}
-                />
+                {feature.image ? (
+                    <Image
+                        src={getStrapiMediaUrl(feature.image)}
+                        alt={feature.title || "Feature Image"}
+                        fill
+                        className="object-fill"
+                        unoptimized={isLocal}
+                    />
+                ) : (
+                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 font-bold">
+                        No Image Available
+                    </div>
+                )}
             </div>
 
             {/* Content Card */}

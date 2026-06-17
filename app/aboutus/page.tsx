@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 interface Feature {
     id: number,
-    image: string,
+    image: string | null,
     title: string,
     description: string,
     buttonText: string,
@@ -42,7 +42,7 @@ export default async function AboutUs() {
     const isLocal = isStrapiLocal();
     const herodata_main = strapioutput.MainPageCards;
     const featuresdata = (herodata_main?.items && herodata_main.items.length > 0) ? herodata_main.items.map((item: SectionItem, index: number) => {
-        const imgurl = item.image?.formats?.large?.url || item.image?.url || "";
+        const imgurl = item.image?.formats?.large?.url || item.image?.url || null;
         const button = item.button;
         const showButton = button ? !button.disablebutton : false;
         return {
@@ -61,7 +61,7 @@ export default async function AboutUs() {
     const relatedItems = (relatedSection?.items && relatedSection.items.length > 0) ? relatedSection.items.slice(0, 3).map((item: SectionItem) => {
         const itemImg = item.image;
         const imgUrlRaw = itemImg?.formats?.medium?.url || itemImg?.formats?.small?.url || itemImg?.url;
-        const imgUrl = imgUrlRaw || "";
+        const imgUrl = imgUrlRaw || null;
         const button = item.button;
         const showButton = button ? !button.disablebutton : false;
 
@@ -125,13 +125,19 @@ export default async function AboutUs() {
                                 {relatedItems.map((item: any) => (
                                     <div key={item.id} className="bg-white rounded-[16px] overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
                                         <div className="relative h-[200px] w-full bg-gray-100">
-                                            <Image
-                                                src={getStrapiMediaUrl(item.image)}
-                                                alt={item.title}
-                                                fill
-                                                className="object-cover"
-                                                unoptimized={isLocal}
-                                            />
+                                            {item.image ? (
+                                                <Image
+                                                    src={getStrapiMediaUrl(item.image)}
+                                                    alt={item.title || "Related Card Image"}
+                                                    fill
+                                                    className="object-cover"
+                                                    unoptimized={isLocal}
+                                                />
+                                            ) : (
+                                                <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 font-bold">
+                                                    No Image
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="p-5 md:p-6 flex flex-col flex-grow justify-between min-h-[160px]">
                                             <h3 className="text-[16px] md:text-[20px] font-bold text-black mb-4 leading-tight">
