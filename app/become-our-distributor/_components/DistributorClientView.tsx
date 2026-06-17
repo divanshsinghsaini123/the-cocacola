@@ -95,12 +95,12 @@ export default function DistributorClientView({
                         </div>
 
                         <div className="mb-2 mt-auto">
-                            <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-7 py-3 rounded-full font-medium transition-colors shadow-lg shadow-blue-500/20">
+                            {/* <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-7 py-3 rounded-full font-medium transition-colors shadow-lg shadow-blue-500/20">
                                 <span>Learn More</span>
                                 <div className="bg-white text-[#3FA2F6] rounded-full p-1.5">
                                     <ArrowRight size={16} strokeWidth={3} />
                                 </div>
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 </div>
@@ -160,12 +160,12 @@ export default function DistributorClientView({
 
                                     {isLast && (
                                         <div className="mt-auto flex justify-end w-full">
-                                            <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-6 py-3 rounded-full font-medium transition-transform hover:scale-105 shadow-lg shadow-blue-500/20">
+                                            {/* <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-6 py-3 rounded-full font-medium transition-transform hover:scale-105 shadow-lg shadow-blue-500/20">
                                                 <span>All Services</span>
                                                 <div className="bg-white text-[#3FA2F6] rounded-full p-1.5">
                                                     <ArrowRight size={16} strokeWidth={3} />
                                                 </div>
-                                            </button>
+                                            </button> */}
                                         </div>
                                     )}
                                 </div>
@@ -373,10 +373,10 @@ export default function DistributorClientView({
                 <div className="flex items-center shrink-0 gap-3 md:gap-4">
                     <Link
                         href="/"
-                        className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/25 transition-all shadow-lg backdrop-blur-md"
+                        className="inline-flex items-`center justify-center w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/25 transition-all shadow-lg backdrop-blur-md"
                         title="Back to Home"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                     </Link>
                     {/* The screenshot shows 'Cloud9 ENERGY DRINK' logo. We use the one from Hero or standard img. */}
                     {Hero?.Logo ? (
