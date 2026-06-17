@@ -13,13 +13,17 @@ export default function Features({ data }: FeaturesProps) {
     const featuresdata = (data?.items && data.items.length > 0) ? data.items.slice(0, 3).map((item: SectionItem, index: number) => {
         // @ts-ignore
         const imgurl = item.image.data?.attributes?.formats?.large?.url || item.image.formats?.large?.url || item.image?.url || "";
+        const button = item.button;
+        const showButton = button ? !button.disablebutton : false;
+
         return {
             id: item.id,
             image: imgurl,
             title: item.title,
             description: item.description,
-            buttonText: item.buttonText,
-            link: item.buttonLink || "#",
+            buttonText: button?.buttonText || item.buttonText,
+            link: button?.buttonLink || item.buttonLink || "#",
+            showButton,
             alignment: index % 2 === 0 ? "left" : "right"
         }
     }) : []
@@ -31,6 +35,7 @@ export default function Features({ data }: FeaturesProps) {
         description: string,
         buttonText: string,
         link: string,
+        showButton: boolean,
         alignment: string
     }
     return (
@@ -69,12 +74,14 @@ export default function Features({ data }: FeaturesProps) {
                                         {feature.description}
                                     </p>
                                 </div>
-                                <Link
-                                    href={feature.link}
-                                    className="w-full md:w-[327px] block text-center py-2 rounded-full border-2 border-black text-black font-bold text-[16px] hover:bg-black hover:text-white transition-colors duration-300"
-                                >
-                                    {feature.buttonText}
-                                </Link>
+                                {feature.showButton && (
+                                    <Link
+                                        href={feature.link}
+                                        className="w-full md:w-[327px] block text-center py-2 rounded-full border-2 border-black text-black font-bold text-[16px] hover:bg-black hover:text-white transition-colors duration-300"
+                                    >
+                                        {feature.buttonText}
+                                    </Link>
+                                )}
 
                             </div>
                         </div>

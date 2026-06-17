@@ -11,6 +11,7 @@ interface Feature {
     description: string,
     buttonText: string,
     link: string,
+    showButton: boolean,
     alignment: string
 }
 
@@ -49,12 +50,14 @@ export default function Mainpage_aboutus({ feature }: Props) {
                         {feature.description}
                     </p>
                 </div>
-                <Link
-                    href={feature.link}
-                    className="w-full md:w-[327px] block text-center py-2 rounded-full border-2 border-black text-black font-bold text-[16px] hover:bg-black hover:text-white transition-colors duration-300"
-                >
-                    {feature.buttonText}
-                </Link>
+                {feature.showButton && (
+                    <Link
+                        href={feature.link}
+                        className="w-full md:w-[327px] block text-center py-2 rounded-full border-2 border-black text-black font-bold text-[16px] hover:bg-black hover:text-white transition-colors duration-300"
+                    >
+                        {feature.buttonText}
+                    </Link>
+                )}
 
             </div>
         </div>

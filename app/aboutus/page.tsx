@@ -27,6 +27,7 @@ interface Feature {
     description: string,
     buttonText: string,
     link: string,
+    showButton: boolean,
     alignment: string
 }
 
@@ -42,13 +43,16 @@ export default async function AboutUs() {
     const herodata_main = strapioutput.MainPageCards;
     const featuresdata = (herodata_main?.items && herodata_main.items.length > 0) ? herodata_main.items.map((item: SectionItem, index: number) => {
         const imgurl = item.image?.formats?.large?.url || item.image?.url || "";
+        const button = item.button;
+        const showButton = button ? !button.disablebutton : false;
         return {
             id: item.id,
             image: imgurl,
             title: item.title,
             description: item.description,
-            buttonText: item.buttonText,
-            link: item.buttonLink || "#",
+            buttonText: button?.buttonText || item.buttonText,
+            link: button?.buttonLink || item.buttonLink || "#",
+            showButton,
             alignment: index % 2 === 0 ? "right" : "left"
         }
     }) : ""
@@ -58,12 +62,16 @@ export default async function AboutUs() {
         const itemImg = item.image;
         const imgUrlRaw = itemImg?.formats?.medium?.url || itemImg?.formats?.small?.url || itemImg?.url;
         const imgUrl = imgUrlRaw || "";
+        const button = item.button;
+        const showButton = button ? !button.disablebutton : false;
 
         return {
             id: item.id,
             image: imgUrl,
             title: item.title,
-            link: item.buttonLink || "#"
+            link: button?.buttonLink || item.buttonLink || "#",
+            buttonText: button?.buttonText || item.buttonText,
+            showButton
         }
     }) : [];
     return (
@@ -129,13 +137,15 @@ export default async function AboutUs() {
                                             <h3 className="text-[16px] md:text-[20px] font-bold text-black mb-4 leading-tight">
                                                 {item.title}
                                             </h3>
-                                            <Link
-                                                href={item.link}
-                                                className="inline-flex items-center text-black font-bold text-[14px] hover:text-gray-600 transition-colors mt-auto"
-                                            >
-                                                Read More
-                                                <span className="ml-2">→</span>
-                                            </Link>
+                                            {item.showButton && (
+                                                <Link
+                                                    href={item.link}
+                                                    className="inline-flex items-center text-black font-bold text-[14px] hover:text-gray-600 transition-colors mt-auto"
+                                                >
+                                                    {item.buttonText}
+                                                    <span className="ml-2">→</span>
+                                                </Link>
+                                            )}
                                         </div>
                                     </div>
                                 ))}

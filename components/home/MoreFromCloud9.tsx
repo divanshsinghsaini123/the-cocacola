@@ -13,6 +13,7 @@ interface MoreFromCloud9Item {
     description: string;
     buttonText: string;
     buttonLink: string;
+    showButton: boolean;
 }
 interface MoreFromCloud9Props {
     data: MoreFromCloud9Data;
@@ -24,13 +25,16 @@ export default function MoreFromCloud9({ data }: MoreFromCloud9Props) {
         //sbse phle nikalenge url
         // @ts-ignore
         const imgurl = item.image.data?.attributes?.formats?.small?.url || item.image.formats?.small?.url || item.image?.url || "";
+        const button = item.button;
+        const showButton = button ? !button.disablebutton : false;
         return {
             id: item.id,
             image: imgurl,
             title: item.title,
             description: item.description,
-            buttonText: item.buttonText,
-            buttonLink: item.buttonLink || "#",
+            buttonText: button?.buttonText || item.buttonText,
+            buttonLink: button?.buttonLink || item.buttonLink || "#",
+            showButton
         }
     }) : [];
     const finalItems = StrapiItems;
@@ -94,14 +98,16 @@ export default function MoreFromCloud9({ data }: MoreFromCloud9Props) {
                                     <p className="text-[14px] md:text-[16px] text-black mb-6 leading-[1.5]">
                                         {item.description}
                                     </p>
-                                    <div className="mt-auto">
-                                        <Link href={item.buttonLink} className="inline-flex items-center text-black font-bold text-[14px] md:text-[16px] group border-b-2 border-black hover:border-transparent transition-all pb-0.5">
-                                            {item.buttonText}
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                                            </svg>
-                                        </Link>
-                                    </div>
+                                    {item.showButton && (
+                                        <div className="mt-auto">
+                                            <Link href={item.buttonLink} className="inline-flex items-center text-black font-bold text-[14px] md:text-[16px] group border-b-2 border-black hover:border-transparent transition-all pb-0.5">
+                                                {item.buttonText}
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                                </svg>
+                                            </Link>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}

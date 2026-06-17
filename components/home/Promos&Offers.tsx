@@ -13,38 +13,41 @@ interface PromosAndOffersProps {
 export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersProps) {
     const isLocal = isStrapiLocal();
     // Fallback static data if data.items is missing or empty
-    const defaultOffers = [
-        {
-            id: 1,
-            image: "/assets/Home/pro&offer1.webp",
-            title: "Enter for a chance to win groceries for a year",
-            description: "There's nothing more comforting than a stocked kitchen. We'll take care of that all year.",
-            link: "#",
-            buttonText: "Enter Now"
-        },
-        {
-            id: 2,
-            image: "/assets/Home/nascar-home-tile.png",
-            title: "Coca-Cola® DAYTONA 500® Flyaway Sweepstakes",
-            description: "Enter for your chance to win a NASCAR® VIP experience that will get your heart racing.",
-            link: "#",
-            buttonText: "Enter Now"
-        }
-    ];
+    // const defaultOffers = [
+    // {
+    //     id: 1,
+    //     image: "/assets/Home/pro&offer1.webp",
+    //     title: "Enter for a chance to win groceries for a year",
+    //     description: "There's nothing more comforting than a stocked kitchen. We'll take care of that all year.",
+    //     link: "#",
+    //     buttonText: "Enter Now"
+    // },
+    // {
+    //     id: 2,
+    //     image: "/assets/Home/nascar-home-tile.png",
+    //     title: "Coca-Cola® DAYTONA 500® Flyaway Sweepstakes",
+    //     description: "Enter for your chance to win a NASCAR® VIP experience that will get your heart racing.",
+    //     link: "#",
+    //     buttonText: "Enter Now"
+    // }
+    // ];
 
     const offers = (data?.items && data.items.length > 0) ? data.items.slice(0, 2).map((item: SectionItem) => {
         // @ts-ignore
         const imageUrl = item.image.data?.attributes?.formats?.large?.url || item.image.formats?.large?.url || item.image?.url || "";
+        const button = item.button;
+        const showButton = button ? !button.disablebutton : false;
 
         return {
             id: item.id,
             image: imageUrl,
             title: item.title || "No Title",
             description: item.description || "No Description",
-            link: item.buttonLink || "#",
-            buttonText: item.buttonText || "Enter Now"
+            link: button?.buttonLink || item.buttonLink || "#",
+            buttonText: button?.buttonText || item.buttonText,
+            showButton
         };
-    }) : defaultOffers;
+    }) : [];
 
 
 
@@ -95,6 +98,7 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
         description: string;
         link: string;
         buttonText: string;
+        showButton: boolean;
     }
 
     return (
@@ -131,14 +135,16 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
                                 <p className="text-[16px] text-black mb-6 leading-[1.5]">
                                     {offer.description}
                                 </p>
-                                <div className="mt-auto">
-                                    <Link href={offer.link} className="inline-flex items-center text-black font-bold text-[16px] group pointer-events-auto">
-                                        <span className="border-b-2 border-black group-hover:border-transparent transition-all">{offer.buttonText}</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                                        </svg>
-                                    </Link>
-                                </div>
+                                {offer.showButton && (
+                                    <div className="mt-auto">
+                                        <Link href={offer.link} className="inline-flex items-center text-black font-bold text-[16px] group pointer-events-auto">
+                                            <span className="border-b-2 border-black group-hover:border-transparent transition-all">{offer.buttonText}</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                            </svg>
+                                        </Link>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -157,9 +163,9 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
 
                 {/* View All Button */}
                 <div className="flex justify-center mt-8 sm:mt-12">
-                    <Link href="#" 
-                       style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
-                       className="bg-black text-white w-[90%] sm:w-auto px-14 md:px-20 py-2 rounded-full font-bold text-[16px] tracking-wide hover:opacity-80 transition-all text-center block sm:inline-block">
+                    <Link href="#"
+                        style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
+                        className="bg-black text-white w-[90%] sm:w-auto px-14 md:px-20 py-2 rounded-full font-bold text-[16px] tracking-wide hover:opacity-80 transition-all text-center block sm:inline-block">
                         View all Offerings
                     </Link>
                 </div>

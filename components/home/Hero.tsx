@@ -51,6 +51,11 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
         return () => clearInterval(interval);
     }, [mobileImages.length]);
 
+    const button = data?.button;
+    const showButton = button ? !button.disablebutton : data?.ShowButton;
+    const buttonText = button?.buttonText || data?.ButtonText;
+    const buttonLink = button?.buttonLink || data?.ButttonLink || "#";
+
     return (
         <section className="w-full bg-[var(--background)] pt-4 lg:pt-14 pb-4 lg:pb-14">
             <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-6">
@@ -110,18 +115,18 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                                         .join(" ")}
                                 </p>
                             </div>
+                            {showButton && buttonText &&
+                                (<div className="mt-auto md:mt-8 pt-4 w-full md:w-auto flex justify-center md:block">
 
-                            <div className="mt-auto md:mt-8 pt-4 w-full md:w-auto flex justify-center md:block">
-                                {data?.ShowButton && (
                                     <Link
-                                        href={data.ButttonLink || "#"}
+                                        href={buttonLink}
                                         style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
                                         className="flex items-center justify-center w-[290px] h-[40px] lg:w-[327px] lg:h-[40px] md:inline-flex bg-[var(--component)] text-black text-[18px] font-bold rounded-full hover:bg-opacity-80 transition-all duration-200"
                                     >
-                                        {data.ButtonText}
+                                        {buttonText}
                                     </Link>
-                                )}
-                            </div>
+
+                                </div>)}
                         </div>
                     </div>
                 </div>

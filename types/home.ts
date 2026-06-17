@@ -29,6 +29,13 @@ export interface RichTextParagraph {
     children: RichTextChild[];
 }
 
+export interface ButtonComponent {
+    id: number;
+    buttonText: string;
+    buttonLink: string;
+    disablebutton: boolean;
+}
+
 // Hero Section Types
 export interface HeroData {
     id: number;
@@ -39,6 +46,7 @@ export interface HeroData {
     ShowButton: boolean;
     imageMobile: StrapiImage;
     imageDesktop: StrapiImage;
+    button?: ButtonComponent | null;
 }
 
 // Common Item Type for lists
@@ -49,6 +57,7 @@ export interface SectionItem {
     buttonText: string;
     buttonLink: string | null;
     image: StrapiImage;
+    button?: ButtonComponent | null;
 }
 
 // Promos and Offers Section Types
