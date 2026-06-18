@@ -64,6 +64,10 @@ if (!STRAPI_URLBrand) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
+const STRAPI_Coffiling = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/cofilling?populate[0]=hero.logo&populate[1]=hero.backgroundvideo&populate[2]=hero.leftbutton&populate[3]=hero.rightbutton&populate[4]=hero.stats&populate[5]=hero2.backgroundimage&populate[6]=hero2.media.image&populate[7]=hero2.leftbutton&populate[8]=hero2.rightbutton&populate[9]=aboutus.backgroundimage&populate[10]=aboutus.logo&populate[11]=aboutus.button&populate[12]=aboutus.carouselItems&populate[13]=factoryhighlights.button&populate[14]=contactus.location.addressLines&populate[15]=contactus.location.gpsLines&populate[16]=contactus.privacyPolicy&populate[17]=whatwedoSection.product.productFooter&populate[18]=whatwedoSection.product.productFooter.backgroundimage&populate[19]=whatwedoSection.product.productFooter.item&populate[20]=whatwedoSection.product.productcard.productImage&populate[21]=whatwedoSection.product.productcard.features&populate[22]=whatwedoSection.product.productcard.subFeatures&populate[23]=whatwedoSection.product.productcard.flavours.column1.items&populate[24]=whatwedoSection.product.productcard.flavours.column2.items&populate[25]=whatwedoSection.packaging.card.image&populate[26]=whatwedoSection.logicstics.backgroundImage&populate[27]=whatwedoSection.logicstics.card.image";
+if (!STRAPI_Coffiling) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
+}
 
 let cachedHomePageData: any = null;
 export async function GetBrandPageData() {
@@ -389,6 +393,33 @@ export async function GetStoreLocatorData() {
     }
     catch (error) {
         console.error("Error fetching Store Locator page data:", error);
+        return null;
+    }
+}
+
+export async function GetCofillingData() {
+    try {
+        const response = await fetch(
+            STRAPI_Coffiling,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        )
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_Coffiling} Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch Cofilling page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    }
+    catch (error) {
+        console.error("Error fetching Cofilling page data:", error);
         return null;
     }
 }
