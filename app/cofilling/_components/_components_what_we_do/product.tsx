@@ -3,22 +3,78 @@
 import React from "react";
 import Image from "next/image";
 import ProductComponent, { ProductProps } from "./__components/product_componet";
-import { useGetExtraDataQuery } from "@/src/store/slices/api";
+import { productsData } from "../../_data/products_data";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 interface ProductSectionProps {
-    products: ProductProps[];
+    data?: {
+        productcard?: any[];
+        productFooter?: {
+            title?: string;
+            heading?: string;
+            item?: { line: string }[];
+            backgroundimage?: { url?: string };
+        };
+    };
 }
 
-const Product: React.FC<ProductSectionProps> = ({ products }) => {
-    const { data, error } = useGetExtraDataQuery();
-    const stickyNav = data?.data?.StickyNavbar;
+const Product: React.FC<ProductSectionProps> = ({ data }) => {
+    const bgImages = [
+        "/assets/Coffiling_page/BG1-e1706537162881.png",
+        "/assets/Coffiling_page/BG3-e1706537032453.png",
+        "/assets/Coffiling_page/BG1-2-e1706537211470.png"
+    ];
+
+    const products: ProductProps[] = data?.productcard && data.productcard.length > 0
+        ? data.productcard.map((card: any, idx: number) => {
+            const flavorGroups = [];
+            if (card.flavours?.column1?.items?.length > 0) {
+                flavorGroups.push({
+                    title: card.flavours.column1.tittle || "",
+                    columnsNumber: 1 as const,
+                    items: card.flavours.column1.items.map((it: any) => it.item)
+                });
+            }
+            if (card.flavours?.column2?.items?.length > 0) {
+                flavorGroups.push({
+                    title: card.flavours.column2.tittle || "",
+                    columnsNumber: 2 as const,
+                    items: card.flavours.column2.items.map((it: any) => it.item)
+                });
+            }
+
+            return {
+                title: card.title,
+                subtitle: card.subtitle || "choose your flavour",
+                layout: (card.layout || "left") as "left" | "right",
+                backgroundImage: bgImages[idx % bgImages.length],
+                productImage: getStrapiMediaUrl(card.productImage?.url),
+                totalColumns: flavorGroups.length === 2 ? 2 : 1,
+                flavours: flavorGroups,
+                features: card.features ? card.features.map((f: any) => ({ text: f.item })) : [],
+                subFeatures: card.subFeatures ? card.subFeatures.map((sf: any) => ({ text: sf.item })) : []
+            };
+        })
+        : productsData.map((prod, idx) => ({
+            ...prod,
+            backgroundImage: bgImages[idx % bgImages.length],
+            features: prod.features.map(f => ({ text: f.text })),
+            subFeatures: prod.subFeatures.map(sf => ({ text: sf.text }))
+        }));
+
+    const footerData = {
+        title: data?.productFooter?.title || "YOU DON'T HAVE A BRAND?",
+        heading: data?.productFooter?.heading || "TAKE ONE OF THESE!",
+        items: data?.productFooter?.item && data.productFooter.item.length > 0
+            ? data.productFooter.item.map((it: any) => it.line)
+            : ["ZYGRA", "SLANG", "ROUZED", "PLAGE"],
+        backgroundImage: getStrapiMediaUrl(data?.productFooter?.backgroundimage?.url) || "/assets/Coffiling_page/zygra_ENERGY_DRINK_portfolio-1.png"
+    };
+
     return (
         <div className="w-full flex flex-col items-center">
             {/* PRODUCT Header */}
-            <div
-                className="w-full bg-[#8B0000] py-3 text-center sticky md:relative z-30 shadow-md md:shadow-none transition-all duration-300"
-            // style={{ top: stickyNav ? '80px' : '0px' }}
-            >
+            <div className="w-full bg-[#8B0000] py-3 text-center sticky md:relative z-30 shadow-md md:shadow-none transition-all duration-300">
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
                     PRODUCTS
                 </h3>
@@ -34,29 +90,28 @@ const Product: React.FC<ProductSectionProps> = ({ products }) => {
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
                     <Image
-                        src="/assets/Coffiling_page/zygra_ENERGY_DRINK_portfolio-1.png"
+                        src={footerData.backgroundImage}
                         alt="Footer Background"
                         fill
                         className="object-cover"
                     />
-                    <div className="absolute inset-0" /> {/* Overlay for text readability */}
+                    <div className="absolute inset-0" />
                 </div>
 
                 <div className="relative z-10 flex flex-col items-center gap-10 px-4">
                     <div className="flex flex-col gap-3">
                         <h3 className="text-white text-2xl md:text-3xl font-bold italic uppercase tracking-wider">
-                            YOU DON'T HAVE A BRAND?
+                            {footerData.title}
                         </h3>
                         <h2 className="text-white text-3xl md:text-5xl font-black italic uppercase tracking-wider">
-                            TAKE ONE OF THESE!
+                            {footerData.heading}
                         </h2>
                     </div>
 
                     <div className="flex flex-wrap justify-center gap-4 md:gap-12 text-white/80 font-bold text-lg md:text-xl uppercase tracking-widest my-4">
-                        <span>ZYGRA</span>
-                        <span>SLANG</span>
-                        <span>ROUZED</span>
-                        <span>PLAGE</span>
+                        {footerData.items.map((item, idx) => (
+                            <span key={idx}>{item}</span>
+                        ))}
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-4">
@@ -78,3 +133,4 @@ const Product: React.FC<ProductSectionProps> = ({ products }) => {
 };
 
 export default Product;
+

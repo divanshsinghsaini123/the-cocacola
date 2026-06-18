@@ -5,7 +5,26 @@ import Link from "next/link";
 import { contactData } from '../_data/contact_data';
 import { useRouter } from "next/navigation";
 
-export default function ContactUs() {
+interface ContactUsProps {
+    data?: {
+        enquirySubtitle?: string;
+        privacyPolicy?: {
+            text?: string;
+            linkText?: string;
+            linkUrl?: string;
+        };
+        location?: {
+            mainTitle?: string;
+            detailsTitle?: string;
+            addressLabel?: string;
+            gpsLabel?: string;
+            addressLines?: { line: string }[];
+            gpsLines?: { N?: string; E?: string };
+        };
+    };
+}
+
+export default function ContactUs({ data }: ContactUsProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const formRef = React.useRef<HTMLFormElement>(null);
@@ -14,7 +33,7 @@ export default function ContactUs() {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const data = {
+        const submitData = {
             fullName: formData.get('fullName'),
             email: formData.get('email'),
             companyName: formData.get('companyName'),
@@ -34,7 +53,7 @@ export default function ContactUs() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(submitData),
         });
         const response = await result.json();
         if (response.status == 400) {
@@ -42,17 +61,33 @@ export default function ContactUs() {
         }
         else {
             setIsSubmitted(true);
-            // setTimeout(() => {
-            //     router.push("/cofilling");
-            // }, 3000);
             formRef.current?.reset();
             document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
             setTimeout(() => {
                 setIsSubmitted(false);
             }, 5000);
         }
-
     }
+
+    const resolvedEnquirySubtitle = data?.enquirySubtitle || contactData.enquirySubtitle;
+    const resolvedPrivacyPolicy = {
+        text: data?.privacyPolicy?.text || contactData.privacyPolicy.text,
+        linkText: data?.privacyPolicy?.linkText || contactData.privacyPolicy.linkText,
+        linkUrl: data?.privacyPolicy?.linkUrl || contactData.privacyPolicy.linkUrl
+    };
+    const resolvedLocation = {
+        mainTitle: data?.location?.mainTitle || contactData.location.mainTitle,
+        detailsTitle: data?.location?.detailsTitle || contactData.location.detailsTitle,
+        addressLabel: data?.location?.addressLabel || contactData.location.addressLabel,
+        gpsLabel: data?.location?.gpsLabel || contactData.location.gpsLabel,
+        addressLines: data?.location?.addressLines && data.location.addressLines.length > 0 
+            ? data.location.addressLines.map(al => al.line) 
+            : contactData.location.addressLines,
+        gpsLines: data?.location?.gpsLines 
+            ? [data.location.gpsLines.N || "", data.location.gpsLines.E || ""] 
+            : contactData.location.gpsLines
+    };
+
     return (
         <section className="w-full bg-black text-white " id="contact">
             <h2 className="w-full bg-[#E51D29] py-6 px-4 md:px-16 text-white text-3xl md:text-4xl font-black italic uppercase tracking-wider mb-4 md:mb-15">
@@ -62,20 +97,20 @@ export default function ContactUs() {
 
                 {/* LEFT COLUMN: LOCATION */}
                 <div className="flex-1 flex flex-col gap-8">
-                    <h2 className="text-2xl font-bold uppercase text-center mb-4">{contactData.location.mainTitle}</h2>
+                    <h2 className="text-2xl font-bold uppercase text-center mb-4">{resolvedLocation.mainTitle}</h2>
 
                     <div className="space-y-6 text-gray-300">
                         <div>
-                            <h3 className="text-white font-bold uppercase mb-2">{contactData.location.detailsTitle}</h3>
-                            <p className="font-bold">{contactData.location.addressLabel}</p>
-                            {contactData.location.addressLines.map((line, i) => (
+                            <h3 className="text-white font-bold uppercase mb-2">{resolvedLocation.detailsTitle}</h3>
+                            <p className="font-bold">{resolvedLocation.addressLabel}</p>
+                            {resolvedLocation.addressLines.map((line, i) => (
                                 <p key={i}>{line}</p>
                             ))}
                         </div>
 
                         <div>
-                            <p className="font-bold">{contactData.location.gpsLabel}</p>
-                            {contactData.location.gpsLines.map((line, i) => (
+                            <p className="font-bold">{resolvedLocation.gpsLabel}</p>
+                            {resolvedLocation.gpsLines.map((line, i) => (
                                 <p key={i}>{line}</p>
                             ))}
                         </div>
@@ -99,7 +134,7 @@ export default function ContactUs() {
                 <div className="flex-1 flex flex-col gap-8">
                     <div className="text-center">
                         <h2 className="text-2xl font-bold uppercase mb-4">GET IN TOUCH</h2>
-                        <h3 className="text-xl whitespace-pre-line">{contactData.enquirySubtitle}</h3>
+                        <h3 className="text-xl whitespace-pre-line">{resolvedEnquirySubtitle}</h3>
                     </div>
                     {isSubmitted ? (
                         <div className="flex flex-col items-center justify-center min-h-[50vh] animate-in fade-in duration-500">
@@ -113,9 +148,6 @@ export default function ContactUs() {
                                 <p className="text-gray-600 text-lg mb-6">
                                     Your message has been sent successfully. We will get back to you shortly.
                                 </p>
-                                {/* <p className="text-sm text-gray-500">
-                                    Redirecting to home page...
-                                </p> */}
                             </div>
                         </div>
                     ) :
@@ -180,13 +212,13 @@ export default function ContactUs() {
                                 <div className="flex items-center gap-2">
                                     <input type="checkbox" name="agreedToPrivacy" id="privacy" className="w-5 h-5 accent-red-600" required />
                                     <label htmlFor="privacy" className="text-sm cursor-pointer select-none">
-                                        {contactData.privacyPolicy.text}
+                                        {resolvedPrivacyPolicy.text}
                                         <button
                                             type="button"
                                             onClick={() => setIsModalOpen(true)}
                                             className="text-red-500 hover:underline font-bold ml-1"
                                         >
-                                            {contactData.privacyPolicy.linkText}
+                                            {resolvedPrivacyPolicy.linkText}
                                         </button>.
                                     </label>
                                 </div>
@@ -214,9 +246,8 @@ export default function ContactUs() {
                         </button>
                         <h3 className="text-2xl font-bold mb-4 uppercase text-[#E51D29]">Privacy Policy</h3>
                         <div className="text-gray-300">
-                            <p>{contactData.privacyPolicy.text}</p>
-                            <Link href={contactData.privacyPolicy.linkUrl}>{contactData.privacyPolicy.linkText}</Link>
-
+                            <p>{resolvedPrivacyPolicy.text}</p>
+                            <Link href={resolvedPrivacyPolicy.linkUrl}>{resolvedPrivacyPolicy.linkText}</Link>
                         </div>
                     </div>
                 </div>

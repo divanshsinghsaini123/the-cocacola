@@ -1,6 +1,4 @@
 "use client";
-import { logisticsData } from "../_data/logistics_data";
-import { productsData } from "../_data/products_data";
 import Packaging from "./_components_what_we_do/packaging";
 import Product from "./_components_what_we_do/product";
 import LogisticsSection from "./_components_what_we_do/logistics";
@@ -8,7 +6,16 @@ import { useGetExtraDataQuery } from "@/src/store/slices/api";
 
 import { useState, useEffect } from "react";
 
-const WhatWeDo = () => {
+interface WhatWeDoProps {
+    data?: {
+        heading?: string;
+        product?: any;
+        packaging?: any;
+        logicstics?: any;
+    };
+}
+
+const WhatWeDo: React.FC<WhatWeDoProps> = ({ data: strapiData }) => {
     const { data, error } = useGetExtraDataQuery();
     const [isMounted, setIsMounted] = useState(false);
 
@@ -17,7 +24,6 @@ const WhatWeDo = () => {
     }, []);
 
     const stickyNav = isMounted ? data?.data?.StickyNavbar : false;
-
 
     return (
         <section className="w-full bg-black flex flex-col">
@@ -28,7 +34,7 @@ const WhatWeDo = () => {
                 style={{ top: '0px' }}
             >
                 <h2 className="text-white text-2xl md:text-4xl font-black italic uppercase tracking-wider mb-2 md:mb-0">
-                    WHAT WE DO
+                    {strapiData?.heading || "WHAT WE DO"}
                 </h2>
                 <div className="flex flex-row justify-between md:justify-center w-full md:w-auto md:gap-6 gap-2 mt-2 md:mt-0">
                     <button
@@ -53,13 +59,13 @@ const WhatWeDo = () => {
             </div>
 
             <div id="product-section">
-                <Product products={productsData} />
+                <Product data={strapiData?.product} />
             </div>
             <div id="packaging-section">
-                <Packaging />
+                <Packaging data={strapiData?.packaging} />
             </div>
             <div id="logistics-section">
-                <LogisticsSection logistics={logisticsData} />
+                <LogisticsSection data={strapiData?.logicstics} />
             </div>
             {/* Placeholder for other products if needed later */}
         </section>
@@ -67,3 +73,4 @@ const WhatWeDo = () => {
 };
 
 export default WhatWeDo;
+

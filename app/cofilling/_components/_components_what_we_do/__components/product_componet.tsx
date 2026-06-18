@@ -2,8 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { Pill, BookOpen, Ban, CandyOff } from "lucide-react"; // Fallback icons
-import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 export interface ProductProps {
     title: string;
@@ -18,11 +16,9 @@ export interface ProductProps {
         items: string[];
     }[];
     features: {
-        icon: string | React.ReactNode;
         text: string;
     }[];
     subFeatures: {
-        icon: string | React.ReactNode;
         text: string;
     }[];
 }
@@ -55,12 +51,14 @@ const ProductComponent: React.FC<ProductProps> = ({
                 {/* Product Image Side */}
                 <div className="w-full md:w-1/2 flex justify-center">
                     <div className="relative w-[300px] md:w-[450px] aspect-[3/4]">
-                        <Image
-                            src={productImage}
-                            alt={title}
-                            fill
-                            className="object-contain"
-                        />
+                        {productImage && (
+                            <Image
+                                src={productImage}
+                                alt={title}
+                                fill
+                                className="object-contain"
+                            />
+                        )}
                     </div>
                 </div>
 
@@ -77,13 +75,11 @@ const ProductComponent: React.FC<ProductProps> = ({
 
                     {/* Flavours */}
                     <div className="w-full mb-12">
-                        {/* {flavours.map((group, groupIndex) => ( */}
                         <div className={`grid gap-x-2 gap-y-1 ${totalColumns === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                             {flavours.map((group, groupIndex) => (
                                 <div key={groupIndex} className="flex flex-col gap-2">
-                                    {group.title && <h4>{group.title}</h4>}
+                                    {group.title && <h4 className="font-bold text-xs uppercase tracking-widest text-red-500 mb-1">{group.title}</h4>}
                                     {group.items.map((flavor, flavorIndex) => (
-
                                         <div
                                             key={flavorIndex}
                                             className="relative bg-[#a6192e] text-white py-1 px-8 font-bold text-sm hover:bg-[#c41e3a] transition-colors cursor-default flex items-center shadow-sm min-h-[36px]"
@@ -98,52 +94,36 @@ const ProductComponent: React.FC<ProductProps> = ({
                                 </div>
                             ))}
                         </div>
-                        {/* ))} */}
                     </div>
 
                     {/* Features & Subfeatures */}
-                    <div className="flex flex-col gap-10">
+                    <div className="flex flex-col gap-8">
                         {/* Main Features */}
-                        <div className="flex gap-6 md:gap-12 justify-start flex-wrap">
-                            {features.map((feature, i) => (
-                                <div key={i} className="flex flex-col items-center text-center md:gap-3 gap-0 group">
-                                    <div className="w-16 h-16 relative flex items-center justify-center border-2 border-white/20 rounded-xl p-3 bg-black/20 backdrop-blur-sm group-hover:border-[#E51D29] transition-colors">
-                                        {typeof feature.icon === 'string' ? (
-                                            <div className="relative md:w-full md:h-full w-[50%] h-[50%]">
-                                                <Image src={getStrapiMediaUrl(feature.icon)} alt={feature.text} fill className="object-contain invert" />
-                                            </div>
-                                        ) : (
-                                            <div className="text-white md:w-full md:h-full w-[70%] h-[70%] [&>svg]:w-full [&>svg]:h-full">
-                                                {feature.icon}
-                                            </div>
-                                        )}
+                        {features && features.length > 0 && (
+                            <div className="flex flex-wrap gap-3 justify-start">
+                                {features.map((feature, i) => (
+                                    <div key={i} className="bg-black/40 border border-white/20 hover:border-[#E51D29] px-4 py-2 rounded-2xl flex items-center text-center transition-colors shadow-md backdrop-blur-sm">
+                                        <span className="font-bold text-xs md:text-sm uppercase tracking-wide leading-tight">
+                                            {feature.text}
+                                        </span>
                                     </div>
-                                    <span className="font-bold text-[10px] md:text-base max-w-[100px] leading-tight text-shadow-sm">
-                                        {feature.text}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Sub Features */}
-                        <div className="flex gap-6 md:gap-12 border-t border-white/20 pt-8 w-full flex-wrap">
-                            {subFeatures.map((sub, i) => (
-                                <div key={i} className="flex items-center gap-4 group">
-                                    <div className="w-8 h-8 relative text-[#E51D29]">
-                                        {typeof sub.icon === 'string' ? (
-                                            <Image src={getStrapiMediaUrl(sub.icon)} alt={sub.text} fill className="object-contain" />
-                                        ) : (
-                                            <div className="w-full h-full [&>svg]:w-full [&>svg]:h-full">
-                                                {sub.icon}
-                                            </div>
-                                        )}
+                        {subFeatures && subFeatures.length > 0 && (
+                            <div className="flex gap-x-6 gap-y-4 border-t border-white/20 pt-6 w-full flex-wrap">
+                                {subFeatures.map((sub, i) => (
+                                    <div key={i} className="flex items-center gap-2 group">
+                                        <span className="text-[#E51D29] text-xl font-bold leading-none select-none">•</span>
+                                        <span className="font-bold uppercase text-xs md:text-sm opacity-90 group-hover:opacity-100 transition-opacity">
+                                            {sub.text}
+                                        </span>
                                     </div>
-                                    <span className="font-bold uppercase text-xs md:text-base opacity-90 group-hover:opacity-100 transition-opacity">
-                                        {sub.text}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -152,3 +132,4 @@ const ProductComponent: React.FC<ProductProps> = ({
 };
 
 export default ProductComponent;
+

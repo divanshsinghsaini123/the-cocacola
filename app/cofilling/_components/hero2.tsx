@@ -2,11 +2,24 @@
 
 import React from "react";
 import Image from "next/image";
-
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 import { SITE_CONFIG } from "@/src/config/site";
 
-const Hero2 = () => {
-    const cards = [
+interface Hero2Props {
+    data?: {
+        description?: string;
+        backgroundimage?: { url?: string };
+        media?: {
+            tittle: string;
+            image?: { url?: string };
+        }[];
+        leftbutton?: { buttonText?: string; disablebutton?: boolean };
+        rightbutton?: { buttonText?: string; disablebutton?: boolean };
+    };
+}
+
+const Hero2: React.FC<Hero2Props> = ({ data }) => {
+    const fallbackCards = [
         {
             image: "/assets/Coffiling_page/HELL_CLASSIC_2024_KV_A0_fekvo_prw-2.png",
             title: "PROVEN BRAND PORTFOLIO",
@@ -25,25 +38,34 @@ const Hero2 = () => {
         },
     ];
 
+    const cards = data?.media && data.media.length > 0
+        ? data.media.map(m => ({
+            image: getStrapiMediaUrl(m.image?.url),
+            title: m.tittle
+        }))
+        : fallbackCards;
+
+    const showLeftButton = data?.leftbutton ? !data.leftbutton.disablebutton : true;
+    const showRightButton = data?.rightbutton ? !data.rightbutton.disablebutton : true;
+
     return (
         <section className="relative w-full min-h-[950px] flex flex-col items-center justify-center py-20 px-4 md:px-8 overflow-hidden">
             {/* Background Texture Overlay */}
             <div className="absolute inset-0 w-full h-full z-0">
                 <Image
-                    src="/assets/Coffiling_page/annie-spratt-6a3nqQ1YwBw-unsplash-.png"
+                    src={getStrapiMediaUrl(data?.backgroundimage?.url) || "/assets/Coffiling_page/annie-spratt-6a3nqQ1YwBw-unsplash-.png"}
                     alt="Background Texture"
                     fill
                     className="object-cover"
                     priority
                     quality={90}
                 />
-
             </div>
 
             {/* Top Text Content */}
             <div className="relative z-10 max-w-3xl mx-auto text-center text-white mb-20 space-y-4">
                 <p className="text-base md:text-20px opacity-90">
-                    The {SITE_CONFIG.companyName} manufacturing complex is one of the region’s most advanced integrated beverage production facilities. The plant operates on 8 high-speed filling lines with a total annual capacity exceeding 6 billion units. Every product passes through more than 100 automated inspection and quality control checkpoints during production. As active beverage brand owners with established products in the market, {SITE_CONFIG.companyName} operates on infrastructure proven by real commercial demand.
+                    {data?.description || `The ${SITE_CONFIG.companyName} manufacturing complex is one of the region’s most advanced integrated beverage production facilities. The plant operates on 8 high-speed filling lines with a total annual capacity exceeding 6 billion units. Every product passes through more than 100 automated inspection and quality control checkpoints during production. As active beverage brand owners with established products in the market, ${SITE_CONFIG.companyName} operates on infrastructure proven by real commercial demand.`}
                 </p>
             </div>
 
@@ -53,12 +75,14 @@ const Hero2 = () => {
                     <div key={index} className="flex flex-col group">
                         {/* Image Container */}
                         <div className="relative w-full aspect-square bg-gray-800 overflow-hidden">
-                            <Image
-                                src={card.image}
-                                alt={card.title}
-                                fill
-                                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
+                            {card.image && (
+                                <Image
+                                    src={card.image}
+                                    alt={card.title}
+                                    fill
+                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                            )}
                         </div>
 
                         {/* Red Bar with Triangle */}
@@ -75,20 +99,27 @@ const Hero2 = () => {
             </div>
 
             {/* Bottom Buttons */}
-            <div className="relative z-10 flex flex-col sm:flex-row gap-6 justify-center items-center mt-auto">
-                <button
-                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="px-10 py-3 bg-[#E51D29] text-white text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-red-700 min-w-[200px]">
-                    Get In Touch
-                </button>
-                <button
-                    onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
-                    className="px-10 py-3 bg-white text-black text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-gray-200 min-w-[200px]">
-                    Find Out More
-                </button>
-            </div>
+            {(showLeftButton || showRightButton) && (
+                <div className="relative z-10 flex flex-col sm:flex-row gap-6 justify-center items-center mt-auto">
+                    {showLeftButton && (
+                        <button
+                            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="px-10 py-3 bg-[#E51D29] text-white text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-red-700 min-w-[200px]">
+                            {data?.leftbutton?.buttonText || "Get In Touch"}
+                        </button>
+                    )}
+                    {showRightButton && (
+                        <button
+                            onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+                            className="px-10 py-3 bg-white text-black text-base font-bold uppercase tracking-wider rounded-2xl transition-colors hover:bg-gray-200 min-w-[200px]">
+                            {data?.rightbutton?.buttonText || "Find Out More"}
+                        </button>
+                    )}
+                </div>
+            )}
         </section>
     );
 };
 
 export default Hero2;
+

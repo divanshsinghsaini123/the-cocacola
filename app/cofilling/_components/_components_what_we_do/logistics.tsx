@@ -4,29 +4,52 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import LogisticsCard, { ProductLogisticsCardProps } from "./__components/logistics_compnent";
+import LogisticsCard from "./__components/logistics_compnent";
 import { useGetExtraDataQuery } from "@/src/store/slices/api";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
-interface logisticprops {
-    logistics: ProductLogisticsCardProps[];
-};
+interface LogisticsProps {
+    data?: {
+        heading?: string;
+        backgroundImage?: { url?: string };
+        card?: {
+            id: number;
+            tittle: string;
+            image?: { url?: string };
+        }[];
+    };
+}
 
-export default function LogisticsSection({ logistics }: logisticprops) {
+export default function LogisticsSection({ data: strapiData }: LogisticsProps) {
     const { data, error } = useGetExtraDataQuery();
     const stickyNav = data?.data?.StickyNavbar;
     const [currentIndex, setCurrentIndex] = useState(0);
     const [touchStart, setTouchStart] = useState<number | null>(null);
     const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
+    const fallbackLogistics = [
+        {
+            title: "PRODUCT SIZE: 250 ML",
+            imageUrl: "/assets/Coffiling_page/logistics/250ml.png" // placeholder/fallback if any
+        }
+    ];
+
+    const items = strapiData?.card && strapiData.card.length > 0
+        ? strapiData.card.map((card) => ({
+            title: card.tittle,
+            imageUrl: getStrapiMediaUrl(card.image?.url)
+        }))
+        : fallbackLogistics;
+
     // Auto-scroll logic: Move to next item every 5 seconds
     useEffect(() => {
-        if (logistics.length <= 1) return;
+        if (items.length <= 1) return;
         const interval = setInterval(() => {
             setCurrentIndex((current) => current + 1);
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [logistics.length]);
+    }, [items.length]);
 
     const handlePrev = () => setCurrentIndex(c => c - 1);
     const handleNext = () => setCurrentIndex(c => c + 1);
@@ -56,14 +79,14 @@ export default function LogisticsSection({ logistics }: logisticprops) {
         }
     };
 
-    const actualActiveIndex = ((currentIndex % logistics.length) + logistics.length) % logistics.length;
+    const actualActiveIndex = items.length > 0 ? (((currentIndex % items.length) + items.length) % items.length) : 0;
 
     return (
         <div className="w-full flex flex-col items-center justify-center bg-zinc-900 pb-16 overflow-hidden relative min-h-[800px]">
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="/assets/Coffiling_page/DJI_0145_black-white-1.png"
+                    src={getStrapiMediaUrl(strapiData?.backgroundImage?.url) || "/assets/Coffiling_page/DJI_0145_black-white-1.png"}
                     alt="Background"
                     fill
                     className="w-full h-full object-cover"
@@ -71,9 +94,9 @@ export default function LogisticsSection({ logistics }: logisticprops) {
             </div>
 
             {/* LOGISTICS Header */}
-            <div className={`w-full bg-[#8B0000] py-3 text-center mb-8 sticky md:relative top-0 md:top-0 z-30 shadow-md md:shadow-none`}>
+            <div className="w-full bg-[#8B0000] py-3 text-center mb-8 sticky md:relative top-0 md:top-0 z-30 shadow-md md:shadow-none">
                 <h3 className="text-white text-xl md:text-2xl font-bold uppercase tracking-widest">
-                    LOGISTICS
+                    {strapiData?.heading || "LOGISTICS"}
                 </h3>
             </div>
 
@@ -86,7 +109,7 @@ export default function LogisticsSection({ logistics }: logisticprops) {
             >
 
                 {/* Navigation Buttons (Static) */}
-                {logistics.length > 1 && (
+                {items.length > 1 && (
                     <>
                         <button
                             onClick={handlePrev}
@@ -104,17 +127,17 @@ export default function LogisticsSection({ logistics }: logisticprops) {
                 )}
 
                 <div className="relative w-full h-full flex justify-center items-center overflow-hidden">
-                    {logistics.length === 1 ? (
+                    {items.length === 1 ? (
                         <div className="absolute top-1/2 left-1/2 w-full max-w-[600px] transition-all duration-700 ease-in-out transform opacity-100 scale-100 z-30 -translate-x-1/2 translate-y-[-50%]">
                             <div className="relative w-full">
-                                <LogisticsCard title={logistics[0].title} sections={logistics[0].sections} />
+                                <LogisticsCard title={items[0].title} imageUrl={items[0].imageUrl} />
                             </div>
                         </div>
                     ) : (
                         [-2, -1, 0, 1, 2].map((offset) => {
                             const vIndex = currentIndex + offset;
-                            const dataIndex = ((vIndex % logistics.length) + logistics.length) % logistics.length;
-                            const item = logistics[dataIndex];
+                            const dataIndex = ((vIndex % items.length) + items.length) % items.length;
+                            const item = items[dataIndex];
 
                             let positionClass = "";
                             if (offset === 0) {
@@ -140,7 +163,7 @@ export default function LogisticsSection({ logistics }: logisticprops) {
                                 >
                                     <div className="relative w-full">
                                         <div className={`pointer-events-none md:pointer-events-auto ${offset === 0 ? '' : 'pointer-events-none'}`}>
-                                            <LogisticsCard title={item.title} sections={item.sections} />
+                                            <LogisticsCard title={item.title} imageUrl={item.imageUrl} />
                                         </div>
                                     </div>
                                 </div>
@@ -151,12 +174,14 @@ export default function LogisticsSection({ logistics }: logisticprops) {
             </div>
 
             {/* Progress Bar */}
-            <div className="w-[200px] md:w-[400px] h-2 bg-gray-700/50 relative rounded-full mt-12 overflow-hidden z-10">
-                <div
-                    className="absolute left-0 top-0 h-full bg-[#E51D29] transition-all duration-500 ease-out"
-                    style={{ width: `${((actualActiveIndex + 1) / logistics.length) * 100}%` }}
-                ></div>
-            </div>
+            {items.length > 0 && (
+                <div className="w-[200px] md:w-[400px] h-2 bg-gray-700/50 relative rounded-full mt-12 overflow-hidden z-10">
+                    <div
+                        className="absolute left-0 top-0 h-full bg-[#E51D29] transition-all duration-500 ease-out"
+                        style={{ width: `${((actualActiveIndex + 1) / items.length) * 100}%` }}
+                    ></div>
+                </div>
+            )}
         </div>
     );
-}
+}
