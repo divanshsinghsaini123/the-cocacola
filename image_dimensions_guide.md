@@ -225,6 +225,7 @@ Used across all standard customer-facing pages.
 
 ### What We Do - Individual Product Layouts (ProductComponent)
 * **Associated Code:** [WhatWeDoProductComponent](file:///d:/the-cocacola/app/cofilling/_components/_components_what_we_do/__components/product_componet.tsx)
+![alt text](image.png)
 * **Section BG Image:** 100vw x 750px
   * **Fit Mode:** `object-cover`
   * **Recommended Upload:** **1920px x 750px**
@@ -238,6 +239,8 @@ Used across all standard customer-facing pages.
 
 ### What We Do - Packaging Subsection
 * **Associated Code:** [WhatWeDoPackaging](file:///d:/the-cocacola/app/cofilling/_components/_components_what_we_do/packaging.tsx)
+
+![alt text](image-2.png)
 * **BG Packaging Image:** `/assets/Coffiling_page/BG1-4.png`
   * **Fit Mode:** `object-cover`
   * **Recommended Upload:** **1920px x 1080px**
@@ -256,6 +259,7 @@ Used across all standard customer-facing pages.
 
 ### What We Do - Logistics Subsection
 * **Associated Code:** [WhatWeDoLogistics](file:///d:/the-cocacola/app/cofilling/_components/_components_what_we_do/logistics.tsx)
+![alt text](image-1.png)
 * **BG Logistics Image:** `/assets/Coffiling_page/DJI_0145_black-white-1.png`
   * **Fit Mode:** `object-cover`
   * **Recommended Upload:** **1920px x 800px**
