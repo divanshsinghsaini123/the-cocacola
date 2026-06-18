@@ -19,14 +19,22 @@ interface ProductSectionProps {
 }
 
 const Product: React.FC<ProductSectionProps> = ({ data }) => {
-    const bgImages = [
-        "/assets/Coffiling_page/BG1-e1706537162881.png",
-        "/assets/Coffiling_page/BG3-e1706537032453.png",
-        "/assets/Coffiling_page/BG1-2-e1706537211470.png"
+    const bgRight = [
+        "/assets/Coffiling_page/BG1-2-e1706537211470.png",
+        "/assets/Coffiling_page/BG3-e1706537032453.png"
+
     ];
 
+    const bgLeft = [
+        "/assets/Coffiling_page/BG1-e1706537162881.png",
+        "/assets/Coffiling_page/BG2-e1706537132149.png"
+    ];
+
+    let rightIndex = 0;
+    let leftIndex = 0;
+
     const products: ProductProps[] = data?.productcard && data.productcard.length > 0
-        ? data.productcard.map((card: any, idx: number) => {
+        ? data.productcard.map((card: any) => {
             const flavorGroups = [];
             if (card.flavours?.column1?.items?.length > 0) {
                 flavorGroups.push({
@@ -43,11 +51,21 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
                 });
             }
 
+            const layout = (card.layout || "left") as "left" | "right";
+            let backgroundImage = "";
+            if (layout === "right") {
+                backgroundImage = bgRight[rightIndex % bgRight.length];
+                rightIndex++;
+            } else {
+                backgroundImage = bgLeft[leftIndex % bgLeft.length];
+                leftIndex++;
+            }
+
             return {
                 title: card.title,
                 subtitle: card.subtitle || "choose your flavour",
-                layout: (card.layout || "left") as "left" | "right",
-                backgroundImage: bgImages[idx % bgImages.length],
+                layout,
+                backgroundImage,
                 productImage: getStrapiMediaUrl(card.productImage?.url),
                 totalColumns: flavorGroups.length === 2 ? 2 : 1,
                 flavours: flavorGroups,
@@ -55,12 +73,27 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
                 subFeatures: card.subFeatures ? card.subFeatures.map((sf: any) => ({ text: sf.item })) : []
             };
         })
-        : productsData.map((prod, idx) => ({
-            ...prod,
-            backgroundImage: bgImages[idx % bgImages.length],
-            features: prod.features.map(f => ({ text: f.text })),
-            subFeatures: prod.subFeatures.map(sf => ({ text: sf.text }))
-        }));
+        : (() => {
+            let fallbackRightIndex = 0;
+            let fallbackLeftIndex = 0;
+            return productsData.map((prod) => {
+                const layout = (prod.layout || "left") as "left" | "right";
+                let backgroundImage = "";
+                if (layout === "right") {
+                    backgroundImage = bgRight[fallbackRightIndex % bgRight.length];
+                    fallbackRightIndex++;
+                } else {
+                    backgroundImage = bgLeft[fallbackLeftIndex % bgLeft.length];
+                    fallbackLeftIndex++;
+                }
+                return {
+                    ...prod,
+                    backgroundImage,
+                    features: prod.features.map(f => ({ text: f.text })),
+                    subFeatures: prod.subFeatures.map(sf => ({ text: sf.text }))
+                };
+            });
+        })();
 
     const footerData = {
         title: data?.productFooter?.title || "YOU DON'T HAVE A BRAND?",
