@@ -24,6 +24,7 @@ const WhatWeDo: React.FC<WhatWeDoProps> = ({ data: strapiData }) => {
     }, []);
 
     const stickyNav = isMounted ? data?.data?.StickyNavbar : false;
+    const hasLogisticsData = !!(strapiData?.logicstics?.card && strapiData.logicstics.card.length > 0);
 
     return (
         <section className="w-full bg-black flex flex-col">
@@ -49,12 +50,14 @@ const WhatWeDo: React.FC<WhatWeDoProps> = ({ data: strapiData }) => {
                     >
                         PACKAGING
                     </button>
-                    <button
-                        onClick={() => document.getElementById('logistics-section')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="bg-transparent border-2 border-white text-white px-3 md:px-6 py-1.5 md:py-2 rounded-full hover:bg-white hover:text-[#E51D29] transition-all duration-300 font-bold text-[11px] sm:text-xs md:text-base uppercase tracking-wider whitespace-nowrap flex-1 md:flex-none"
-                    >
-                        LOGISTICS
-                    </button>
+                    {hasLogisticsData && (
+                        <button
+                            onClick={() => document.getElementById('logistics-section')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="bg-transparent border-2 border-white text-white px-3 md:px-6 py-1.5 md:py-2 rounded-full hover:bg-white hover:text-[#E51D29] transition-all duration-300 font-bold text-[11px] sm:text-xs md:text-base uppercase tracking-wider whitespace-nowrap flex-1 md:flex-none"
+                        >
+                            LOGISTICS
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -64,9 +67,11 @@ const WhatWeDo: React.FC<WhatWeDoProps> = ({ data: strapiData }) => {
             <div id="packaging-section">
                 <Packaging data={strapiData?.packaging} />
             </div>
-            <div id="logistics-section">
-                <LogisticsSection data={strapiData?.logicstics} />
-            </div>
+            {hasLogisticsData && (
+                <div id="logistics-section">
+                    <LogisticsSection data={strapiData?.logicstics} />
+                </div>
+            )}
             {/* Placeholder for other products if needed later */}
         </section>
     );

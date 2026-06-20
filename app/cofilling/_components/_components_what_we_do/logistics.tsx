@@ -27,19 +27,12 @@ export default function LogisticsSection({ data: strapiData }: LogisticsProps) {
     const [touchStart, setTouchStart] = useState<number | null>(null);
     const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-    const fallbackLogistics = [
-        {
-            title: "PRODUCT SIZE: 250 ML",
-            imageUrl: "/assets/Coffiling_page/logistics/250ml.png" // placeholder/fallback if any
-        }
-    ];
-
     const items = strapiData?.card && strapiData.card.length > 0
         ? strapiData.card.map((card) => ({
             title: card.tittle,
             imageUrl: getStrapiMediaUrl(card.image?.url)
         }))
-        : fallbackLogistics;
+        : [];
 
     // Auto-scroll logic: Move to next item every 5 seconds
     useEffect(() => {
@@ -80,6 +73,10 @@ export default function LogisticsSection({ data: strapiData }: LogisticsProps) {
     };
 
     const actualActiveIndex = items.length > 0 ? (((currentIndex % items.length) + items.length) % items.length) : 0;
+
+    if (items.length === 0) {
+        return null;
+    }
 
     return (
         <div className="w-full flex flex-col items-center justify-center bg-zinc-900 pb-16 overflow-hidden relative min-h-[800px]">

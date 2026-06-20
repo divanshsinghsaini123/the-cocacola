@@ -151,7 +151,7 @@ Used across all standard customer-facing pages.
 ### Hero Banner Background
 * **Container Size:**
   * **Desktop:** 100vw x 500px (wide banner layout)
-  * **Mobile:** 100vw x 400px (1:1 layout)
+
 * **Fit Mode:** `object-cover md:object-fit`
 * **Recommended Upload:** **1920px x 700px** (Landscape background banner)
 
