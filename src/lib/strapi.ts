@@ -34,7 +34,7 @@ const STRAPI_URLExtension = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/extension
 if (!STRAPI_URLExtension) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
-const STRAPI_URLCobranding = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/cobranding?populate[Card1][populate]=*&populate[card2][populate]=*&populate[SEO][populate]=*&populate[PageButton]=*";
+const STRAPI_URLCobranding = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/cobranding?populate[hero][populate]=*&populate[stages][populate]=*&populate[callToActionCard][populate]=*&populate[Cards][populate]=*&populate[SEO][populate]=*&populate[PageButton]=*";
 if (!STRAPI_URLCobranding) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
