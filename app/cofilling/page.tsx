@@ -9,10 +9,16 @@ import { notFound } from 'next/navigation';
 
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-    title: "Co-Filling Services",
-    description: "Learn about our state-of-the-art beverage co-filling and manufacturing capabilities.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const strapioutput = await GetCofillingData();
+    const seo = strapioutput?.SEO || strapioutput?.seo;
+
+    return {
+        title: seo?.metaTitle || "Co-Filling Services | K&M Beverages",
+        description: seo?.metaDescription || "Learn about our state-of-the-art beverage co-filling and manufacturing capabilities.",
+        keywords: seo?.keywords || "co-filling, beverage manufacturing, contract bottling, aluminum cans, PET bottles",
+    };
+}
 
 export default async function Page() {
     const data = await GetCofillingData();
