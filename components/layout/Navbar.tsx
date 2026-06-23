@@ -19,6 +19,59 @@ interface NavbarProps {
     navbarColor: string | undefined;
     navbarFontColor?: string;
 }
+
+interface CustomLinkProps {
+    href: string;
+    className?: string;
+    style?: React.CSSProperties;
+    onClick?: () => void;
+    children: React.ReactNode;
+}
+
+const CustomLink = ({ href, className, style, onClick, children }: CustomLinkProps) => {
+    if (!href) {
+        return (
+            <Link href="#" className={className} style={style} onClick={onClick}>
+                {children}
+            </Link>
+        );
+    }
+
+    const hasProtocol =
+        href.startsWith('http://') ||
+        href.startsWith('https://') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('tel:') ||
+        href.startsWith('//');
+
+    const isExternal = hasProtocol || href.startsWith('www') || (!href.startsWith('/') && !href.startsWith('#') && !href.startsWith('?') && href.includes('.'));
+
+    if (isExternal) {
+        let targetHref = href;
+        if (!hasProtocol) {
+            targetHref = `https://${href}`;
+        }
+        return (
+            <a
+                href={targetHref}
+                className={className}
+                style={style}
+                onClick={onClick}
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                {children}
+            </a>
+        );
+    }
+
+    return (
+        <Link href={href} className={className} style={style} onClick={onClick}>
+            {children}
+        </Link>
+    );
+};
+
 export default function Navbar({ stores, navbarImage, navbarColor, navbarFontColor }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
@@ -123,7 +176,7 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
                                         onMouseEnter={() => setActiveDropdown(link.name)}
                                         onMouseLeave={() => setActiveDropdown("")}
                                     >
-                                        <Link
+                                        <CustomLink
                                             href={link.href}
                                             className={`pt-2 h-full flex items-center font-bold text-[15px] tracking-wide transition-all duration-200 border-b-4`}
                                             style={{
@@ -148,19 +201,19 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
                                                     />
                                                 </svg>
                                             )}
-                                        </Link>
+                                        </CustomLink>
                                         {activeDropdown === link.name && link.dropdownContent && (
                                             <div
                                                 className="absolute top-full left-0 bg-[var(--component)] shadow-xl border border-gray-100 p-2 flex flex-col gap-1 min-w-[220px] rounded-lg animate-in fade-in slide-in-from-top-2 duration-200 z-50"
                                             >
                                                 {link.dropdownContent.map((item) => (
-                                                    <Link
+                                                    <CustomLink
                                                         key={item.name}
                                                         href={item.link}
                                                         className="block py-2.5 px-4 text-[14px] font-medium text-gray-700 hover:bg-gray-50 hover:text-black rounded-md transition-colors"
                                                     >
                                                         {item.name}
-                                                    </Link>
+                                                    </CustomLink>
                                                 ))}
                                             </div>
                                         )}
@@ -291,7 +344,7 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
                                                         style={{ borderColor: navbarFontColor || "black" }}
                                                     >
                                                         {link.dropdownContent.map((item) => (
-                                                            <Link
+                                                            <CustomLink
                                                                 key={item.name}
                                                                 href={item.link}
                                                                 className="text-lg font-medium block py-1 hover:opacity-100 transition-opacity"
@@ -299,13 +352,13 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
                                                                 onClick={() => setIsOpen(false)}
                                                             >
                                                                 {item.name}
-                                                            </Link>
+                                                            </CustomLink>
                                                         ))}
                                                     </div>
                                                 </div>
                                             </div>
                                         ) : (
-                                            <Link
+                                            <CustomLink
                                                 href={link.href}
                                                 className="block text-[22px] font-bold"
                                                 style={{ color: navbarFontColor || "black" }}
@@ -314,7 +367,7 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
                                                 <div className="flex justify-between items-center w-full">
                                                     {link.name}
                                                 </div>
-                                            </Link>
+                                            </CustomLink>
                                         )}
                                     </div>
                                 );

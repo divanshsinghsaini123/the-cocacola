@@ -66,6 +66,58 @@ interface FooterProps {
     footerBgColor?: string;
 }
 
+interface CustomLinkProps {
+    href: string;
+    className?: string;
+    style?: React.CSSProperties;
+    onClick?: () => void;
+    children: React.ReactNode;
+}
+
+const CustomLink = ({ href, className, style, onClick, children }: CustomLinkProps) => {
+    if (!href) {
+        return (
+            <Link href="#" className={className} style={style} onClick={onClick}>
+                {children}
+            </Link>
+        );
+    }
+
+    const hasProtocol = 
+        href.startsWith('http://') ||
+        href.startsWith('https://') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('tel:') ||
+        href.startsWith('//');
+
+    const isExternal = hasProtocol || href.startsWith('www') || (!href.startsWith('/') && !href.startsWith('#') && !href.startsWith('?') && href.includes('.'));
+
+    if (isExternal) {
+        let targetHref = href;
+        if (!hasProtocol) {
+            targetHref = `https://${href}`;
+        }
+        return (
+            <a
+                href={targetHref}
+                className={className}
+                style={style}
+                onClick={onClick}
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                {children}
+            </a>
+        );
+    }
+
+    return (
+        <Link href={href} className={className} style={style} onClick={onClick}>
+            {children}
+        </Link>
+    );
+};
+
 export default function Footer(props: FooterProps) {
     const isLocal = isStrapiLocal();
 
@@ -189,9 +241,9 @@ export default function Footer(props: FooterProps) {
                         <ul className={`space-y-3 text-md font-bold ${openSections['section1'] ? 'block py-4 ml-5' : 'hidden'} md:block md:py-0`}>
                             {section1Links.map((link) => (
                                 <li key={link.id || link.name}>
-                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
+                                    <CustomLink href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
                                         {link.name}
-                                    </Link>
+                                    </CustomLink>
                                 </li>
                             ))}
                         </ul>
@@ -213,9 +265,9 @@ export default function Footer(props: FooterProps) {
                         <ul className={`space-y-3 text-md font-bold ${openSections['section2'] ? 'block py-4 ml-5' : 'hidden'} md:block md:py-0`}>
                             {section2Links.map((link) => (
                                 <li key={link.id || link.name}>
-                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
+                                    <CustomLink href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
                                         {link.name}
-                                    </Link>
+                                    </CustomLink>
                                 </li>
                             ))}
                         </ul>
@@ -237,9 +289,9 @@ export default function Footer(props: FooterProps) {
                         <ul className={`space-y-3 text-md font-bold ${openSections['section3'] ? 'block py-4 ml-7' : 'hidden'} md:block md:py-0`}>
                             {section3Links.map((link) => (
                                 <li key={link.id || link.name}>
-                                    <Link href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
+                                    <CustomLink href={link.url || '#'} className="hover:underline" style={{ color: footerData?.LinkHexColor || "white" }}>
                                         {link.name}
-                                    </Link>
+                                    </CustomLink>
                                 </li>
                             ))}
                         </ul>
