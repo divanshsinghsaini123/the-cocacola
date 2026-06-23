@@ -22,6 +22,10 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ data }) => {
+    if (!data || (!data.heading && !data.logo)) {
+        return null;
+    }
+
     const showLeftButton = data?.leftbutton ? !data.leftbutton.disablebutton : true;
     const showRightButton = data?.rightbutton ? !data.rightbutton.disablebutton : true;
 

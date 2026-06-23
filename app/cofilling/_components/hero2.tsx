@@ -19,31 +19,16 @@ interface Hero2Props {
 }
 
 const Hero2: React.FC<Hero2Props> = ({ data }) => {
-    const fallbackCards = [
-        {
-            image: "/assets/Coffiling_page/HELL_CLASSIC_2024_KV_A0_fekvo_prw-2.png",
-            title: "PROVEN BRAND PORTFOLIO",
-        },
-        {
-            image: "/assets/Coffiling_page/DJI_0117.png",
-            title: "STATE-OF-THE-ART High-Speed Filling Lines",
-        },
-        {
-            image: "/assets/Coffiling_page/DJI_0141.png",
-            title: "Automated Warehousing & Own Logistics Network",
-        },
-        {
-            image: "/assets/Coffiling_page/DJI_0168.png",
-            title: "Custom Formulation Support",
-        },
-    ];
+    if (!data || (!data.description && (!data.media || data.media.length === 0))) {
+        return null;
+    }
 
     const cards = data?.media && data.media.length > 0
         ? data.media.map(m => ({
             image: getStrapiMediaUrl(m.image?.url),
             title: m.tittle
         }))
-        : fallbackCards;
+        : [];
 
     const showLeftButton = data?.leftbutton ? !data.leftbutton.disablebutton : true;
     const showRightButton = data?.rightbutton ? !data.rightbutton.disablebutton : true;

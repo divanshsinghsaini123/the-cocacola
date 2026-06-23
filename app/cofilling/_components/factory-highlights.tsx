@@ -16,6 +16,10 @@ interface FactoryHighlightsProps {
 }
 
 const FactoryHighlights: React.FC<FactoryHighlightsProps> = ({ data }) => {
+    if (!data || (!data.title && !data.mainheading && !data.youtubeURL1 && !data.youtubeURL2)) {
+        return null;
+    }
+
     const showButton = data?.button ? !data.button.disablebutton : true;
 
     return (

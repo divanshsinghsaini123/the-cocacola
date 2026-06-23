@@ -31,6 +31,10 @@ export default function ContactUs({ data }: ContactUsProps) {
     const formRef = React.useRef<HTMLFormElement>(null);
     const router = useRouter();
 
+    if (!data || (!data.location && !data.enquirySubtitle)) {
+        return null;
+    }
+
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);

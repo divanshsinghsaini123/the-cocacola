@@ -21,6 +21,10 @@ interface AboutUsProps {
 }
 
 const AboutUs: React.FC<AboutUsProps> = ({ data }) => {
+    if (!data || (!data.logo && !data.backgroundimage && (!data.carouselItems || data.carouselItems.length === 0))) {
+        return null;
+    }
+
     // Carousel Items Data based on the screenshot
     const fallbackCarouselItems = [
         {
@@ -59,7 +63,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ data }) => {
 
     const carouselItems = data?.carouselItems && data.carouselItems.length > 0
         ? data.carouselItems
-        : fallbackCarouselItems;
+        : [];
 
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -134,33 +138,35 @@ const AboutUs: React.FC<AboutUsProps> = ({ data }) => {
             <div className="relative z-10 w-full flex flex-col items-center justify-end pb-18 space-y-16">
 
                 {/* Carousel Window */}
-                <div className="w-full max-w-[90%] md:max-w-6xl px-4">
-                    <div className="flex w-full justify-center md:justify-between items-center text-center">
-                        {getVisibleItems().map((item, index) => {
-                            const isMiddle = carouselItems.length > 2 ? index === 1 : index === 0;
-                            return (
-                                <div key={`${item.key}-${index}`} className={`flex flex-col items-center justify-start transition-all duration-500 ${isMiddle ? 'w-full md:w-2/5 opacity-100 scale-100' : 'w-0 md:w-1/4 opacity-0 md:opacity-60 scale-0 md:scale-90 hidden md:flex'}`}>
+                {carouselItems.length > 0 && (
+                    <div className="w-full max-w-[90%] md:max-w-6xl px-4">
+                        <div className="flex w-full justify-center md:justify-between items-center text-center">
+                            {getVisibleItems().map((item, index) => {
+                                const isMiddle = carouselItems.length > 2 ? index === 1 : index === 0;
+                                return (
+                                    <div key={`${item.key}-${index}`} className={`flex flex-col items-center justify-start transition-all duration-500 ${isMiddle ? 'w-full md:w-2/5 opacity-100 scale-100' : 'w-0 md:w-1/4 opacity-0 md:opacity-60 scale-0 md:scale-90 hidden md:flex'}`}>
 
-                                    <div className="flex items-center justify-center gap-4 w-full">
-                                        {/* Left Chevron for active item */}
-                                        {isMiddle && carouselItems.length > 1 && <ChevronLeft onClick={() => setActiveIndex((current) => (current - 1 + carouselItems.length) % carouselItems.length)} className="w-12 h-12 md:w-16 md:h-16 text-white/40 cursor-pointer" />}
+                                        <div className="flex items-center justify-center gap-4 w-full">
+                                            {/* Left Chevron for active item */}
+                                            {isMiddle && carouselItems.length > 1 && <ChevronLeft onClick={() => setActiveIndex((current) => (current - 1 + carouselItems.length) % carouselItems.length)} className="w-12 h-12 md:w-16 md:h-16 text-white/40 cursor-pointer" />}
 
-                                        <h3 className="text-white text-2xl md:text-3xl font-black italic tracking-tighter uppercase leading-none md:truncate w-full whitespace-normal md:whitespace-nowrap">
-                                            {item.title}
-                                        </h3>
+                                            <h3 className="text-white text-2xl md:text-3xl font-black italic tracking-tighter uppercase leading-none md:truncate w-full whitespace-normal md:whitespace-nowrap">
+                                                {item.title}
+                                            </h3>
 
-                                        {/* Right Chevron for active item */}
-                                        {isMiddle && carouselItems.length > 1 && <ChevronRight onClick={() => setActiveIndex((current) => (current + 1) % carouselItems.length)} className="w-12 h-12 md:w-16 md:h-16 text-white/40 cursor-pointer" />}
+                                            {/* Right Chevron for active item */}
+                                            {isMiddle && carouselItems.length > 1 && <ChevronRight onClick={() => setActiveIndex((current) => (current + 1) % carouselItems.length)} className="w-12 h-12 md:w-16 md:h-16 text-white/40 cursor-pointer" />}
+                                        </div>
+
+                                        <p className="text-white text-sm md:text-sm font-bold uppercase opacity-90 mt-4 md:mt-2 max-w-[90%] md:max-w-[80%] leading-tight">
+                                            {item.subtitle}
+                                        </p>
                                     </div>
-
-                                    <p className="text-white text-sm md:text-sm font-bold uppercase opacity-90 mt-4 md:mt-2 max-w-[90%] md:max-w-[80%] leading-tight">
-                                        {item.subtitle}
-                                    </p>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Progress Bar */}
                 {carouselItems.length > 0 && (

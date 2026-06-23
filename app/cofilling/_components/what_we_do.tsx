@@ -23,6 +23,10 @@ const WhatWeDo: React.FC<WhatWeDoProps> = ({ data: strapiData }) => {
         setIsMounted(true);
     }, []);
 
+    if (!strapiData || (!strapiData.heading && !strapiData.product && !strapiData.packaging)) {
+        return null;
+    }
+
     const stickyNav = isMounted ? data?.data?.StickyNavbar : false;
     const hasLogisticsData = !!(strapiData?.logicstics?.card && strapiData.logicstics.card.length > 0);
 
