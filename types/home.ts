@@ -65,6 +65,7 @@ export interface PromosAndOffersData {
     id: number;
     sectionTitle: string;
     items: SectionItem[];
+    endbutton?: ButtonComponent | null;
 }
 
 // Features Section Types

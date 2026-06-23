@@ -12,6 +12,11 @@ interface PromosAndOffersProps {
 }
 export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersProps) {
     const isLocal = isStrapiLocal();
+    const endButton = data?.endbutton;
+    const showEndButton = endButton ? !endButton.disablebutton : true;
+    const endButtonLink = endButton?.buttonLink || "#";
+    const endButtonText = endButton?.buttonText || "View all Offerings";
+
     // Fallback static data if data.items is missing or empty
     // const defaultOffers = [
     // {
@@ -168,13 +173,15 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
                 </div>
 
                 {/* View All Button */}
-                <div className="flex justify-center mt-8 sm:mt-12">
-                    <Link href="#"
-                        style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
-                        className="bg-black text-white w-[90%] sm:w-auto px-14 md:px-20 py-2 rounded-full font-bold text-[16px] tracking-wide hover:opacity-80 transition-all text-center block sm:inline-block">
-                        View all Offerings
-                    </Link>
-                </div>
+                {showEndButton && (
+                    <div className="flex justify-center mt-8 sm:mt-12">
+                        <Link href={endButtonLink}
+                            style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
+                            className="bg-black text-white w-[90%] sm:w-auto px-14 md:px-20 py-2 rounded-full font-bold text-[16px] tracking-wide hover:opacity-80 transition-all text-center block sm:inline-block">
+                            {endButtonText}
+                        </Link>
+                    </div>
+                )}
             </div>
         </section>
     );

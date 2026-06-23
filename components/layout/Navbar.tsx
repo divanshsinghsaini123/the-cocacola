@@ -46,21 +46,41 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
         dropdownContent?: { name: string; link: string }[];
     };
 
-    let navLinks: Record<string, NavLinkData> = {
-        "Brands": { href: "/brands" },
-        "Cofilling": { href: "/cofilling" },
-        "Become Our Distributor": { href: "/become-our-distributor" },
-        "VisiCooler": { href: "/visicooler" },
-        // "Promos & Offers": { href: "/promos&offers" },
-        "Contact Us": { href: "/contactus" }
-    };
+    let navLinks: Record<string, NavLinkData> = {};
+
+    const strapiNavLinks = data?.data?.navLinks;
+    if (strapiNavLinks && strapiNavLinks.length > 0) {
+        strapiNavLinks.forEach((link: any) => {
+            if (link.label) {
+                navLinks[link.label] = {
+                    href: link.href || "#",
+                    hasChevron: link.hasChevron,
+                    dropdownContent: link.dropdownContent && link.dropdownContent.length > 0
+                        ? link.dropdownContent.map((item: any) => ({
+                            name: item.name,
+                            link: item.url || "#"
+                        }))
+                        : undefined
+                };
+            }
+        });
+    } else {
+        navLinks = {
+            "Brands": { href: "/brands" },
+            "Cofilling": { href: "/cofilling" },
+            "Become Our Distributor": { href: "/become-our-distributor" },
+            "VisiCooler": { href: "/visicooler" },
+            // "Promos & Offers": { href: "/promos&offers" },
+            "Contact Us": { href: "/contactus" }
+        };
+    }
 
     if (navLinks["Shop"]) {
         navLinks["Shop"].dropdownContent = stores?.map((store) => {
             return {
                 name: store.name,
                 link: store.link,
-            }
+            };
         });
     }
     // console.log('DEBUG: stickyNav', stickyNav);

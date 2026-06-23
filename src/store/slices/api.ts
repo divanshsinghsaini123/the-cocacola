@@ -9,7 +9,7 @@ export const api = createApi({
     }),
     endpoints: (builder) => ({
         getExtraData: builder.query<any, void>({
-            query: () => '',
+            query: () => '?populate[navLinks][populate]=*',
         }),
     }),
 })

@@ -15,7 +15,7 @@ if (!STRAPI_URLContactUs) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
-const STRAPI_URLExtra = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/extra";
+const STRAPI_URLExtra = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/extra?populate[navLinks][populate]=*";
 if (!STRAPI_URLExtra) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
