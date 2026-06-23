@@ -15,7 +15,7 @@ export default async function ExploreBrands() {
     const brands = await Brand.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).lean();
 
     return (
-        <section className="w-full bg-[var(--background)] py-20 ">
+        <section id="brands" className="w-full bg-[var(--background)] py-20 ">
             <div className="max-w-3xl mx-auto px-4 sm:px-6">
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-7 text-black">Explore Our Brands</h2>
 

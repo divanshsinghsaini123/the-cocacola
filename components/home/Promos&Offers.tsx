@@ -107,7 +107,7 @@ export default function PromosAndOffers({ data, buttonStyle }: PromosAndOffersPr
     }
 
     return (
-        <section className="w-full bg-[var(--background)] py-10 lg:py-16">
+        <section id="promos-offers" className="w-full bg-[var(--background)] py-10 lg:py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6">
                 <h2 className="text-[26px] md:text-[32px] font-bold text-center mb-10 text-black">{data.sectionTitle}</h2>
 
