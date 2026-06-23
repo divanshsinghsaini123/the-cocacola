@@ -18,6 +18,7 @@ interface ContactUsProps {
             detailsTitle?: string;
             addressLabel?: string;
             gpsLabel?: string;
+            mapEmbedUrl?: string;
             addressLines?: { line: string }[];
             gpsLines?: { N?: string; E?: string };
         };
@@ -80,12 +81,13 @@ export default function ContactUs({ data }: ContactUsProps) {
         detailsTitle: data?.location?.detailsTitle || contactData.location.detailsTitle,
         addressLabel: data?.location?.addressLabel || contactData.location.addressLabel,
         gpsLabel: data?.location?.gpsLabel || contactData.location.gpsLabel,
-        addressLines: data?.location?.addressLines && data.location.addressLines.length > 0 
-            ? data.location.addressLines.map(al => al.line) 
+        addressLines: data?.location?.addressLines && data.location.addressLines.length > 0
+            ? data.location.addressLines.map(al => al.line)
             : contactData.location.addressLines,
-        gpsLines: data?.location?.gpsLines 
-            ? [data.location.gpsLines.N || "", data.location.gpsLines.E || ""] 
-            : contactData.location.gpsLines
+        gpsLines: data?.location?.gpsLines
+            ? [data.location.gpsLines.N || "", data.location.gpsLines.E || ""]
+            : contactData.location.gpsLines,
+        mapEmbedUrl: data?.location?.mapEmbedUrl || contactData.location.mapEmbedUrl
     };
 
     return (
@@ -119,7 +121,7 @@ export default function ContactUs({ data }: ContactUsProps) {
                     {/* Google Map Embed */}
                     <div className="w-full h-[400px] rounded-lg overflow-hidden border border-gray-700">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1576.4369766983058!2d20.91361208034444!3d48.17637171420108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4740a1b0b5b5b5b5%3A0x5b0b5b5b5b5b5b5b!2sHell%20Energy%20Magyarorsz%C3%A1g%20Kft.!5e0!3m2!1sen!2shu!4v1708111111111!5m2!1sen!2shu"
+                            src={resolvedLocation.mapEmbedUrl}
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}
