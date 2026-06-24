@@ -67,7 +67,7 @@ export async function PUT(req: Request) {
 
     } catch (err: any) {
         console.error("Gcore Upload Error:", err);
-        
+
         let errorMessage = err.message;
         if (err.$response && err.$response.statusCode) {
             errorMessage += ` (Gcore returned HTTP ${err.$response.statusCode})`;
