@@ -5,10 +5,10 @@ import BrandForm from "../../../_components/BrandForm";
 import BrandProducts from "../../../_components/BrandProducts";
 import { notFound } from "next/navigation";
 
-interface EditBrandPageProps {
-    params: {
+type EditBrandPageProps = {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export default async function EditBrandPage({ params }: EditBrandPageProps) {
