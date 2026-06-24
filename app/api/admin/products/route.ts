@@ -1,4 +1,4 @@
-import { deleteFromGcore } from "../gcore_upload/route";
+import { deleteFromGcore } from "@/src/lib/gcore";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import { Product } from "@/src/models/Product";

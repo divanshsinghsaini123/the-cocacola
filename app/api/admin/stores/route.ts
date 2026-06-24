@@ -1,4 +1,4 @@
-import { deleteFromGcore } from "../gcore_upload/route";
+import { deleteFromGcore } from "@/src/lib/gcore";
 import { NextResponse } from "next/server";
 import { Store } from '@/src/models/store';
 import { StoreSchema } from '@/src/lib/validation';

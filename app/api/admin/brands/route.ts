@@ -74,7 +74,7 @@ export async function PUT(request: Request) {
     }
 }
 
-import { deleteFromGcore, deleteFilesFromGcore } from "../gcore_upload/route";
+import { deleteFromGcore, deleteFilesFromGcore } from "@/src/lib/gcore";
 
 // DELETE brand
 export async function DELETE(request: Request) {
