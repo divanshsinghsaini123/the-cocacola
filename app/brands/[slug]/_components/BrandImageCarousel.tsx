@@ -63,6 +63,24 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
         }
     }, [images.length]);
 
+    const handlePrev = () => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+        const cardWidth = container.firstElementChild?.clientWidth || 0;
+        if (cardWidth === 0) return;
+        const stride = cardWidth + 24; // gap-6
+        container.scrollBy({ left: -stride, behavior: 'smooth' });
+    };
+
+    const handleNext = () => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+        const cardWidth = container.firstElementChild?.clientWidth || 0;
+        if (cardWidth === 0) return;
+        const stride = cardWidth + 24; // gap-6
+        container.scrollBy({ left: stride, behavior: 'smooth' });
+    };
+
     if (!images || images.length === 0) return null;
 
     return (
@@ -92,36 +110,61 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
                     ))}
                 </div>
 
-                {/* Pagination Dots */}
+                {/* Pagination Dots & Navigation Controls */}
                 {images.length > 1 && (
-                    <div className="flex justify-center items-center gap-2 mt-[-10px] mb-8">
-                        {images.map((_, index) => (
-                            <div
-                                key={index}
-                                onClick={() => {
-                                    if (!scrollContainerRef.current) return;
-                                    const container = scrollContainerRef.current;
-                                    const cardWidth = container.firstElementChild?.clientWidth || 0;
-                                    if (cardWidth === 0) return;
+                    <div className="flex justify-center items-center gap-6 mt-[-10px] mb-8">
+                        {/* Prev Button (Desktop Only) */}
+                        <button
+                            onClick={handlePrev}
+                            className="hidden md:flex w-10 h-10 items-center justify-center rounded-full border border-gray-300 hover:border-black bg-white hover:bg-black hover:text-white text-gray-700 transition-all active:scale-95 shadow-sm cursor-pointer"
+                            aria-label="Previous slide"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
 
-                                    const stride = cardWidth + 24; // gap-6
-                                    const setWidth = images.length * stride;
+                        {/* Dots */}
+                        <div className="flex items-center gap-2">
+                            {images.map((_, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => {
+                                        if (!scrollContainerRef.current) return;
+                                        const container = scrollContainerRef.current;
+                                        const cardWidth = container.firstElementChild?.clientWidth || 0;
+                                        if (cardWidth === 0) return;
 
-                                    // Calculate closest target in the current set
-                                    const currentScroll = container.scrollLeft;
-                                    const currentSet = Math.round(currentScroll / setWidth);
+                                        const stride = cardWidth + 24; // gap-6
+                                        const setWidth = images.length * stride;
 
-                                    const targetScroll = (currentSet * images.length + index) * stride;
+                                        // Calculate closest target in the current set
+                                        const currentScroll = container.scrollLeft;
+                                        const currentSet = Math.round(currentScroll / setWidth);
 
-                                    container.scrollTo({
-                                        left: targetScroll,
-                                        behavior: 'smooth'
-                                    });
-                                }}
-                                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'
-                                    }`}
-                            ></div>
-                        ))}
+                                        const targetScroll = (currentSet * images.length + index) * stride;
+
+                                        container.scrollTo({
+                                            left: targetScroll,
+                                            behavior: 'smooth'
+                                        });
+                                    }}
+                                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'
+                                        }`}
+                                ></div>
+                            ))}
+                        </div>
+
+                        {/* Next Button (Desktop Only) */}
+                        <button
+                            onClick={handleNext}
+                            className="hidden md:flex w-10 h-10 items-center justify-center rounded-full border border-gray-300 hover:border-black bg-white hover:bg-black hover:text-white text-gray-700 transition-all active:scale-95 shadow-sm cursor-pointer"
+                            aria-label="Next slide"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
                     </div>
                 )}
             </div>
