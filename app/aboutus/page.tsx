@@ -3,6 +3,7 @@ import { getStrapiMediaUrl, isStrapiLocal } from "@/src/lib/strapi-media";
 import Image from "next/image";
 import Link from "next/link";
 import Mainpage_aboutus from "./_components/Mainpage_aboutus";
+import FaqFloatingButton from "./_components/FaqFloatingButton";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SectionItem } from "@/types/home";
@@ -161,6 +162,7 @@ export default async function AboutUs() {
                 )
             }
 
+            <FaqFloatingButton />
         </main >
     );
 }
