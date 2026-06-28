@@ -234,31 +234,31 @@ export default function DistributorClientView({
                         )}
                     </div>
 
-                    {contactData?.FollowUsOn && (
+                    {contactData?.FollowUsOn && [contactData.FollowUsOn.Facebook, contactData.FollowUsOn.Twitter, contactData.FollowUsOn.Youtube, contactData.FollowUsOn.Instagram, contactData.FollowUsOn.Printest].some(link => link && link.trim() !== "") && (
                         <div className="mt-1 md:mt-4">
                             <h4 className="text-white font-medium text-[16px] md:text-[20px] mb-3 md:mb-6 tracking-wide">Follow Us On :</h4>
                             <div className="flex items-center gap-2 md:gap-3">
-                                {contactData.FollowUsOn.Facebook && (
+                                {contactData.FollowUsOn.Facebook && contactData.FollowUsOn.Facebook.trim() !== "" && (
                                     <a href={contactData.FollowUsOn.Facebook} target="_blank" rel="noreferrer" className="bg-[#4aa5f8] p-1.5 md:p-2 flex items-center justify-center rounded-full text-white hover:opacity-80 transition-opacity w-8 h-8 md:w-[34px] md:h-[34px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="md:w-[18px] md:h-[18px]"><path d="M14.53 22.92v-8.96h2.98l.45-3.48h-3.43V8.25c0-1.01.28-1.7 1.73-1.7h1.85V3.44c-.32-.04-1.42-.14-2.7-.14-2.67 0-4.5 1.63-4.5 4.63v2.55H7.94v3.48h2.97v8.96h3.62z" /></svg>
                                     </a>
                                 )}
-                                {contactData.FollowUsOn.Twitter && (
+                                {contactData.FollowUsOn.Twitter && contactData.FollowUsOn.Twitter.trim() !== "" && (
                                     <a href={contactData.FollowUsOn.Twitter} target="_blank" rel="noreferrer" className="bg-white p-1.5 md:p-2 flex items-center justify-center rounded-full text-[#111] hover:opacity-80 transition-opacity w-8 h-8 md:w-[34px] md:h-[34px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="md:w-[16px] md:h-[16px]"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" /></svg>
                                     </a>
                                 )}
-                                {contactData.FollowUsOn.Youtube && (
+                                {contactData.FollowUsOn.Youtube && contactData.FollowUsOn.Youtube.trim() !== "" && (
                                     <a href={contactData.FollowUsOn.Youtube} target="_blank" rel="noreferrer" className="bg-white p-1.5 md:p-2 flex items-center justify-center rounded-full text-[#111] hover:opacity-80 transition-opacity w-8 h-8 md:w-[34px] md:h-[34px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="md:w-[18px] md:h-[18px]"><path d="M21.582 6.186a2.636 2.636 0 0 0-1.856-1.868C18.087 3.864 12 3.864 12 3.864s-6.087 0-7.726.454A2.635 2.635 0 0 0 2.418 6.186C1.964 7.838 1.964 12 1.964 12s0 4.162.454 5.814a2.636 2.636 0 0 0 1.856 1.868c1.639.454 7.726.454 7.726.454s6.087 0 7.726-.454a2.635 2.635 0 0 0 1.856-1.868c.454-1.652.454-5.814.454-5.814s0-4.162-.454-5.814zM9.953 15.421V8.579L15.93 12l-5.977 3.421z" /></svg>
                                     </a>
                                 )}
-                                {contactData.FollowUsOn.Instagram && (
+                                {contactData.FollowUsOn.Instagram && contactData.FollowUsOn.Instagram.trim() !== "" && (
                                     <a href={contactData.FollowUsOn.Instagram} target="_blank" rel="noreferrer" className="bg-white p-1.5 md:p-2 flex items-center justify-center rounded-full text-[#111] hover:opacity-80 transition-opacity w-8 h-8 md:w-[34px] md:h-[34px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:w-[18px] md:h-[18px]"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                                     </a>
                                 )}
-                                {contactData.FollowUsOn.Printest && (
+                                {contactData.FollowUsOn.Printest && contactData.FollowUsOn.Printest.trim() !== "" && (
                                     <a href={contactData.FollowUsOn.Printest} target="_blank" rel="noreferrer" className="bg-white p-1.5 md:p-2 flex items-center justify-center rounded-full text-[#111] hover:opacity-80 transition-opacity w-8 h-8 md:w-[34px] md:h-[34px]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" className="md:w-[16px] md:h-[16px]"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.366 18.624.002 12.017.002z" /></svg>
                                     </a>

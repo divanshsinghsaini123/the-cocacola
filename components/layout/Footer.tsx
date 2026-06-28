@@ -299,16 +299,18 @@ export default function Footer(props: FooterProps) {
 
                     {/* Social Icons */}
                     <div className="md:col-span-3 flex justify-start md:justify-end items-start gap-4 mt-8 md:mt-0 pt-8 md:pt-0 border-t border-white md:border-t-0">
-                        {socialIcons.map((social) => (
-                            <a
-                                key={social.name}
-                                href={social.href}
-                                className="w-10 h-10 border border-white rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-colors"
-                                aria-label={social.name}
-                            >
-                                {social.icon}
-                            </a>
-                        ))}
+                        {socialIcons
+                            .filter((social) => social.href && social.href !== "#" && social.href.trim() !== "")
+                            .map((social) => (
+                                <a
+                                    key={social.name}
+                                    href={social.href}
+                                    className="w-10 h-10 border border-white rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-colors"
+                                    aria-label={social.name}
+                                >
+                                    {social.icon}
+                                </a>
+                            ))}
                     </div>
                 </div>
 

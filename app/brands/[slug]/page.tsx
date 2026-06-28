@@ -122,7 +122,8 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
                     </div>
                 )}
 
-                {/* Follow Section (Black Bar) */}
+            {/* Follow Section (Black Bar) */}
+            {brand.socialLinks && [brand.socialLinks.facebook, brand.socialLinks.x, brand.socialLinks.instagram, brand.socialLinks.youtube].some(link => link && link.trim() !== "") && (
                 <div className="w-full bg-black rounded-[20px] py-7 px-8 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
                     <h2 className="text-white text-[20px] md:text-[32px] font-bold tracking-tight">{brand.socialLinks?.title || "Follow"} {brand.name}</h2>
                     <div className="flex gap-4">
@@ -132,7 +133,7 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
                             { name: 'instagram', path: "M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z M17.5 6.5h.01 M16 2H8a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V6a4 4 0 0 0-4-4z", link: brand.socialLinks?.instagram },
                             { name: 'youtube', path: "M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z M9.75 15.02l5.75-3.27-5.75-3.27z", link: brand.socialLinks?.youtube }
                         ]
-                            .filter(icon => icon.link)
+                            .filter(icon => icon.link && icon.link.trim() !== "")
                             .map((icon) => (
                                 <a
                                     key={icon.name}
@@ -158,6 +159,7 @@ export default async function BrandDetailPage({ params }: BrandPageProps) {
                             ))}
                     </div>
                 </div>
+            )}
 
                 {/* Footer Descriptions */}
                 {(brand.descriptions?.d1 || brand.descriptions?.d2 || brand.descriptions?.d3) && (
