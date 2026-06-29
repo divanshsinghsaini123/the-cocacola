@@ -39,12 +39,14 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
 
             const layout = (card.layout || "left") as "left" | "right";
             const imageUrl = getStrapiMediaUrl(card.productImage?.url) || "";
+            const imageUrlMobile = getStrapiMediaUrl(card.productImage_mobile?.url) || "";
 
             return {
                 title: card.title,
                 subtitle: card.subtitle || "choose your flavour",
                 layout,
                 backgroundImage: imageUrl,
+                backgroundImageMobile: imageUrlMobile,
                 productImage: imageUrl,
                 totalColumns: flavorGroups.length === 2 ? 2 : 1,
                 flavours: flavorGroups,
@@ -57,6 +59,7 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
                 return {
                     ...prod,
                     backgroundImage: prod.productImage,
+                    backgroundImageMobile: prod.productImage,
                     features: prod.features.map(f => ({ text: f.text })),
                     subFeatures: prod.subFeatures.map(sf => ({ text: sf.text }))
                 };

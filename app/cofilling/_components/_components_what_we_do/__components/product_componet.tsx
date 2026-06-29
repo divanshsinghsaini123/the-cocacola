@@ -8,6 +8,7 @@ export interface ProductProps {
     subtitle?: string;
     layout: "left" | "right"; // image position
     backgroundImage: string;
+    backgroundImageMobile?: string;
     productImage: string;
     totalColumns: 1 | 2;
     flavours: {
@@ -28,6 +29,7 @@ const ProductComponent: React.FC<ProductProps> = ({
     subtitle = "choose your flavour",
     layout,
     backgroundImage,
+    backgroundImageMobile,
     productImage,
     totalColumns,
     flavours,
@@ -37,13 +39,26 @@ const ProductComponent: React.FC<ProductProps> = ({
     return (
         <section className="relative w-full md:min-h-[750px] flex items-center justify-center overflow-hidden pt-16 pb-10 bg-black">
             {/* Background */}
-            <div className={`absolute inset-0 w-full h-full z-0`}>
-                <Image
-                    src={backgroundImage}
-                    alt="Background"
-                    fill
-                    className="object-cover opacity-100"
-                />
+            <div className="absolute inset-0 w-full h-full z-0">
+                {backgroundImage && (
+                    <Image
+                        src={backgroundImage}
+                        alt="Background"
+                        fill
+                        className="object-cover opacity-100 hidden md:block"
+                    />
+                )}
+                {(backgroundImageMobile || backgroundImage) && (
+                    <Image
+                        src={backgroundImageMobile || backgroundImage}
+                        alt="Background Mobile"
+                        fill
+                        className="object-cover opacity-100 block md:hidden"
+                    />
+                )}
+                {/* Fade Breakers */}
+                <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none" />
             </div>
 
             <div className={`relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center md:gap-30 gap-10 ${layout === 'left' ? 'md:flex-row-reverse' : ''}`}>
@@ -82,7 +97,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                                     {group.items.map((flavor, flavorIndex) => (
                                         <div
                                             key={flavorIndex}
-                                            className="relative bg-[#a6192e] text-white py-1 px-8 font-bold text-sm hover:bg-[#c41e3a] transition-colors cursor-default flex items-center shadow-sm min-h-[36px]"
+                                            className="relative bg-[#a6192e]/50 md:bg-[#a6192e] text-white py-1 px-6 md:px-8 font-bold text-sm w-fit md:w-full hover:bg-[#c41e3a]/50 md:hover:bg-[#c41e3a] transition-colors cursor-default flex items-center shadow-sm min-h-[36px]"
                                             style={{
                                                 clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 15px 50%)",
                                                 borderRadius: "0 20px 20px 0"
