@@ -53,7 +53,7 @@ export default function Features({ data }: FeaturesProps) {
                                         src={getStrapiMediaUrl(feature.image)}
                                         alt={feature.title || "Feature Image"}
                                         fill
-                                        className="object-contain"
+                                        className="object-fill"
                                         unoptimized={isLocal}
                                     />
                                 ) : (
