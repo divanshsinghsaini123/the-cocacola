@@ -42,15 +42,15 @@ const ProductComponent: React.FC<ProductProps> = ({
                     src={backgroundImage}
                     alt="Background"
                     fill
-                    className="object-cover md:opacity-100 opacity-50"
+                    className="object-cover opacity-100"
                 />
             </div>
 
-            <div className={`relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center md:gap-30 gap-10 ${layout === 'right' ? 'md:flex-row-reverse' : ''}`}>
+            <div className={`relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center md:gap-30 gap-10 ${layout === 'left' ? 'md:flex-row-reverse' : ''}`}>
 
                 {/* Product Image Side */}
                 <div className="w-full md:w-1/2 flex justify-center">
-                    <div className="relative w-[300px] md:w-[450px] aspect-[3/4]">
+                    {/* <div className="relative w-[300px] md:w-[450px] aspect-[3/4]">
                         {productImage && (
                             <Image
                                 src={productImage}
@@ -59,7 +59,7 @@ const ProductComponent: React.FC<ProductProps> = ({
                                 className="object-contain"
                             />
                         )}
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Content Side */}

@@ -19,20 +19,6 @@ interface ProductSectionProps {
 }
 
 const Product: React.FC<ProductSectionProps> = ({ data }) => {
-    const bgRight = [
-        "/assets/Coffiling_page/BG1-2-e1706537211470.png",
-        "/assets/Coffiling_page/BG3-e1706537032453.png"
-
-    ];
-
-    const bgLeft = [
-        "/assets/Coffiling_page/BG1-e1706537162881.png",
-        "/assets/Coffiling_page/BG2-e1706537132149.png"
-    ];
-
-    let rightIndex = 0;
-    let leftIndex = 0;
-
     const products: ProductProps[] = data?.productcard && data.productcard.length > 0
         ? data.productcard.map((card: any) => {
             const flavorGroups = [];
@@ -52,21 +38,14 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
             }
 
             const layout = (card.layout || "left") as "left" | "right";
-            let backgroundImage = "";
-            if (layout === "right") {
-                backgroundImage = bgRight[rightIndex % bgRight.length];
-                rightIndex++;
-            } else {
-                backgroundImage = bgLeft[leftIndex % bgLeft.length];
-                leftIndex++;
-            }
+            const imageUrl = getStrapiMediaUrl(card.productImage?.url) || "";
 
             return {
                 title: card.title,
                 subtitle: card.subtitle || "choose your flavour",
                 layout,
-                backgroundImage,
-                productImage: getStrapiMediaUrl(card.productImage?.url),
+                backgroundImage: imageUrl,
+                productImage: imageUrl,
                 totalColumns: flavorGroups.length === 2 ? 2 : 1,
                 flavours: flavorGroups,
                 features: card.features ? card.features.map((f: any) => ({ text: f.item })) : [],
@@ -74,21 +53,10 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
             };
         })
         : (() => {
-            let fallbackRightIndex = 0;
-            let fallbackLeftIndex = 0;
             return productsData.map((prod) => {
-                const layout = (prod.layout || "left") as "left" | "right";
-                let backgroundImage = "";
-                if (layout === "right") {
-                    backgroundImage = bgRight[fallbackRightIndex % bgRight.length];
-                    fallbackRightIndex++;
-                } else {
-                    backgroundImage = bgLeft[fallbackLeftIndex % bgLeft.length];
-                    fallbackLeftIndex++;
-                }
                 return {
                     ...prod,
-                    backgroundImage,
+                    backgroundImage: prod.productImage,
                     features: prod.features.map(f => ({ text: f.text })),
                     subFeatures: prod.subFeatures.map(sf => ({ text: sf.text }))
                 };
