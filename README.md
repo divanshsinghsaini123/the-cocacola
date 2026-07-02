@@ -20,6 +20,9 @@ MONGODB_URI="your_mongodb_connection_string"
 # JWT CONFIG
 JWT_SECRET="your_secure_jwt_secret"
 
+# SITE URL
+NEXT_PUBLIC_BASE_URL="https://your-deployed-site-url.com"
+
 # STRAPI CONFIGURATION
 # Local Development: NEXT_PUBLIC_STRAPI_URL="http://localhost:1337"
 NEXT_PUBLIC_STRAPI_URL="your_strapi_cloud_url"  

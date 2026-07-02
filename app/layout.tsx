@@ -25,9 +25,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await GetHomePageData();
   const faviconUrl = data?.Favicon?.url || data?.attributes?.Favicon?.url;
   const fullFaviconUrl = faviconUrl ? getStrapiMediaUrl(faviconUrl) : "/favicon.ico";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://cloud9-webapp-8afob.ondigitalocean.app";
 
   return {
-    metadataBase: new URL("https://cloud9website-x6hfd.ondigitalocean.app/"), // Replace with actual domain
+    metadataBase: new URL(baseUrl),
     title: {
       default: SITE_CONFIG.companyName,
       template: `%s | ${SITE_CONFIG.companyName}`,
@@ -44,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: "website",
       locale: "en_US",
-      url: "https://cloud9website-x6hfd.ondigitalocean.app/",
+      url: baseUrl,
       title: SITE_CONFIG.companyName,
       description: "Powering the World's Favorite Beverage Brands.",
       siteName: SITE_CONFIG.companyName,
