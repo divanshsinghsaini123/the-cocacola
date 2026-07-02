@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
         // Rate Limiter
         const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-                || "unknown";
+            || "unknown";
         const { success: allowed } = rateLimit(`login:${ip}`, 5, 900); // 5 per 15 min
 
         if (!allowed) {
@@ -42,14 +42,13 @@ export async function POST(request: Request) {
         let admin = await Admin.findOne({ username });
 
         if (!admin) {
-            let hashpassword = await bcrypt.hash(password, 10);
-            return NextResponse.json({ error: "Failed to create admin: " }, { status: 500 });
+            return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
         }
 
         let unhashpassword = await bcrypt.compare(password, admin.password);
         // Verify Password (hashed password)
         if (!unhashpassword || !admin.isActive || admin.role !== "Superadmin") {
-            return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+            return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
         }
 
         // Create Token
