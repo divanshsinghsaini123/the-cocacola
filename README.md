@@ -36,8 +36,8 @@ GCORE_BUCKET_NAME="cocacola-bucket"
 GCORE_REGION="s-ed1"
 NEXT_PUBLIC_GCORE_CDN_URL="https://cdn.yourdomain.com"
 
-# DEV ENVIRONMENT SSL FIX
-NODE_TLS_REJECT_UNAUTHORIZED="0"
+# DEV ENVIRONMENT SSL FIX (Local development ONLY - NEVER set this in production!)
+# NODE_TLS_REJECT_UNAUTHORIZED="0"
 
 # GITHUB WORKFLOWS AUTOMATED DISPATCHERS
 GITHUB_OWNER="github_username_or_organization"
