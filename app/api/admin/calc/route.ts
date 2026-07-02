@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { rateLimit } from "@/src/lib/rate-limit";
 
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
@@ -19,6 +20,18 @@ export async function POST(request: Request) {
         }
 
         const { username, password } = validation.data;
+
+        // Rate Limiter
+        const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+                || "unknown";
+        const { success: allowed } = rateLimit(`calc_login:${ip}`, 5, 900); // 5 per 15 min
+
+        if (!allowed) {
+            return NextResponse.json(
+                { error: "Too many login attempts. Please try again later." },
+                { status: 429 }
+            );
+        }
 
         if (!process.env.JWT_SECRET) {
             console.error("JWT_SECRET is missing in environment variables.");
