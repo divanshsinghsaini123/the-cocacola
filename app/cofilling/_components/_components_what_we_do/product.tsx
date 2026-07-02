@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import ProductComponent, { ProductProps } from "./__components/product_componet";
-import { productsData } from "../../_data/products_data";
 import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 
 interface ProductSectionProps {
@@ -54,21 +53,11 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
                 subFeatures: card.subFeatures ? card.subFeatures.map((sf: any) => ({ text: sf.item })) : []
             };
         })
-        : (() => {
-            return productsData.map((prod) => {
-                return {
-                    ...prod,
-                    backgroundImage: prod.productImage,
-                    backgroundImageMobile: prod.productImage,
-                    features: prod.features.map(f => ({ text: f.text })),
-                    subFeatures: prod.subFeatures.map(sf => ({ text: sf.text }))
-                };
-            });
-        })();
+        : [];
 
     const footerData = {
-        title: data?.productFooter?.title || "YOU DON'T HAVE A BRAND?",
-        heading: data?.productFooter?.heading || "TAKE ONE OF THESE!",
+        title: data?.productFooter?.title,
+        heading: data?.productFooter?.heading,
         items: data?.productFooter?.item && data.productFooter.item.length > 0
             ? data.productFooter.item.map((it: any) => it.line)
             : ["ZYGRA", "SLANG", "ROUZED", "PLAGE"],

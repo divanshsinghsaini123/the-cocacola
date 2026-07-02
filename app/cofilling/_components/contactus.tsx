@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { contactData } from '../_data/contact_data';
 import { useRouter } from "next/navigation";
 
 interface ContactUsProps {
@@ -74,24 +73,24 @@ export default function ContactUs({ data }: ContactUsProps) {
         }
     }
 
-    const resolvedEnquirySubtitle = data?.enquirySubtitle || contactData.enquirySubtitle;
+    const resolvedEnquirySubtitle = data?.enquirySubtitle;
     const resolvedPrivacyPolicy = {
-        text: data?.privacyPolicy?.text || contactData.privacyPolicy.text,
-        linkText: data?.privacyPolicy?.linkText || contactData.privacyPolicy.linkText,
-        linkUrl: data?.privacyPolicy?.linkUrl || contactData.privacyPolicy.linkUrl
+        text: data?.privacyPolicy?.text,
+        linkText: data?.privacyPolicy?.linkText,
+        linkUrl: data?.privacyPolicy?.linkUrl as string
     };
     const resolvedLocation = {
-        mainTitle: data?.location?.mainTitle || contactData.location.mainTitle,
-        detailsTitle: data?.location?.detailsTitle || contactData.location.detailsTitle,
-        addressLabel: data?.location?.addressLabel || contactData.location.addressLabel,
-        gpsLabel: data?.location?.gpsLabel || contactData.location.gpsLabel,
+        mainTitle: data?.location?.mainTitle,
+        detailsTitle: data?.location?.detailsTitle,
+        addressLabel: data?.location?.addressLabel,
+        gpsLabel: data?.location?.gpsLabel,
         addressLines: data?.location?.addressLines && data.location.addressLines.length > 0
             ? data.location.addressLines.map(al => al.line)
-            : contactData.location.addressLines,
+            : [],
         gpsLines: data?.location?.gpsLines
             ? [data.location.gpsLines.N || "", data.location.gpsLines.E || ""]
-            : contactData.location.gpsLines,
-        mapEmbedUrl: data?.location?.mapEmbedUrl || contactData.location.mapEmbedUrl
+            : [],
+        mapEmbedUrl: data?.location?.mapEmbedUrl
     };
 
     return (

@@ -72,7 +72,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
                                     src={getStrapiMediaUrl(url)}
                                     alt="Hero Mobile Banner"
                                     fill
-                                    className={`object-fit object-right md:hidden absolute inset-0 transition-opacity duration-1000 ${index === mobileIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+                                    className={`object-cover object-right md:hidden absolute inset-0 transition-opacity duration-1000 ${index === mobileIndex ? "opacity-100 z-10" : "opacity-0 z-0"
                                         }`}
                                     priority={index === 0}
                                     unoptimized={isLocal}

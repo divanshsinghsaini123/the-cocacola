@@ -84,7 +84,7 @@ export default async function AboutUs() {
                         src={getStrapiMediaUrl(bannerUrl)}
                         alt="Our Company Data"
                         fill
-                        className="object-cover md:object-fit"
+                        className="object-cover"
                         priority
                         unoptimized={true}
                     />

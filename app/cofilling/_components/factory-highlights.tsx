@@ -30,10 +30,10 @@ const FactoryHighlights: React.FC<FactoryHighlightsProps> = ({ data }) => {
 
             <div className="relative z-10 flex flex-col items-center text-center mb-12">
                 <h3 className="text-sm md:text-base font-bold uppercase tracking-widest mb-2 text-black">
-                    {data?.title || "WATCH OUR INTRO VIDEO"}
+                    {data?.title}
                 </h3>
                 <h2 className="text-4xl md:text-5xl font-black italic uppercase text-black">
-                    {data?.mainheading || "HELL FACTORY HIGHLIGHTS"}
+                    {data?.mainheading}
                 </h2>
             </div>
 
@@ -43,8 +43,8 @@ const FactoryHighlights: React.FC<FactoryHighlightsProps> = ({ data }) => {
                     <iframe
                         width="100%"
                         height="100%"
-                        src={data?.youtubeURL1 || "https://www.youtube.com/embed/_CYtIFAVhDg"}
-                        title="HELL Energy Drink - QUALITY PACK FACTORY"
+                        src={data?.youtubeURL1}
+                        title=" Energy Drink - QUALITY PACK FACTORY"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
@@ -56,8 +56,8 @@ const FactoryHighlights: React.FC<FactoryHighlightsProps> = ({ data }) => {
                     <iframe
                         width="100%"
                         height="100%"
-                        src={data?.youtubeURL2 || "https://www.youtube.com/embed/-oFQyxMcvwg"}
-                        title="Introducing the factory of HELL ENERGY (Short version)"
+                        src={data?.youtubeURL2}
+                        title="Introducing the factory of  ENERGY (Short version)"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen

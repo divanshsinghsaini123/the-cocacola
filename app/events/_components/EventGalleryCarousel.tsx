@@ -313,7 +313,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
 //             <img
 //                 src={getStrapiMediaUrl(imgUrl)}
 //                 alt={img.AltText || `${eventName} - Image ${index + 1}`}
-//                 className="w-full h-full object-fit transition-all duration-700"
+//                 className="w-full h-full object-cover transition-all duration-700"
 //                 loading="lazy"
 //             />
 //             {img.AltText && (
@@ -335,7 +335,7 @@ export default function EventGalleryCarousel({ images, eventName }: EventGallery
 //             <img
 //                 src={getStrapiMediaUrl(imgUrl)}
 //                 alt={img.AltText || `${eventName} - Image ${index + 1}`}
-//                 className="w-full h-full object-fit transition-all duration-700"
+//                 className="w-full h-full object-cover transition-all duration-700"
 //                 loading="lazy"
 //             />
 //             {img.AltText && (
