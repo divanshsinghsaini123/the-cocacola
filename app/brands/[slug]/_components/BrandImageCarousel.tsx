@@ -20,6 +20,7 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
 
     // Initial scroll positioning tracking
     const [isFormatted, setIsFormatted] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     const checkScroll = () => {
         if (!scrollContainerRef.current) return;
@@ -69,6 +70,22 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
         const cardWidth = container.firstElementChild?.clientWidth || 0;
         if (cardWidth === 0) return;
         const stride = cardWidth + 24; // gap-6
+
+        const scrollLeft = container.scrollLeft;
+        const rawIndex = Math.round(scrollLeft / stride);
+        const realIndex = rawIndex % images.length;
+
+        // If we are getting close to the start, reset to the middle set instantly first
+        if (rawIndex <= 2 * images.length) {
+            const middleSetIndex = Math.floor(SETS_COUNT / 2);
+            const targetScroll = (middleSetIndex * images.length + realIndex) * stride;
+            container.style.scrollBehavior = 'auto';
+            container.scrollLeft = targetScroll;
+            // Force layout reflow
+            const _reflow = container.offsetHeight;
+            container.style.scrollBehavior = 'smooth';
+        }
+
         container.scrollBy({ left: -stride, behavior: 'smooth' });
     };
 
@@ -78,8 +95,40 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
         const cardWidth = container.firstElementChild?.clientWidth || 0;
         if (cardWidth === 0) return;
         const stride = cardWidth + 24; // gap-6
+
+        const scrollLeft = container.scrollLeft;
+        const rawIndex = Math.round(scrollLeft / stride);
+        const realIndex = rawIndex % images.length;
+
+        // If we are getting close to the end, reset to the middle set instantly first
+        if (rawIndex >= (SETS_COUNT - 2) * images.length) {
+            const middleSetIndex = Math.floor(SETS_COUNT / 2);
+            const targetScroll = (middleSetIndex * images.length + realIndex) * stride;
+            container.style.scrollBehavior = 'auto';
+            container.scrollLeft = targetScroll;
+            // Force layout reflow
+            const _reflow = container.offsetHeight;
+            container.style.scrollBehavior = 'smooth';
+        }
+
         container.scrollBy({ left: stride, behavior: 'smooth' });
     };
+
+    // Auto-scroll logic with mutable callback ref to prevent interval recreation
+    const handleNextRef = useRef(handleNext);
+    useEffect(() => {
+        handleNextRef.current = handleNext;
+    });
+
+    useEffect(() => {
+        if (images.length <= 1 || !isFormatted || isHovered) return;
+
+        const interval = setInterval(() => {
+            handleNextRef.current();
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [images.length, isFormatted, isHovered]);
 
     if (!images || images.length === 0) return null;
 
@@ -90,6 +139,10 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
                     ref={scrollContainerRef}
                     className={`flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden ${isFormatted ? 'scroll-smooth' : ''}`}
                     onScroll={checkScroll}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onTouchStart={() => setIsHovered(true)}
+                    onTouchEnd={() => setIsHovered(false)}
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {extendedImages.map((imageSrc, index) => (
