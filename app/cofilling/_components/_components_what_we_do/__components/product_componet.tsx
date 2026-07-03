@@ -97,10 +97,10 @@ const ProductComponent: React.FC<ProductProps> = ({
                                     {group.items.map((flavor, flavorIndex) => (
                                         <div
                                             key={flavorIndex}
-                                            className="relative bg-[#a6192e]/50 md:bg-[#a6192e] text-white py-1 px-6 md:px-8 font-bold text-sm w-fit md:w-full hover:bg-[#c41e3a]/50 md:hover:bg-[#c41e3a] transition-colors cursor-default flex items-center shadow-sm min-h-[36px]"
+                                            className="relative bg-black md:bg-[#a6192e] text-white py-1 px-3 pl-1 md:px-8 font-bold text-sm w-fit md:w-full hover:bg-neutral-800 md:hover:bg-[#c41e3a] transition-colors cursor-default flex items-center shadow-sm min-h-[36px] md:[--clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%,15px_50%)] md:[--border-radius:0_20px_20px_0]"
                                             style={{
-                                                clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 15px 50%)",
-                                                borderRadius: "0 20px 20px 0"
+                                                clipPath: "var(--clip-path, none)",
+                                                borderRadius: "var(--border-radius, 26px)"
                                             }}
                                         >
                                             <span className="block drop-shadow-sm ml-2">{flavor}</span>

@@ -60,8 +60,8 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
         heading: data?.productFooter?.heading,
         items: data?.productFooter?.item && data.productFooter.item.length > 0
             ? data.productFooter.item.map((it: any) => it.line)
-            : ["ZYGRA", "SLANG", "ROUZED", "PLAGE"],
-        backgroundImage: getStrapiMediaUrl(data?.productFooter?.backgroundimage?.url) || "/assets/Coffiling_page/zygra_ENERGY_DRINK_portfolio-1.png"
+            : [],
+        backgroundImage: getStrapiMediaUrl(data?.productFooter?.backgroundimage?.url)
     };
 
     return (
@@ -82,12 +82,14 @@ const Product: React.FC<ProductSectionProps> = ({ data }) => {
             <div className="w-full h-[813px] relative flex flex-col items-center justify-center text-center overflow-hidden">
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
-                    <Image
-                        src={footerData.backgroundImage}
-                        alt="Footer Background"
-                        fill
-                        className="object-cover"
-                    />
+                    {footerData.backgroundImage && (
+                        <Image
+                            src={footerData.backgroundImage}
+                            alt="Footer Background"
+                            fill
+                            className="object-cover"
+                        />
+                    )}
                     <div className="absolute inset-0" />
                 </div>
 
