@@ -150,7 +150,7 @@ export default function ContactusClient({ data }: ContactusProps) {
                                             className="w-full p-4 pr-10 border border-black/20 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-black/50 text-lg transition-all"
                                             required
                                         >
-                                            <option value="question">I have a question</option>
+                                            {/* <option value="question">I have a question</option> */}
                                             <option value="issue">I have an issue with a drink i have purchased</option>
                                         </select>
                                         {/* Chevron Icon */}

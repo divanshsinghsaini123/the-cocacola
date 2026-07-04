@@ -37,6 +37,7 @@ export default async function AboutUs() {
     if (strapioutput?.DisablePage) return notFound();
 
     const heroData = strapioutput?.Hero;
+
     // console.log(strapioutput)
     const bannerUrl = heroData?.HeroBanner?.formats?.large?.url || heroData?.HeroBanner?.url;
     // console.log(heroData);
@@ -90,8 +91,8 @@ export default async function AboutUs() {
                     />
                 )}
                 <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
-                    <h1 className="text-white text-4xl md:text-6xl lg:text-[70px] font-bold uppercase tracking-wider text-center drop-shadow-lg">
-                        Our Company
+                    <h1 className={`${heroData?.HeroBannerTextColor} text-4xl md:text-6xl lg:text-[70px] font-bold uppercase tracking-wider text-center drop-shadow-lg`}>
+                        {heroData?.HeroBannerText}
                     </h1>
                 </div>
             </section>
@@ -126,7 +127,7 @@ export default async function AboutUs() {
                                 {relatedItems.map((item: any) => (
                                     <div key={item.id} className="bg-white rounded-[16px] overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
                                         <div className="relative h-[200px] w-full bg-gray-100">
-                                            {item.image ? (
+                                            {item.image && (
                                                 <Image
                                                     src={getStrapiMediaUrl(item.image)}
                                                     alt={item.title || "Related Card Image"}
@@ -134,10 +135,6 @@ export default async function AboutUs() {
                                                     className="object-cover"
                                                     unoptimized={isLocal}
                                                 />
-                                            ) : (
-                                                <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 font-bold">
-                                                    No Image
-                                                </div>
                                             )}
                                         </div>
                                         <div className="p-5 md:p-6 flex flex-col flex-grow justify-between min-h-[160px]">
