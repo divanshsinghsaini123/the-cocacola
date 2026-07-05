@@ -135,7 +135,7 @@ export default function ContactusClient({ data }: ContactusProps) {
                             <form className="space-y-8" onSubmit={(e) => handleSubmit(e)}>
 
                                 {/* Topic Selection */}
-                                <div className="space-y-2">
+                                <div className="space-y-2 hidden">
                                     <label
                                         htmlFor="topic"
                                         className="block text-sm font-medium text-gray-900"
