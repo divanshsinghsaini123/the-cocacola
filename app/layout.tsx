@@ -6,7 +6,7 @@ import Script from "next/script";
 import NavbarServer from "@/components/layout/NavbarServer";
 import StoreProvider from "@/src/providers/StoreProvider";
 import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
-import { GetHomePageData } from "@/src/lib/strapi";
+import { GetHomePageData, GetExtraData } from "@/src/lib/strapi";
 
 import { SITE_CONFIG } from "@/src/config/site";
 const geistSans = Geist({
@@ -23,20 +23,28 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await GetHomePageData();
+  const extraData = await GetExtraData();
+  const globalConfig = extraData?.globalConfig || extraData?.attributes?.globalConfig;
+
   const faviconUrl = data?.Favicon?.url || data?.attributes?.Favicon?.url;
   const fullFaviconUrl = faviconUrl ? getStrapiMediaUrl(faviconUrl) : "/favicon.ico";
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://cloud9-webapp-8afob.ondigitalocean.app";
 
+  const companyName = globalConfig?.companyName || SITE_CONFIG.companyName;
+  const defaultKeywords = globalConfig?.defaultKeywords
+    ? globalConfig.defaultKeywords.split(",").map((k: string) => k.trim())
+    : SITE_CONFIG.defaultKeywords;
+
   return {
     metadataBase: new URL(baseUrl),
     title: {
-      default: SITE_CONFIG.companyName,
-      template: `%s | ${SITE_CONFIG.companyName}`,
+      default: companyName,
+      template: `%s | ${companyName}`,
     },
     description: "Powering the World's Favorite Beverage Brands. We are a leading beverage company dedicated to refreshing the world and making a difference.",
-    keywords: SITE_CONFIG.defaultKeywords,
-    authors: [{ name: SITE_CONFIG.companyName }],
-    creator: SITE_CONFIG.companyName,
+    keywords: defaultKeywords,
+    authors: [{ name: companyName }],
+    creator: companyName,
     icons: {
       icon: fullFaviconUrl,
       shortcut: fullFaviconUrl,
@@ -46,21 +54,21 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "en_US",
       url: baseUrl,
-      title: SITE_CONFIG.companyName,
+      title: companyName,
       description: "Powering the World's Favorite Beverage Brands.",
-      siteName: SITE_CONFIG.companyName,
+      siteName: companyName,
       images: [
         {
           url: "/assets/Home/logo-white-large.svg", // Ideally use an absolute URL or a specific OG image
           width: 1200,
           height: 630,
-          alt: SITE_CONFIG.companyName,
+          alt: companyName,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: SITE_CONFIG.companyName,
+      title: companyName,
       description: "Powering the World's Favorite Beverage Brands.",
       images: ["/assets/Home/logo-white-large.svg"], // Ideally use an absolute URL or a specific OG image
     },
@@ -84,6 +92,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const data = await GetHomePageData();
+  const extraData = await GetExtraData();
+  const globalConfig = extraData?.globalConfig || extraData?.attributes?.globalConfig;
 
   // Safely access data whether it's flat or nested in attributes
   const footerData = data?.footer || data?.attributes?.footer;
@@ -102,15 +112,46 @@ export default async function RootLayout({
   // Favicon dynamic resolution
   const faviconUrl = data?.Favicon?.url || data?.attributes?.Favicon?.url;
   const fullFaviconUrl = faviconUrl ? getStrapiMediaUrl(faviconUrl) : "/favicon.ico";
+
+  // Dynamic IDs from Strapi extra config
+  const googleAnalyticsId = globalConfig?.googleAnalyticsId || SITE_CONFIG.analytics.googleAnalyticsId;
+  const metaPixelId = globalConfig?.metaPixelId || SITE_CONFIG.analytics.metaPixelId;
+  const customScripts = globalConfig?.customScripts || [];
+
   return (
     <html lang="en">
       <head>
         <link rel="icon" href={fullFaviconUrl} />
+        {/* Render custom head scripts */}
+        {customScripts.map((script: any, index: number) => {
+          if (script.enabled && script.position === "Head") {
+            return (
+              <div
+                key={`head-script-${script.id || index}`}
+                dangerouslySetInnerHTML={{ __html: script.scriptCode }}
+              />
+            );
+          }
+          return null;
+        })}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning={true}
       >
+        {/* Render custom BodyStart scripts */}
+        {customScripts.map((script: any, index: number) => {
+          if (script.enabled && script.position === "BodyStart") {
+            return (
+              <div
+                key={`bodystart-script-${script.id || index}`}
+                dangerouslySetInnerHTML={{ __html: script.scriptCode }}
+              />
+            );
+          }
+          return null;
+        })}
+
         <StoreProvider>
 
           <NavbarServer navbarImage={navbarImage} navbarColor={navbarColor} navbarFontColor={navbarFontColor} />
@@ -122,10 +163,10 @@ export default async function RootLayout({
           />
 
           {/* Google Analytics Tracking */}
-          {SITE_CONFIG.analytics.googleAnalyticsId && (
+          {googleAnalyticsId && (
             <>
               <Script
-                src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.analytics.googleAnalyticsId}`}
+                src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
                 strategy="afterInteractive"
               />
               <Script id="google-analytics" strategy="afterInteractive">
@@ -133,14 +174,14 @@ export default async function RootLayout({
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag('js', new Date());
-                  gtag('config', '${SITE_CONFIG.analytics.googleAnalyticsId}');
+                  gtag('config', '${googleAnalyticsId}');
                 `}
               </Script>
             </>
           )}
 
           {/* Meta Pixel (Facebook) Tracking */}
-          {SITE_CONFIG.analytics.metaPixelId && (
+          {metaPixelId && (
             <Script id="meta-pixel" strategy="afterInteractive">
               {`
                 !function(f,b,e,v,n,t,s)
@@ -151,12 +192,25 @@ export default async function RootLayout({
                 t.src=v;s=b.getElementsByTagName(e)[0];
                 s.parentNode.insertBefore(t,s)}(window, document,'script',
                 'https://connect.facebook.net/en_US/fbevents.js');
-                fbq('init', '${SITE_CONFIG.analytics.metaPixelId}');
+                fbq('init', '${metaPixelId}');
                 fbq('track', 'PageView');
               `}
             </Script>
           )}
         </StoreProvider>
+
+        {/* Render custom BodyEnd scripts */}
+        {customScripts.map((script: any, index: number) => {
+          if (script.enabled && script.position === "BodyEnd") {
+            return (
+              <div
+                key={`bodyend-script-${script.id || index}`}
+                dangerouslySetInnerHTML={{ __html: script.scriptCode }}
+              />
+            );
+          }
+          return null;
+        })}
       </body>
     </html>
   );
