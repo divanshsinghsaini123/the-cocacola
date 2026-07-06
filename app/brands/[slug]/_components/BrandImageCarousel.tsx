@@ -125,7 +125,7 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
 
         const interval = setInterval(() => {
             handleNextRef.current();
-        }, 1000);
+        }, 3000);
 
         return () => clearInterval(interval);
     }, [images.length, isFormatted, isHovered]);
