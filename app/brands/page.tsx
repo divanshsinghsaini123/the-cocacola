@@ -52,13 +52,13 @@ export default async function BrandsPage() {
                                 key={brand._id ? String(brand._id) : index}
                                 className="group flex flex-col items-center gap-3"
                             >
-                                <div className="w-full bg-white rounded-[14px] lg:rounded-[18px] flex items-center justify-center p-6 h-[160px] lg:h-[230px] md:h-[180px] relative shadow-[0_8px_25px_rgba(0,0,0,0.05)] group-hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 group-hover:scale-105 overflow-hidden block">
-                                    <div className="relative w-[100%] h-[100%]">
+                                <div className="w-full bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 group-hover:scale-[1.02] flex flex-col items-center justify-center p-5 aspect-square">
+                                    <div className="relative w-full h-full">
                                         <Image
                                             src={process.env.NEXT_PUBLIC_GCORE_CDN_URL + "/" + brand.logo}
                                             alt={brand.name}
                                             fill
-                                            className="object-contain"
+                                            className="object-contain rounded-lg"
                                         // unoptimized={true}
                                         />
                                     </div>

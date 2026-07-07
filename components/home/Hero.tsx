@@ -59,7 +59,7 @@ export default function Hero({ data, buttonStyle }: HeroProps) {
     return (
         <section id="hero" className="w-full bg-[var(--background)] pt-4 lg:pt-14 pb-4 lg:pb-14">
             <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-6">
-                <div className="relative w-full h-[600px] md:h-[540px] lg:h-[570px] rounded-[18px] overflow-hidden">
+                <div className="relative w-full h-[600px] md:h-[540px] lg:h-[570px] rounded-[18px] overflow-hidden isolate">
                     {/* Background Images */}
                     <div className="absolute inset-0">
                         {/* Mobile Images (Cross-Fade) */}

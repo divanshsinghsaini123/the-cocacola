@@ -81,7 +81,7 @@ export default function MoreFromCloud9({ data }: MoreFromCloud9Props) {
                         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
                         {finalItems.map((item: MoreFromCloud9Item, index: number) => (
-                            <div key={`${item.id}-${index}`} className="w-[85vw] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-start bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col shadow-sm group">
+                            <div key={`${item.id}-${index}`} className="w-[85vw] md:w-[calc((100%-48px)/3)] flex-shrink-0 snap-start bg-[var(--component)] rounded-[20px] overflow-hidden flex flex-col shadow-sm group isolate">
                                 <div className="relative h-[200px] md:h-[250px] w-full">
                                     {item.image ? (
                                         <Image

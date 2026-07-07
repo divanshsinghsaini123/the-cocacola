@@ -64,6 +64,33 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
         }
     }, [images.length]);
 
+    const scrollToTarget = (targetScroll: number, instant: boolean = false) => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+
+        if (instant) {
+            container.style.scrollSnapType = 'none';
+            container.style.scrollBehavior = 'auto';
+            container.scrollLeft = targetScroll;
+            container.style.scrollSnapType = 'x mandatory';
+        } else {
+            container.style.scrollSnapType = 'none';
+            container.style.scrollBehavior = 'smooth';
+            container.scrollTo({ left: targetScroll });
+
+            const restoreSnap = () => {
+                container.style.scrollSnapType = 'x mandatory';
+                container.removeEventListener('scrollend', restoreSnap);
+            };
+            container.addEventListener('scrollend', restoreSnap);
+
+            // Fallback for browsers that don't support scrollend event
+            setTimeout(() => {
+                container.style.scrollSnapType = 'x mandatory';
+            }, 600);
+        }
+    };
+
     const handlePrev = () => {
         if (!scrollContainerRef.current) return;
         const container = scrollContainerRef.current;
@@ -75,18 +102,17 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
         const rawIndex = Math.round(scrollLeft / stride);
         const realIndex = rawIndex % images.length;
 
+        let targetScroll = (rawIndex - 1) * stride;
+
         // If we are getting close to the start, reset to the middle set instantly first
         if (rawIndex <= 2 * images.length) {
             const middleSetIndex = Math.floor(SETS_COUNT / 2);
-            const targetScroll = (middleSetIndex * images.length + realIndex) * stride;
-            container.style.scrollBehavior = 'auto';
-            container.scrollLeft = targetScroll;
-            // Force layout reflow
-            const _reflow = container.offsetHeight;
-            container.style.scrollBehavior = 'smooth';
+            const resetScroll = (middleSetIndex * images.length + realIndex) * stride;
+            scrollToTarget(resetScroll, true);
+            targetScroll = resetScroll - stride;
         }
 
-        container.scrollBy({ left: -stride, behavior: 'smooth' });
+        scrollToTarget(targetScroll, false);
     };
 
     const handleNext = () => {
@@ -100,18 +126,17 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
         const rawIndex = Math.round(scrollLeft / stride);
         const realIndex = rawIndex % images.length;
 
+        let targetScroll = (rawIndex + 1) * stride;
+
         // If we are getting close to the end, reset to the middle set instantly first
         if (rawIndex >= (SETS_COUNT - 2) * images.length) {
             const middleSetIndex = Math.floor(SETS_COUNT / 2);
-            const targetScroll = (middleSetIndex * images.length + realIndex) * stride;
-            container.style.scrollBehavior = 'auto';
-            container.scrollLeft = targetScroll;
-            // Force layout reflow
-            const _reflow = container.offsetHeight;
-            container.style.scrollBehavior = 'smooth';
+            const resetScroll = (middleSetIndex * images.length + realIndex) * stride;
+            scrollToTarget(resetScroll, true);
+            targetScroll = resetScroll + stride;
         }
 
-        container.scrollBy({ left: stride, behavior: 'smooth' });
+        scrollToTarget(targetScroll, false);
     };
 
     // Auto-scroll logic with mutable callback ref to prevent interval recreation
@@ -125,7 +150,7 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
 
         const interval = setInterval(() => {
             handleNextRef.current();
-        }, 3000);
+        }, 1500);
 
         return () => clearInterval(interval);
     }, [images.length, isFormatted, isHovered]);
@@ -137,7 +162,7 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
             <div className="max-w-full mx-auto px-4 md:px-0">
                 <div
                     ref={scrollContainerRef}
-                    className={`flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden ${isFormatted ? 'scroll-smooth' : ''}`}
+                    className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
                     onScroll={checkScroll}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
@@ -191,16 +216,11 @@ export default function BrandImageCarousel({ images }: BrandImageCarouselProps) 
                                         const stride = cardWidth + 24; // gap-6
                                         const setWidth = images.length * stride;
 
-                                        // Calculate closest target in the current set
                                         const currentScroll = container.scrollLeft;
                                         const currentSet = Math.round(currentScroll / setWidth);
 
                                         const targetScroll = (currentSet * images.length + index) * stride;
-
-                                        container.scrollTo({
-                                            left: targetScroll,
-                                            behavior: 'smooth'
-                                        });
+                                        scrollToTarget(targetScroll, false);
                                     }}
                                     className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${index === activeIndex ? 'w-8 bg-black' : 'w-2 bg-gray-400'
                                         }`}
