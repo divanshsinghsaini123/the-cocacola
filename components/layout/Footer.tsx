@@ -111,8 +111,13 @@ const CustomLink = ({ href, className, style, onClick, children }: CustomLinkPro
         );
     }
 
+    let finalHref = href;
+    if (!finalHref.startsWith('/') && !finalHref.startsWith('#') && !finalHref.startsWith('?')) {
+        finalHref = `/${finalHref}`;
+    }
+
     return (
-        <Link href={href} className={className} style={style} onClick={onClick}>
+        <Link href={finalHref} className={className} style={style} onClick={onClick}>
             {children}
         </Link>
     );
