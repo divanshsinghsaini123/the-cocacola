@@ -423,3 +423,30 @@ export async function GetCofillingData() {
         return null;
     }
 }
+
+export async function GetLandingDate() {
+    try {
+        const response = await fetch(
+            Strapi_Landing,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        )
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${Strapi_Landing} Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch Landing page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    }
+    catch (error) {
+        console.error("Error fetching Landing page data:", error);
+        return null;
+    }
+}
