@@ -83,7 +83,7 @@ const CustomLink = ({ href, className, style, onClick, children }: CustomLinkPro
         );
     }
 
-    const hasProtocol = 
+    const hasProtocol =
         href.startsWith('http://') ||
         href.startsWith('https://') ||
         href.startsWith('mailto:') ||
@@ -201,9 +201,9 @@ export default function Footer(props: FooterProps) {
     const section3Links = getLinks(footerData?.Section3);
     const FooterImageUrl = footerData?.FooterImage?.url as string;
 
-    const section1Name = footerData?.Section1?.LinkSectionName || "Help";
-    const section2Name = footerData?.Section2?.LinkSectionName || "Shop & Visit";
-    const section3Name = footerData?.Section3?.LinkSectionName || "Legal";
+    const section1Name = footerData?.Section1?.LinkSectionName;
+    const section2Name = footerData?.Section2?.LinkSectionName;
+    const section3Name = footerData?.Section3?.LinkSectionName;
     const footerHexCode = props.footerBgColor || footerData?.FooterHexColorCode || "black";
 
     return (
