@@ -124,12 +124,7 @@ export default function Navbar({ stores, navbarImage, navbarColor, navbarFontCol
         });
     } else {
         navLinks = {
-            "Brands": { href: "/brands" },
-            "Cofilling": { href: "/cofilling" },
-            "Become Our Distributor": { href: "/become-our-distributor" },
-            "VisiCooler": { href: "/visicooler" },
-            // "Promos & Offers": { href: "/promos&offers" },
-            "Contact Us": { href: "/contactus" }
+
         };
     }
 
