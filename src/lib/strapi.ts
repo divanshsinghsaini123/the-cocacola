@@ -65,6 +65,10 @@ if (!STRAPI_Coffiling) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
+const Strapi_Landing = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/landing-page?populate[Card][populate]=*"
+if (!Strapi_Landing) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
+}
 let cachedHomePageData: any = null;
 export async function GetBrandPageData() {
     try {
