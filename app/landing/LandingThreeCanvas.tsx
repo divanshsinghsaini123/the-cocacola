@@ -2,16 +2,31 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { brandCards as pageCards, BrandCardData as PageCardData } from "./data";
+interface CanvasCard {
+  id: string | number;
+  title: string;
+  tagline: string;
+  description: string;
+  image: string;
+  button: {
+    buttonLink: string;
+    buttonText: string;
+    disablebutton: boolean;
+  };
+  bgColor: string;
+  accentColor: string;
+}
 
 interface LandingThreeCanvasProps {
   activeIndex: number;
   onChangeActiveIndex: (index: number) => void;
+  cards: CanvasCard[];
 }
 
 export default function LandingThreeCanvas({
   activeIndex,
   onChangeActiveIndex,
+  cards,
 }: LandingThreeCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -21,7 +36,7 @@ export default function LandingThreeCanvas({
 
     const container = containerRef.current;
     const canvas = canvasRef.current;
-    const N = pageCards.length;
+    const N = cards.length;
     const step = (2 * Math.PI) / N;
 
     // --- SCENE SETUP ---
@@ -128,7 +143,7 @@ export default function LandingThreeCanvas({
     // Store card group references
     const cardGroups: THREE.Group[] = [];
 
-    pageCards.forEach((card, index) => {
+    cards.forEach((card, index) => {
       const cardGroup = new THREE.Group();
       cardGroup.userData = { cardIndex: index };
 
@@ -322,7 +337,9 @@ export default function LandingThreeCanvas({
 
             if (cardIndex === calculatedActiveIndex) {
               // Clicked the active card -> Redirect!
-              window.location.href = pageCards[cardIndex].link;
+              if (!cards[cardIndex].button?.disablebutton && cards[cardIndex].button?.buttonLink) {
+                window.location.href = cards[cardIndex].button.buttonLink;
+              }
             } else {
               // Clicked inactive card -> Rotate to center it
               let diff = -cardIndex * step - targetAngle;
@@ -457,7 +474,7 @@ export default function LandingThreeCanvas({
       scene.clear();
       renderer.dispose();
     };
-  }, [onChangeActiveIndex]);
+  }, [onChangeActiveIndex, cards]);
 
   return (
     <div

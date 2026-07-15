@@ -3,8 +3,27 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { brandCards as pageCards } from "./data";
 import { ChevronRight, MousePointerClick, Volume2, VolumeX } from "lucide-react";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
+import { GetLandingDate } from "@/src/lib/strapi";
+import { useRouter } from "next/navigation";
+
+interface Button {
+  buttonLink: string;
+  buttonText: string;
+  disablebutton: boolean;
+}
+interface Card {
+  id: string | number;
+  title: string;
+  tagline: string;
+  description: string;
+  image: string;
+  button: Button;
+  bgColor: string;         // Primary theme color
+  accentColor: string;     // Bright highlighting color (for titles, glow, buttons)
+}
+
 
 // Dynamically import Three.js canvas to avoid SSR errors
 const LandingThreeCanvas = dynamic(() => import("./LandingThreeCanvas"), {
@@ -16,7 +35,37 @@ export default function LandingPage() {
   const [displayIndex, setDisplayIndex] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [cards, setCards] = useState<Card[]>([]);
+  const router = useRouter();
+  useEffect(() => {
+    const data = async () => {
+      const res = await GetLandingDate();
+      if (!res || res.DisablePage === true) {
+        router.push('/');
+      }
+      else if (res && res.Card) {
 
+        const mappedCards: Card[] = res.Card.map((c: any) => ({
+          id: c.id,
+          title: c.title || "",
+          tagline: c.tagline || "",
+          description: c.description || "",
+          image: getStrapiMediaUrl(c.image?.url),
+          button: {
+            buttonLink: c.button?.buttonLink || "#",
+            buttonText: c.button?.buttonText || "",
+            disablebutton: c.button?.disablebutton || false,
+          },
+          bgColor: c.bgColor || "#000000",
+          accentColor: c.accentColor || c.bgColor || "#ffffff",
+        }));
+        setCards(mappedCards);
+      }
+      setLoading(false);
+    }
+    data();
+  }, [])
   // Handle client-side mounting
   useEffect(() => {
     setMounted(true);
@@ -33,7 +82,7 @@ export default function LandingPage() {
     return () => clearTimeout(timer);
   }, [activeIndex, mounted]);
 
-  if (!mounted) {
+  if (!mounted || loading) {
     return (
       <div className="w-full h-screen bg-[#0b0b0b] flex items-center justify-center text-white">
         <div className="flex flex-col items-center gap-4">
@@ -44,7 +93,11 @@ export default function LandingPage() {
     );
   }
 
-  const activePage = pageCards[displayIndex];
+  if (cards.length === 0) {
+    return null;
+  }
+
+  const activePage = cards[displayIndex];
 
   return (
     <main className="w-full h-screen relative bg-[#0b0b0b] text-white overflow-hidden select-none">
@@ -59,6 +112,7 @@ export default function LandingPage() {
         <LandingThreeCanvas
           activeIndex={activeIndex}
           onChangeActiveIndex={setActiveIndex}
+          cards={cards}
         />
       </div>
 
@@ -83,19 +137,21 @@ export default function LandingPage() {
         </div>
 
         {/* Action Prompt */}
-        <div className="mt-6 md:mt-0 flex flex-col items-start md:items-end gap-2 pointer-events-auto">
-          <Link
-            href={activePage.link}
-            className="group flex items-center gap-3 px-6 py-3.5 bg-white text-black font-bold uppercase text-xs tracking-widest rounded-full shadow-lg hover:scale-105 transition-all duration-300"
-          >
-            <span>Explore Page</span>
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <div className="flex items-center gap-2 mt-1 opacity-50 text-[10px] uppercase tracking-widest font-semibold ml-2 md:ml-0 md:mr-2">
-            <MousePointerClick className="w-3.5 h-3.5 animate-pulse" />
-            <span>Or click card to enter</span>
+        {!activePage.button?.disablebutton && (
+          <div className="mt-6 md:mt-0 flex flex-col items-start md:items-end gap-2 pointer-events-auto">
+            <Link
+              href={activePage.button?.buttonLink || "#"}
+              className="group flex items-center gap-3 px-6 py-3.5 bg-white text-black font-bold uppercase text-xs tracking-widest rounded-full shadow-lg hover:scale-105 transition-all duration-300"
+            >
+              <span>{activePage.button?.buttonText || "Explore Page"}</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <div className="flex items-center gap-2 mt-1 opacity-50 text-[10px] uppercase tracking-widest font-semibold ml-2 md:ml-0 md:mr-2">
+              <MousePointerClick className="w-3.5 h-3.5 animate-pulse" />
+              <span>Or click card to enter</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* 5. Custom Background Ambient Overlay for Soft glow */}
