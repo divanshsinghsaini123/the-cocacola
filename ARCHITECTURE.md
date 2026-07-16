@@ -78,7 +78,7 @@ The system separates standard website layouts and editorial contents from transa
 
 To optimize load speeds globally and reduce primary hosting bandwidth consumption:
 *   **Object Storage:** All images, videos, and PDFs uploaded via the Strapi CMS or our Custom CMS are stored directly in a **Gcore S3 Cloud Bucket** (`cocacola-bucket`).
-*   **Unified CDN Host:** We have configured a premium **Gcore CDN** (`https://cdn.birbot.tech`) that wraps around the Gcore S3 bucket endpoint.
+*   **Unified CDN Host:** We have configured a premium **Gcore CDN** (`https://cdn.thecloud9beverages.com`) that wraps around the Gcore S3 bucket endpoint.
 *   **Caching & Optimization:** Media assets are requested and rendered on the client browser exclusively using the CDN hostname, guaranteeing sub-millisecond response times.
 
 ---
