@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn.birbot.tech", // Add GCORE_CDN_HOSTNAME to your .env
+        hostname: "cdn.cloud9beverages.com", // Add GCORE_CDN_HOSTNAME to your .env
       },
       {
         protocol: "https",
