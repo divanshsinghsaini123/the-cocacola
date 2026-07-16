@@ -105,8 +105,6 @@ export default function LandingPage() {
       {/* Subtle grid pattern overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.6)_100%)] z-[1] pointer-events-none" />
 
-
-
       {/* 3. Three.js 3D Ring Canvas */}
       <div className="absolute inset-0 z-10">
         <LandingThreeCanvas
@@ -156,11 +154,11 @@ export default function LandingPage() {
 
       {/* 5. Custom Background Ambient Overlay for Soft glow */}
       <div
-        className="absolute w-[600px] h-[600px] -top-[200px] -left-[200px] rounded-full blur-[150px] opacity-15 pointer-events-none transition-colors duration-1000"
+        className="absolute w-[600px] h-[600px] -top-[200px] -left-[200px] rounded-full blur-[150px] opacity-15 pointer-events-none transition-colors duration-1000 z-[2]"
         style={{ backgroundColor: activePage.accentColor }}
       />
       <div
-        className="absolute w-[650px] h-[650px] -bottom-[300px] -right-[200px] rounded-full blur-[160px] opacity-10 pointer-events-none transition-colors duration-1000"
+        className="absolute w-[650px] h-[650px] -bottom-[300px] -right-[200px] rounded-full blur-[160px] opacity-10 pointer-events-none transition-colors duration-1000 z-[2]"
         style={{ backgroundColor: activePage.accentColor }}
       />
     </main>
