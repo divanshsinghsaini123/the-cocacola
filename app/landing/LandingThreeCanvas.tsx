@@ -303,7 +303,7 @@ export default function LandingThreeCanvas({
       if (!isDragging) return;
       const dx = e.clientX - startX;
 
-      const sensitivity = container.clientWidth < 768 ? 3.0 : 1.8;
+      const sensitivity = container.clientWidth < 768 ? 1.5 : 1.8;
 
       // Calculate new target angle based on drag delta with screen-aware sensitivity
       const rotationDelta = (dx / container.clientWidth) * Math.PI * sensitivity;
