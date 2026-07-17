@@ -153,9 +153,9 @@ export default function LandingThreeCanvas({
       const cardGroup = new THREE.Group();
       cardGroup.userData = { cardIndex: index };
 
-      // 1. Card Base (Colored Background)
+      // 1. Card Base (Neutral Dark Background to prevent color shade/bleed on image fade)
       const baseMat = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(card.bgColor),
+        color: new THREE.Color("#1c1c1e"),
         roughness: 0.18,
         metalness: 0.08,
         transparent: true,
