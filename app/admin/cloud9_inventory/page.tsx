@@ -19,13 +19,21 @@ interface ApiResponse {
     cloud9_inventory: InventoryItem[];
 }
 
+interface GroupedPincode {
+    pincode: string;
+    items: InventoryItem[];
+    totalItems: number;
+    inStockCount: number;
+    outOfStockCount: number;
+}
+
 export default function Cloud9InventoryPage() {
     const [inventory, setInventory] = useState<InventoryItem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [selectedPincode, setSelectedPincode] = useState<string>("all");
     const [stockFilter, setStockFilter] = useState<string>("all");
+    const [expandedPincodes, setExpandedPincodes] = useState<Record<string, boolean>>({});
 
     const API_ENDPOINT = "/api/admin/cloud9_inventory";
 
@@ -40,8 +48,7 @@ export default function Cloud9InventoryPage() {
                 throw new Error(`Failed to fetch inventory (Status ${res.status})`);
             }
             const data: ApiResponse = await res.json();
-
-            // Support both direct cloud9_inventory key and wrapped array format
+            
             let items: InventoryItem[] = [];
             if (data && Array.isArray(data.cloud9_inventory)) {
                 items = data.cloud9_inventory;
@@ -55,6 +62,12 @@ export default function Cloud9InventoryPage() {
             }
 
             setInventory(items);
+
+            // Default expand first pincode accordion
+            if (items.length > 0) {
+                const firstPincode = String(items[0].pincode || "Unknown");
+                setExpandedPincodes({ [firstPincode]: true });
+            }
         } catch (err: any) {
             console.error("Error fetching Cloud9 Inventory:", err);
             setError(err.message || "An unexpected error occurred while fetching inventory data.");
@@ -67,19 +80,8 @@ export default function Cloud9InventoryPage() {
         fetchInventory();
     }, []);
 
-    // Extract unique pincodes for drop-down quick filter
-    const availablePincodes = useMemo(() => {
-        const pincodes = new Set<string>();
-        inventory.forEach((item) => {
-            if (item.pincode) {
-                pincodes.add(String(item.pincode));
-            }
-        });
-        return Array.from(pincodes);
-    }, [inventory]);
-
-    // Real-time filtering logic
-    const filteredInventory = useMemo(() => {
+    // Filter items first by search query & stock availability
+    const filteredItems = useMemo(() => {
         return inventory.filter((item) => {
             const query = searchQuery.toLowerCase().trim();
             const parentName = (item.parent_product_name || "").toLowerCase();
@@ -94,9 +96,6 @@ export default function Cloud9InventoryPage() {
                 sku.includes(query) ||
                 pincode.includes(query);
 
-            const matchesPincode =
-                selectedPincode === "all" || String(item.pincode || "") === selectedPincode;
-
             const isItemInStock =
                 String(item.in_stock).toLowerCase() === "yes" ||
                 String(item.in_stock).toLowerCase() === "true" ||
@@ -107,11 +106,64 @@ export default function Cloud9InventoryPage() {
                 (stockFilter === "in_stock" && isItemInStock) ||
                 (stockFilter === "out_of_stock" && !isItemInStock);
 
-            return matchesSearch && matchesPincode && matchesStock;
+            return matchesSearch && matchesStock;
         });
-    }, [inventory, searchQuery, selectedPincode, stockFilter]);
+    }, [inventory, searchQuery, stockFilter]);
 
-    // Overview Stats
+    // Group items by Pincode
+    const groupedByPincode = useMemo(() => {
+        const groups: Record<string, InventoryItem[]> = {};
+
+        filteredItems.forEach((item) => {
+            const pin = item.pincode ? String(item.pincode) : "Unknown Area";
+            if (!groups[pin]) {
+                groups[pin] = [];
+            }
+            groups[pin].push(item);
+        });
+
+        const result: GroupedPincode[] = Object.keys(groups).map((pin) => {
+            const items = groups[pin];
+            const inStockCount = items.filter((item) => {
+                const s = String(item.in_stock).toLowerCase();
+                return s === "yes" || s === "true" || Number(item.in_stock) > 0;
+            }).length;
+
+            return {
+                pincode: pin,
+                items,
+                totalItems: items.length,
+                inStockCount,
+                outOfStockCount: items.length - inStockCount,
+            };
+        });
+
+        return result;
+    }, [filteredItems]);
+
+    // Toggle single accordion
+    const togglePincode = (pincode: string) => {
+        setExpandedPincodes((prev) => ({
+            ...prev,
+            [pincode]: !prev[pincode],
+        }));
+    };
+
+    // Expand / Collapse all
+    const expandAll = () => {
+        const allExpanded: Record<string, boolean> = {};
+        groupedByPincode.forEach((group) => {
+            allExpanded[group.pincode] = true;
+        });
+        setExpandedPincodes(allExpanded);
+    };
+
+    const collapseAll = () => {
+        setExpandedPincodes({});
+    };
+
+    // Overall metrics
+    const totalPincodes = groupedByPincode.length;
     const totalItems = inventory.length;
     const inStockCount = useMemo(() => {
         return inventory.filter((item) => {
@@ -119,11 +171,10 @@ export default function Cloud9InventoryPage() {
             return s === "yes" || s === "true" || Number(item.in_stock) > 0;
         }).length;
     }, [inventory]);
-    const outOfStockCount = totalItems - inStockCount;
 
     return (
         <div className="max-w-7xl mx-auto space-y-6 pb-12">
-            {/* Header section */}
+            {/* Top Navigation & Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <Link
@@ -154,10 +205,10 @@ export default function Cloud9InventoryPage() {
                         </div>
                         <div>
                             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
-                                Cloud9 Inventory Dashboard
+                                Cloud9 Pincode Inventory
                             </h1>
                             <p className="text-sm text-gray-500">
-                                Real-time inventory & stock levels by area pincode.
+                                Inventory catalog organized by area pincodes. Click any pincode accordion to view product details.
                             </p>
                         </div>
                     </div>
@@ -187,11 +238,23 @@ export default function Cloud9InventoryPage() {
                 </div>
             </div>
 
-            {/* Quick Metrics Cards */}
+            {/* Metric Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Items</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Area Pincodes</p>
+                        <p className="text-2xl font-extrabold text-gray-900 mt-1">{loading ? "..." : totalPincodes}</p>
+                    </div>
+                    <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Products</p>
                         <p className="text-2xl font-extrabold text-gray-900 mt-1">{loading ? "..." : totalItems}</p>
                     </div>
                     <div className="p-3 bg-gray-100 rounded-xl text-gray-600">
@@ -203,7 +266,7 @@ export default function Cloud9InventoryPage() {
 
                 <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">In Stock</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total In-Stock Items</p>
                         <p className="text-2xl font-extrabold text-emerald-600 mt-1">{loading ? "..." : inStockCount}</p>
                     </div>
                     <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600">
@@ -212,21 +275,9 @@ export default function Cloud9InventoryPage() {
                         </svg>
                     </div>
                 </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
-                    <div>
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Out of Stock</p>
-                        <p className="text-2xl font-extrabold text-rose-600 mt-1">{loading ? "..." : outOfStockCount}</p>
-                    </div>
-                    <div className="p-3 bg-rose-50 rounded-xl text-rose-600">
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                </div>
             </div>
 
-            {/* Filter & Controls Bar */}
+            {/* Filter & Accordion Controls */}
             <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
                 {/* Search Bar */}
                 <div className="relative w-full md:w-96">
@@ -239,7 +290,7 @@ export default function Cloud9InventoryPage() {
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search product name, pincode, or SKU ID..."
+                        placeholder="Search product name, pincode, SKU ID..."
                         className="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition-all"
                     />
                     {searchQuery && (
@@ -252,38 +303,36 @@ export default function Cloud9InventoryPage() {
                     )}
                 </div>
 
-                {/* Filter Selects */}
-                <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    {/* Stock Filter */}
+                {/* Controls */}
+                <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
                     <select
                         value={stockFilter}
                         onChange={(e) => setStockFilter(e.target.value)}
                         className="px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition-all cursor-pointer"
                     >
-                        <option value="all">All Stock Status</option>
+                        <option value="all">All Availability</option>
                         <option value="in_stock">In Stock Only ('Yes')</option>
                         <option value="out_of_stock">Out of Stock Only</option>
                     </select>
 
-                    {/* Pincode Filter */}
-                    {availablePincodes.length > 0 && (
-                        <select
-                            value={selectedPincode}
-                            onChange={(e) => setSelectedPincode(e.target.value)}
-                            className="px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition-all cursor-pointer"
+                    <div className="flex items-center gap-2 border-l border-gray-200 pl-3">
+                        <button
+                            onClick={expandAll}
+                            className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs rounded-xl transition-colors"
                         >
-                            <option value="all">All Area Pincodes</option>
-                            {availablePincodes.map((pin) => (
-                                <option key={pin} value={pin}>
-                                    Pincode: {pin}
-                                </option>
-                            ))}
-                        </select>
-                    )}
+                            Expand All
+                        </button>
+                        <button
+                            onClick={collapseAll}
+                            className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs rounded-xl transition-colors"
+                        >
+                            Collapse All
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {/* Content Area */}
+            {/* Accordion List View */}
             {loading ? (
                 <div className="bg-white p-12 rounded-2xl border border-gray-200 shadow-sm text-center flex flex-col items-center justify-center min-h-[300px]">
                     <div className="w-12 h-12 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin mb-4" />
@@ -306,133 +355,179 @@ export default function Cloud9InventoryPage() {
                         Try Again
                     </button>
                 </div>
+            ) : groupedByPincode.length === 0 ? (
+                <div className="bg-white p-12 rounded-2xl border border-gray-200 shadow-sm text-center">
+                    <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                    <h3 className="text-base font-bold text-gray-800">No inventory found</h3>
+                    <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
+                        {searchQuery ? "No products or pincodes match your active search terms." : "The n8n webhook API returned no inventory items."}
+                    </p>
+                </div>
             ) : (
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr className="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    <th className="py-3.5 px-4 md:px-6">Pincode</th>
-                                    <th className="py-3.5 px-4 md:px-6">Product Name</th>
-                                    <th className="py-3.5 px-4 md:px-6">SKU ID</th>
-                                    <th className="py-3.5 px-4 md:px-6">Size</th>
-                                    <th className="py-3.5 px-4 md:px-6">Price (MRP / Offer)</th>
-                                    <th className="py-3.5 px-4 md:px-6">Max Qty</th>
-                                    <th className="py-3.5 px-4 md:px-6 text-right">Stock Status</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {filteredInventory.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={7} className="py-12 text-center text-gray-500">
-                                            <div className="max-w-xs mx-auto space-y-2">
-                                                <svg className="w-8 h-8 text-gray-300 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                                                </svg>
-                                                <p className="font-semibold text-gray-700">No matching inventory items</p>
-                                                <p className="text-xs text-gray-400">
-                                                    {searchQuery ? "Try searching with a different term or clear filters." : "The API returned no inventory items."}
-                                                </p>
+                <div className="space-y-4">
+                    {groupedByPincode.map((group) => {
+                        const isExpanded = !!expandedPincodes[group.pincode];
+
+                        return (
+                            <div
+                                key={group.pincode}
+                                className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden transition-all duration-200 hover:border-amber-200"
+                            >
+                                {/* Accordion Header */}
+                                <button
+                                    onClick={() => togglePincode(group.pincode)}
+                                    className="w-full p-4 md:p-5 flex items-center justify-between bg-white hover:bg-gray-50/70 transition-colors text-left focus:outline-none"
+                                >
+                                    <div className="flex items-center gap-3 md:gap-4">
+                                        <div className="p-3 bg-blue-50 text-blue-700 rounded-xl font-bold border border-blue-100 flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            </svg>
+                                            <span className="text-sm md:text-base tracking-wide font-mono">
+                                                {group.pincode}
+                                            </span>
+                                        </div>
+
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="text-base md:text-lg font-bold text-gray-900">
+                                                    Area Pincode: {group.pincode}
+                                                </h3>
                                             </div>
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    filteredInventory.map((item, idx) => {
-                                        const isInStock =
-                                            String(item.in_stock).toLowerCase() === "yes" ||
-                                            String(item.in_stock).toLowerCase() === "true" ||
-                                            Number(item.in_stock) > 0;
+                                            <p className="text-xs text-gray-500 mt-0.5">
+                                                {group.totalItems} product{group.totalItems > 1 ? "s" : ""} listed in this area
+                                            </p>
+                                        </div>
+                                    </div>
 
-                                        return (
-                                            <tr
-                                                key={item.sku_id ? `${item.sku_id}-${idx}` : idx}
-                                                className="hover:bg-gray-50/70 transition-colors"
+                                    <div className="flex items-center gap-3">
+                                        {/* Status badges summary */}
+                                        <div className="hidden sm:flex items-center gap-2">
+                                            <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100">
+                                                {group.inStockCount} In Stock
+                                            </span>
+                                            {group.outOfStockCount > 0 && (
+                                                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 bg-rose-50 text-rose-700 rounded-lg border border-rose-100">
+                                                    {group.outOfStockCount} Out of Stock
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Arrow Icon */}
+                                        <div className="p-2 bg-gray-100 rounded-xl text-gray-500 group-hover:bg-gray-200 transition-colors">
+                                            <svg
+                                                className={`w-5 h-5 transform transition-transform duration-200 ${
+                                                    isExpanded ? "rotate-180" : ""
+                                                }`}
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
                                             >
-                                                {/* Pincode */}
-                                                <td className="py-4 px-4 md:px-6">
-                                                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">
-                                                        <svg className="w-3 h-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                        </svg>
-                                                        {item.pincode || "N/A"}
-                                                    </span>
-                                                </td>
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </button>
 
-                                                {/* Product Name */}
-                                                <td className="py-4 px-4 md:px-6">
-                                                    <div className="font-bold text-gray-900">
-                                                        {item.variant_product_name || item.parent_product_name || "Unnamed Product"}
-                                                    </div>
-                                                    {item.parent_product_name && item.variant_product_name && item.parent_product_name !== item.variant_product_name && (
-                                                        <div className="text-xs text-gray-500 mt-0.5">
-                                                            Parent: {item.parent_product_name}
-                                                        </div>
-                                                    )}
-                                                </td>
+                                {/* Accordion Content: Products Table */}
+                                {isExpanded && (
+                                    <div className="border-t border-gray-100 bg-gray-50/50">
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-left border-collapse text-sm">
+                                                <thead>
+                                                    <tr className="bg-gray-100/80 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                                                        <th className="py-3 px-4 md:px-6">Product Details</th>
+                                                        <th className="py-3 px-4 md:px-6">SKU ID</th>
+                                                        <th className="py-3 px-4 md:px-6">Size</th>
+                                                        <th className="py-3 px-4 md:px-6">Price (MRP / Offer)</th>
+                                                        <th className="py-3 px-4 md:px-6">Max Qty</th>
+                                                        <th className="py-3 px-4 md:px-6 text-right">Stock Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-200/60 bg-white">
+                                                    {group.items.map((item, idx) => {
+                                                        const isInStock =
+                                                            String(item.in_stock).toLowerCase() === "yes" ||
+                                                            String(item.in_stock).toLowerCase() === "true" ||
+                                                            Number(item.in_stock) > 0;
 
-                                                {/* SKU ID */}
-                                                <td className="py-4 px-4 md:px-6">
-                                                    <span className="font-mono text-xs bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-medium border border-gray-200">
-                                                        {item.sku_id || "N/A"}
-                                                    </span>
-                                                </td>
+                                                        return (
+                                                            <tr
+                                                                key={item.sku_id ? `${item.sku_id}-${idx}` : idx}
+                                                                className="hover:bg-amber-50/30 transition-colors"
+                                                            >
+                                                                {/* Product Details */}
+                                                                <td className="py-3.5 px-4 md:px-6">
+                                                                    <div className="font-bold text-gray-900">
+                                                                        {item.variant_product_name || item.parent_product_name || "Unnamed Product"}
+                                                                    </div>
+                                                                    {item.parent_product_name &&
+                                                                        item.variant_product_name &&
+                                                                        item.parent_product_name !== item.variant_product_name && (
+                                                                            <div className="text-xs text-gray-500 mt-0.5">
+                                                                                Parent: {item.parent_product_name}
+                                                                            </div>
+                                                                        )}
+                                                                </td>
 
-                                                {/* Size */}
-                                                <td className="py-4 px-4 md:px-6 font-medium text-gray-700">
-                                                    {item.size || "-"}
-                                                </td>
+                                                                {/* SKU ID */}
+                                                                <td className="py-3.5 px-4 md:px-6">
+                                                                    <span className="font-mono text-xs bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-medium border border-gray-200">
+                                                                        {item.sku_id || "N/A"}
+                                                                    </span>
+                                                                </td>
 
-                                                {/* Pricing */}
-                                                <td className="py-4 px-4 md:px-6">
-                                                    <div className="flex items-baseline gap-2">
-                                                        <span className="font-bold text-gray-900">
-                                                            {item.offer_price ? `₹${item.offer_price}` : "-"}
-                                                        </span>
-                                                        {item.mrp && String(item.mrp) !== String(item.offer_price) && (
-                                                            <span className="text-xs text-gray-400 line-through">
-                                                                ₹{item.mrp}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </td>
+                                                                {/* Size */}
+                                                                <td className="py-3.5 px-4 md:px-6 font-medium text-gray-700">
+                                                                    {item.size || "-"}
+                                                                </td>
 
-                                                {/* Max Qty */}
-                                                <td className="py-4 px-4 md:px-6 font-semibold text-gray-700">
-                                                    {item.max_allowed_cart_qty ?? "-"}
-                                                </td>
+                                                                {/* Pricing */}
+                                                                <td className="py-3.5 px-4 md:px-6">
+                                                                    <div className="flex items-baseline gap-2">
+                                                                        <span className="font-bold text-gray-900">
+                                                                            {item.offer_price ? `₹${item.offer_price}` : "-"}
+                                                                        </span>
+                                                                        {item.mrp && String(item.mrp) !== String(item.offer_price) && (
+                                                                            <span className="text-xs text-gray-400 line-through">
+                                                                                ₹{item.mrp}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                </td>
 
-                                                {/* Stock Status (Green badge for Yes, Red for Out of Stock) */}
-                                                <td className="py-4 px-4 md:px-6 text-right">
-                                                    {isInStock ? (
-                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">
-                                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                                            Yes
-                                                        </span>
-                                                    ) : (
-                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-700 text-xs font-bold rounded-full border border-rose-200">
-                                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                                                            Out of Stock
-                                                        </span>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
+                                                                {/* Max Cart Qty */}
+                                                                <td className="py-3.5 px-4 md:px-6 font-semibold text-gray-700">
+                                                                    {item.max_allowed_cart_qty ?? "-"}
+                                                                </td>
+
+                                                                {/* Stock Status Badge */}
+                                                                <td className="py-3.5 px-4 md:px-6 text-right">
+                                                                    {isInStock ? (
+                                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                                                            Yes
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-700 text-xs font-bold rounded-full border border-rose-200">
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                                                                            Out of Stock
+                                                                        </span>
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 )}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* Table Footer */}
-                    <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-2">
-                        <div>
-                            Showing <span className="font-semibold text-gray-800">{filteredInventory.length}</span> of{" "}
-                            <span className="font-semibold text-gray-800">{totalItems}</span> items
-                        </div>
-                        <div className="flex items-center gap-1 text-gray-400">
-                            n8n Webhook Endpoint: <code className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">a7e4799d-1a16...</code>
-                        </div>
-                    </div>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </div>
