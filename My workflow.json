@@ -1,0 +1,359 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "272be71a-b84e-43d1-8a48-d1df41f50743",
+      "name": "Schedule Trigger",
+      "notes": "Flow started"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { pincode: \"400089\" } },\n  { json: { pincode: \"400072\" } },\n  { json: { pincode: \"400099\" } }\n  // just keep adding your pincodes here\n];\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "c8658931-917f-4a44-a00d-00f9f9613b5d",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        432,
+        -16
+      ],
+      "id": "32fd4e96-aaef-4463-9bd2-d57fa027ff2e",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "url": "https://instamart.in/api/instamart/maps/suggestions",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "input",
+              "value": "={{ $json.pincode }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        608,
+        128
+      ],
+      "id": "a5c9428a-8c23-4cd1-a76f-32cdb296350a",
+      "name": "Get Place ID"
+    },
+    {
+      "parameters": {
+        "url": "https://instamart.in/api/instamart/maps/address-widgets/v2",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "place_id",
+              "value": "={{ $json.data[0].place_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        784,
+        128
+      ],
+      "id": "fe0124d8-f09e-48da-8b58-553c16e40494",
+      "name": "Get Coordinates"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://instamart.in/api/instamart/home/select-location/v2",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": {\n    \"lat\": {{ $json.data.address.location.latitude }},\n    \"lng\": {{ $json.data.address.location.longitude }},\n    \"address\": \"{{ $json.data.address.subtitle }}\",\n    \"addressId\": \"\",\n    \"annotation\": \"{{ $json.data.address.subtitle }}\",\n    \"clientId\": \"INSTAMART-APP\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        960,
+        128
+      ],
+      "id": "a69c222b-2077-4898-a49e-8d0a1de56ab1",
+      "name": "Get Store IDs"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://instamart.in/api/instamart/search/v2",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "offset",
+              "value": "0"
+            },
+            {
+              "name": "storeId",
+              "value": "={{ $json.data.configs.IM_PAGE_CONFIGS.configInfo[0].card.podDetailsList[0].podId }}"
+            },
+            {
+              "name": "primaryStoreId",
+              "value": "={{ $json.data.configs.IM_PAGE_CONFIGS.configInfo[0].card.podDetailsList[0].podId }}"
+            },
+            {
+              "name": "secondaryStoreId",
+              "value": "={{ $json.data.configs.IM_PAGE_CONFIGS.configInfo[0].card.podDetailsList[1].podId }}"
+            },
+            {
+              "name": "ageConsent",
+              "value": "false"
+            },
+            {
+              "name": "layoutId",
+              "value": "4987"
+            },
+            {
+              "name": "voiceSearchTrackingId"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"facets\": [],\n  \"sortAttribute\": \"\",\n  \"query\": \"cloud9\",\n  \"search_results_offset\": \"0\",\n  \"is_pre_search_tag\": false,\n  \"page_type\": \"INSTAMART_SEARCH_PAGE\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1152,
+        128
+      ],
+      "id": "0bc83ccc-6aa1-43a8-bba8-e6a46fc75b48",
+      "name": "Search Cloud9"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst extractedData = [];\n\nitems.forEach(item => {\n  const responseData = item.json.data || item.json;\n  const cards = responseData.cards || [];\n\n  cards.forEach(cardWrapper => {\n    const widget = cardWrapper.card?.card;\n    if (!widget) return;\n\n    const widgetType = widget['@type'];\n    let itemsList = [];\n\n    if (widgetType === 'type.googleapis.com/swiggy.gandalf.widgets.v2.GridWidget') {\n      itemsList = widget.gridElements?.infoWithStyle?.items || [];\n    } else if (widgetType === 'type.googleapis.com/swiggy.im.v1.OOSItemCollectionCard') {\n      itemsList = widget.items?.items || [];\n    }\n\n    itemsList.forEach(prodItem => {\n      const brandName = (prodItem.brand || \"\").toLowerCase();\n      const parentProductName = prodItem.displayName || \"\"; \n      \n      if (brandName.includes(\"cloud9\") || parentProductName.toLowerCase().includes(\"cloud 9\")) {\n        const variations = prodItem.variations || [];\n\n        variations.forEach(variant => {\n          extractedData.push({\n            pincode: $('Loop Over Items').first().json.pincode || \"N/A\",\n            parent_product_name: parentProductName,\n            variant_product_name: variant.displayName,\n            sku_id: variant.skuId,\n            size: variant.quantityDescription,\n            mrp: variant.price?.mrp?.units || \"N/A\",\n            offer_price: variant.price?.offerPrice?.units || \"N/A\",\n            in_stock: variant.inventory?.inStock ? \"Yes\" : \"Out of Stock\",\n            max_allowed_cart_qty: variant.cartAllowedQuantity?.allowedQuantity || 0\n          });\n        });\n      }\n    });\n  });\n});\n\n// Returns everything wrapped in ONE clean array item so it never triggers an invalid JSON error\nreturn [{ json: { cloud9_inventory: extractedData } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        128
+      ],
+      "id": "475a5cb8-96b6-4b11-81d8-a5bb76907212",
+      "name": "Extract Cloud9 Data"
+    },
+    {
+      "parameters": {
+        "path": "a7e4799d-1a16-4c16-aa8d-467cec3e5479",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -224
+      ],
+      "id": "b149d6b7-a830-46cf-8c64-121b7ead7300",
+      "name": "Webhook",
+      "webhookId": "a7e4799d-1a16-4c16-aa8d-467cec3e5479",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        -304
+      ],
+      "id": "e9203a3b-1dfe-42db-bb17-9b686c7435c9",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        368
+      ],
+      "id": "5a6591e5-3e91-4532-b738-83aa91f2ca4c",
+      "name": "Wait",
+      "webhookId": "d454fa9d-b4ac-42cd-8628-00f19bd2922c"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Place ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Place ID": {
+      "main": [
+        [
+          {
+            "node": "Get Coordinates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Coordinates": {
+      "main": [
+        [
+          {
+            "node": "Get Store IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Store IDs": {
+      "main": [
+        [
+          {
+            "node": "Search Cloud9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Cloud9": {
+      "main": [
+        [
+          {
+            "node": "Extract Cloud9 Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Cloud9 Data": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "35f4bac3-e048-4be7-b1cc-ce91246710fc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d6051b5cd8433ca47acf921915d30a175bb0275b3170a3c94047e9e4c0761692"
+  },
+  "nodeGroups": [],
+  "id": "nmPbIsuGt14vW8o7",
+  "tags": []
+}

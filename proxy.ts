@@ -13,6 +13,7 @@ export function proxy(req: NextRequest) {
             pathname === "/api/admin/auth" ||            // login + logout
             pathname === "/api/admin/calc" ||            // calc login
             pathname === "/api/admin/verify" ||          // admin credential verification
+            // pathname === "/api/admin/cloud9_inventory" || // cloud9 inventory proxy
             pathname.startsWith("/api/admin/forgot-password");
 
         if (isPublic) {
