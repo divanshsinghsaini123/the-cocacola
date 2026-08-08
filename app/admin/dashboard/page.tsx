@@ -89,6 +89,36 @@ export default function DashboardPortalPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Cloud9 Inventory Option */}
+                <Link
+                    href="/admin/cloud9_inventory"
+                    className="group relative flex flex-col p-6 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:border-amber-200 transition-all duration-300 overflow-hidden"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                    <div className="relative z-10 flex flex-col h-full gap-4">
+                        <div className="p-3 bg-amber-50 rounded-xl w-fit group-hover:bg-amber-100 transition-colors shadow-sm">
+                            <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
+
+                        <div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-1.5 group-hover:text-amber-600 transition-colors">Cloud9 Inventory</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed">
+                                Manage stock levels, inventory updates, and track warehouse allocations for Cloud9 operations.
+                            </p>
+                        </div>
+
+                        <div className="mt-auto pt-2 flex items-center text-xs font-bold text-amber-600 tracking-wide uppercase">
+                            <span>Open Inventory</span>
+                            <svg className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </div>
+                    </div>
+                </Link>
             </div>
         </div>
     );
