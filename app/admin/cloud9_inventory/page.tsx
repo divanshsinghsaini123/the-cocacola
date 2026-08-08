@@ -27,7 +27,7 @@ export default function Cloud9InventoryPage() {
     const [selectedPincode, setSelectedPincode] = useState<string>("all");
     const [stockFilter, setStockFilter] = useState<string>("all");
 
-    const API_ENDPOINT = "https://n8.thecoreteam.in/webhook/a7e4799d-1a16-4c16-aa8d-467cec3e5479";
+    const API_ENDPOINT = "/api/admin/cloud9_inventory";
 
     const fetchInventory = async () => {
         setLoading(true);
