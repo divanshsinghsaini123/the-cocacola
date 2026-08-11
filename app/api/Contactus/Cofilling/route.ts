@@ -43,6 +43,7 @@ export async function POST(request: Request) {
             await sendContactUsEmail({
                 title: "Cofilling Partnership Inquiry",
                 themeColor: "#0f2027", // Sleek Dark Slate Blue
+                category: "manufacturing",
                 fields: {
                     fullName: finaldata.fullName,
                     email: finaldata.email,

@@ -3,29 +3,52 @@ import nodemailer from "nodemailer";
 interface ContactUsEmailPayload {
     title: string;
     themeColor: string;
+    category?: "manufacturing" | "marketing" | string;
     fields: Record<string, string | number | boolean | null | undefined>;
     messageBody?: string;
+    toEmails?: string[];
+    ccEmails?: string[];
 }
 
-export async function sendContactUsEmail({ title, themeColor, fields, messageBody }: ContactUsEmailPayload) {
+export async function sendContactUsEmail({ title, themeColor, category, fields, messageBody, toEmails, ccEmails }: ContactUsEmailPayload) {
     try {
-        // 1. Resolve recipients
+        // 1. Resolve TO and CC recipients based on category or custom arrays
         let emailList: string[] = [];
-        if (process.env.REPORT_EMAIL_TO) {
-            emailList = process.env.REPORT_EMAIL_TO.split(",")
-                .map(e => e.trim())
-                .filter(Boolean);
+        let ccList: string[] = [];
+
+        if (toEmails && toEmails.length > 0) {
+            emailList = toEmails;
+        } else if (category === "manufacturing") {
+            const rawTo = process.env.MANUFACTURING_EMAIL_TO || process.env.REPORT_EMAIL_TO;
+            if (rawTo) {
+                emailList = rawTo.split(",").map(e => e.trim()).filter(Boolean);
+            }
+        } else {
+            // Default or "marketing"
+            const rawTo = process.env.MARKETING_EMAIL_TO || process.env.REPORT_EMAIL_TO;
+            if (rawTo) {
+                emailList = rawTo.split(",").map(e => e.trim()).filter(Boolean);
+            }
         }
+
         if (emailList.length === 0 && process.env.EMAIL_USER) {
             emailList.push(process.env.EMAIL_USER.trim());
         }
 
         if (emailList.length === 0) {
-            console.error("No recipient emails configured in REPORT_EMAIL_TO or EMAIL_USER");
+            console.error("No recipient emails configured in category envs, REPORT_EMAIL_TO, or EMAIL_USER");
             return { success: false, error: "No recipients configured" };
         }
 
         const recipientString = emailList.join(", ");
+
+        if (ccEmails && ccEmails.length > 0) {
+            ccList = ccEmails;
+        } else if (category === "manufacturing" && process.env.MANUFACTURING_EMAIL_CC) {
+            ccList = process.env.MANUFACTURING_EMAIL_CC.split(",").map(e => e.trim()).filter(Boolean);
+        } else if (process.env.MARKETING_EMAIL_CC) {
+            ccList = process.env.MARKETING_EMAIL_CC.split(",").map(e => e.trim()).filter(Boolean);
+        }
 
         // 2. Configure transporter
         if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
@@ -126,9 +149,10 @@ export async function sendContactUsEmail({ title, themeColor, fields, messageBod
         `;
 
         // 6. Dispatch Email
-        const mailOptions = {
+        const mailOptions: nodemailer.SendMailOptions = {
             from: `"Cloud9 Notification" <${process.env.EMAIL_USER}>`,
             to: recipientString,
+            ...(ccList.length > 0 ? { cc: ccList.join(", ") } : {}),
             subject: `[New Submission] ${title} - ${fields.name || fields.fullName || fields.FirstName || 'Contact Form'}`,
             html: htmlBody,
         };

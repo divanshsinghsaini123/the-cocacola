@@ -29,6 +29,7 @@ export async function POST(request: Request) {
         await sendContactUsEmail({
             title: "Distributor Partnership Application",
             themeColor: "#E51D29", // Premium Coca-Cola Red
+            category: "manufacturing",
             fields: {
                 name: data.name,
                 email: data.email,

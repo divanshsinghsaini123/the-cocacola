@@ -35,6 +35,7 @@ export async function POST(request: Request) {
             await sendContactUsEmail({
                 title: "General Enquiry / Customer Question",
                 themeColor: "#D2143A", // Crimson Red
+                category: "marketing",
                 fields: {
                     name: `${qData.FirstName} ${qData.LastName || ''}`.trim(),
                     email: qData.Email,
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
             await sendContactUsEmail({
                 title: "Customer Defect Report / Support Issue",
                 themeColor: "#D97706", // Alert Amber Orange
+                category: "marketing",
                 fields: {
                     name: `${iData.FirstName} ${iData.LastName || ''}`.trim(),
                     email: iData.Email,
