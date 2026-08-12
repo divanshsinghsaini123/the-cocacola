@@ -23,19 +23,6 @@
     },
     {
       "parameters": {
-        "jsCode": "return [\n  { json: { pincode: \"400089\" } },\n  { json: { pincode: \"400072\" } },\n  { json: { pincode: \"400099\" } }\n  // just keep adding your pincodes here\n];\n\n\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        224,
-        -16
-      ],
-      "id": "c8658931-917f-4a44-a00d-00f9f9613b5d",
-      "name": "Code in JavaScript1"
-    },
-    {
-      "parameters": {
         "options": {}
       },
       "type": "n8n-nodes-base.splitInBatches",
@@ -87,7 +74,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        784,
+        992,
         128
       ],
       "id": "fe0124d8-f09e-48da-8b58-553c16e40494",
@@ -105,7 +92,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        960,
+        1376,
         128
       ],
       "id": "a69c222b-2077-4898-a49e-8d0a1de56ab1",
@@ -155,7 +142,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1152,
+        1776,
         128
       ],
       "id": "0bc83ccc-6aa1-43a8-bba8-e6a46fc75b48",
@@ -163,12 +150,12 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\nconst extractedData = [];\n\nitems.forEach(item => {\n  const responseData = item.json.data || item.json;\n  const cards = responseData.cards || [];\n\n  cards.forEach(cardWrapper => {\n    const widget = cardWrapper.card?.card;\n    if (!widget) return;\n\n    const widgetType = widget['@type'];\n    let itemsList = [];\n\n    if (widgetType === 'type.googleapis.com/swiggy.gandalf.widgets.v2.GridWidget') {\n      itemsList = widget.gridElements?.infoWithStyle?.items || [];\n    } else if (widgetType === 'type.googleapis.com/swiggy.im.v1.OOSItemCollectionCard') {\n      itemsList = widget.items?.items || [];\n    }\n\n    itemsList.forEach(prodItem => {\n      const brandName = (prodItem.brand || \"\").toLowerCase();\n      const parentProductName = prodItem.displayName || \"\"; \n      \n      if (brandName.includes(\"cloud9\") || parentProductName.toLowerCase().includes(\"cloud 9\")) {\n        const variations = prodItem.variations || [];\n\n        variations.forEach(variant => {\n          extractedData.push({\n            pincode: $('Loop Over Items').first().json.pincode || \"N/A\",\n            parent_product_name: parentProductName,\n            variant_product_name: variant.displayName,\n            sku_id: variant.skuId,\n            size: variant.quantityDescription,\n            mrp: variant.price?.mrp?.units || \"N/A\",\n            offer_price: variant.price?.offerPrice?.units || \"N/A\",\n            in_stock: variant.inventory?.inStock ? \"Yes\" : \"Out of Stock\",\n            max_allowed_cart_qty: variant.cartAllowedQuantity?.allowedQuantity || 0\n          });\n        });\n      }\n    });\n  });\n});\n\n// Returns everything wrapped in ONE clean array item so it never triggers an invalid JSON error\nreturn [{ json: { cloud9_inventory: extractedData } }];"
+        "jsCode": "const items = $input.all();\nconst extractedData = [];\n\nitems.forEach(item => {\n  const responseData = item.json.data || item.json;\n  const cards = responseData.cards || [];\n\n  cards.forEach(cardWrapper => {\n    const widget = cardWrapper.card?.card;\n    if (!widget) return;\n\n    const widgetType = widget['@type'];\n    let itemsList = [];\n\n    if (widgetType === 'type.googleapis.com/swiggy.gandalf.widgets.v2.GridWidget') {\n      itemsList = widget.gridElements?.infoWithStyle?.items || [];\n    } else if (widgetType === 'type.googleapis.com/swiggy.im.v1.OOSItemCollectionCard') {\n      itemsList = widget.items?.items || [];\n    }\n\n    itemsList.forEach(prodItem => {\n      const brandName = (prodItem.brand || \"\").toLowerCase();\n      const parentProductName = prodItem.displayName || \"\"; \n      \n      if (brandName.includes(\"cloud9\") || parentProductName.toLowerCase().includes(\"cloud 9\")) {\n        const variations = prodItem.variations || [];\n\n        variations.forEach(variant => {\n          extractedData.push({\n            pincode: $('Loop Over Items').first().json.pincode || \"N/A\",\n            parent_product_name: parentProductName,\n            variant_product_name: variant.displayName,\n            sku_id: variant.skuId,\n            size: variant.quantityDescription,\n            mrp: variant.price?.mrp?.units || \"N/A\",\n            offer_price: variant.price?.offerPrice?.units || \"N/A\",\n            in_stock: variant.inventory?.inStock ? \"Yes\" : \"Out of Stock\",\n            max_allowed_cart_qty: variant.cartAllowedQuantity?.allowedQuantity || 0\n          });\n        });\n      }\n    });\n  });\n});\n\n// Ye line saare items ko flat karke return karegi taaki Excel me rows vertically aayein\nreturn extractedData.map(item => ({ json: item }));"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1328,
+        1952,
         128
       ],
       "id": "475a5cb8-96b6-4b11-81d8-a5bb76907212",
@@ -209,17 +196,117 @@
     },
     {
       "parameters": {
-        "amount": 3
+        "amount": 10
       },
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        1040,
+        1456,
         368
       ],
       "id": "5a6591e5-3e91-4532-b738-83aa91f2ca4c",
       "name": "Wait",
       "webhookId": "d454fa9d-b4ac-42cd-8628-00f19bd2922c"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {
+          "fileName": "Cloud9_inventory"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        -80
+      ],
+      "id": "df74257c-15b7-418f-a88f-15810b65b93c",
+      "name": "Convert to File2"
+    },
+    {
+      "parameters": {
+        "sendTo": "Vibin@thecoreteam.in",
+        "subject": "=Cloud9 Inventory report Date : {{ $now.format('YYYY-MM-DD') }}",
+        "message": "=<div style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333;\">   <h2 style=\"color: #2c3e50;\">Cloud9 Inventory Report</h2>   <p>Hello,</p>   <p>Please find the latest <strong>Cloud9 Inventory Report</strong> for today, <strong>{{ $now.format('DD-MM-YYYY') }}</strong>, attached to this email.</p>      <p>The report includes all the latest stock availability, SKU details, and pricing data.</p>      <p>.</p>      <p>Best regards,<br>   <strong>Inventory Automation System</strong></p> </div>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1456,
+        -80
+      ],
+      "id": "e39d2ed8-8c93-4c2b-bfc3-ad7f33449c0e",
+      "name": "Send a message",
+      "webhookId": "f177f0be-8633-4fa0-8dfd-18e70396b2fe",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "IpCvCvP7ugXTmRhh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { pincode: \"400089\" } },\n  // { json: { pincode: \"400072\" } },\n  // { json: { pincode: \"400099\" } }\n  // just keep adding your pincodes here\n];\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "c8658931-917f-4a44-a00d-00f9f9613b5d",
+      "name": "Pincodes"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        816,
+        128
+      ],
+      "id": "89f32758-f3bd-41fc-a0bb-d7d41ee03471",
+      "name": "Wait1",
+      "webhookId": "ac26f1ed-46f4-4c58-8ec6-f9e599b53e1d"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        128
+      ],
+      "id": "21297d30-c632-4afc-8c48-ba36e3968ca4",
+      "name": "Wait2",
+      "webhookId": "138225c4-8fc3-4a5f-9881-978e2238b78a"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1584,
+        128
+      ],
+      "id": "0a81255f-eef1-4ab1-adde-566f6dc2fba5",
+      "name": "Wait3",
+      "webhookId": "4760995e-c015-4209-9b45-9f8d23d2ca32"
     }
   ],
   "pinData": {},
@@ -228,18 +315,7 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code in JavaScript1": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
+            "node": "Pincodes",
             "type": "main",
             "index": 0
           }
@@ -249,6 +325,11 @@
     "Loop Over Items": {
       "main": [
         [
+          {
+            "node": "Convert to File2",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "Respond to Webhook",
             "type": "main",
@@ -268,7 +349,7 @@
       "main": [
         [
           {
-            "node": "Get Coordinates",
+            "node": "Wait1",
             "type": "main",
             "index": 0
           }
@@ -279,7 +360,7 @@
       "main": [
         [
           {
-            "node": "Get Store IDs",
+            "node": "Wait2",
             "type": "main",
             "index": 0
           }
@@ -290,7 +371,7 @@
       "main": [
         [
           {
-            "node": "Search Cloud9",
+            "node": "Wait3",
             "type": "main",
             "index": 0
           }
@@ -323,7 +404,7 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript1",
+            "node": "Pincodes",
             "type": "main",
             "index": 0
           }
@@ -340,6 +421,61 @@
           }
         ]
       ]
+    },
+    "Convert to File2": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pincodes": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Get Coordinates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Get Store IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Search Cloud9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -348,7 +484,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "35f4bac3-e048-4be7-b1cc-ce91246710fc",
+  "versionId": "78779a10-19cd-432b-8c37-1c6461292dc9",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d6051b5cd8433ca47acf921915d30a175bb0275b3170a3c94047e9e4c0761692"
