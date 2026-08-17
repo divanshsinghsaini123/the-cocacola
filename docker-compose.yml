@@ -3,7 +3,7 @@ version: '3.8'
 services:
   cloud9-frontend:
     build:
-      context: .
+      context: ../the-cocacola
       dockerfile: Dockerfile
     container_name: the-cocacola-app
     restart: always
