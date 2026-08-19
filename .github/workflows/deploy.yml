@@ -1,0 +1,35 @@
+name: Deploy Frontend (Next.js)
+
+on:
+  push:
+    branches:
+      - main
+      - gcore_integration
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and Deploy Frontend
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            echo "🚀 Navigating to Frontend directory..."
+            cd /root/apps/cloud9
+            
+            echo "📥 Pulling latest Frontend code..."
+            git pull origin ${{ github.ref_name }}
+            
+            echo "🐳 Rebuilding Frontend container..."
+            docker compose up --build -d cloud9-frontend
+            
+            echo "🧹 Cleaning up unused images..."
+            docker image prune -f
+            
+            echo "🎉 Frontend Deployment Successful!"
