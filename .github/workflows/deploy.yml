@@ -20,11 +20,11 @@ jobs:
           port: ${{ secrets.SERVER_PORT || 22 }}
           script: |
             echo "🚀 Navigating to Frontend directory..."
-            cd /root/apps/cloud9
+            cd /root/apps/cloud9/the-cocacola
             
             echo "📥 Switching branch and pulling latest code..."
-            git checkout gcore_integration
-            git pull origin gcore_integration
+            git checkout ${{ github.ref_name }}
+            git pull origin ${{ github.ref_name }}
             
             echo "🐳 Rebuilding Frontend container..."
             docker compose up --build -d cloud9-frontend
