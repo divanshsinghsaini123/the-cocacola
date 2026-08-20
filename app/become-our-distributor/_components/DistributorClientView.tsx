@@ -189,7 +189,7 @@ export default function DistributorClientView({
 
     // Render Contact View Component
     const renderContact = () => (
-        <div className="w-full animation-fade-in pt-36 lg:pt-48 pb-20 px-4 sm:px-6 flex flex-col items-center">
+        <div id="contact-form" className="w-full animation-fade-in pt-36 lg:pt-48 pb-20 px-4 sm:px-6 flex flex-col items-center">
             <h1 className="text-4xl md:text-5xl font-medium text-white mb-6 tracking-wide">Contact</h1>
             <p className="text-gray-400 text-center text-[17px] leading-[1.8] max-w-3xl mb-16">
                 {contactData?.Description}
