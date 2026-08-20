@@ -171,7 +171,7 @@ The application should now be successfully running on `http://localhost:3000` co
 
 
 
-# backup notes 
+# backup notes to postgres database 
 // for dumping the database backup 
 step : 0
 docker exec -i cloud9_postgres-db \
