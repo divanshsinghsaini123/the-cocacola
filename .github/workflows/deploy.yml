@@ -3,7 +3,6 @@ name: Deploy Frontend (Next.js)
 on:
   push:
     branches:
-      - main
       - gcore_integration
   workflow_dispatch:
 
@@ -23,8 +22,9 @@ jobs:
             echo "🚀 Navigating to Frontend directory..."
             cd /root/apps/cloud9
             
-            echo "📥 Pulling latest Frontend code..."
-            git pull origin ${{ github.ref_name }}
+            echo "📥 Switching branch and pulling latest code..."
+            git checkout gcore_integration
+            git pull origin gcore_integration
             
             echo "🐳 Rebuilding Frontend container..."
             docker compose up --build -d cloud9-frontend
