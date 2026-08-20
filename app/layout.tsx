@@ -7,6 +7,7 @@ import NavbarServer from "@/components/layout/NavbarServer";
 import StoreProvider from "@/src/providers/StoreProvider";
 import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
 import { GetHomePageData, GetExtraData } from "@/src/lib/strapi";
+import { renderCustomScript } from "@/src/lib/render-custom-scripts";
 
 import { SITE_CONFIG } from "@/src/config/site";
 const geistSans = Geist({
@@ -125,12 +126,7 @@ export default async function RootLayout({
         {/* Render custom head scripts */}
         {customScripts.map((script: any, index: number) => {
           if (script.enabled && script.position === "Head") {
-            return (
-              <div
-                key={`head-script-${script.id || index}`}
-                dangerouslySetInnerHTML={{ __html: script.scriptCode }}
-              />
-            );
+            return renderCustomScript(script.scriptCode, `head-script-${script.id || index}`, false);
           }
           return null;
         })}
@@ -142,12 +138,7 @@ export default async function RootLayout({
         {/* Render custom BodyStart scripts */}
         {customScripts.map((script: any, index: number) => {
           if (script.enabled && script.position === "BodyStart") {
-            return (
-              <div
-                key={`bodystart-script-${script.id || index}`}
-                dangerouslySetInnerHTML={{ __html: script.scriptCode }}
-              />
-            );
+            return renderCustomScript(script.scriptCode, `bodystart-script-${script.id || index}`, true);
           }
           return null;
         })}
@@ -202,12 +193,7 @@ export default async function RootLayout({
         {/* Render custom BodyEnd scripts */}
         {customScripts.map((script: any, index: number) => {
           if (script.enabled && script.position === "BodyEnd") {
-            return (
-              <div
-                key={`bodyend-script-${script.id || index}`}
-                dangerouslySetInnerHTML={{ __html: script.scriptCode }}
-              />
-            );
+            return renderCustomScript(script.scriptCode, `bodyend-script-${script.id || index}`, true);
           }
           return null;
         })}
