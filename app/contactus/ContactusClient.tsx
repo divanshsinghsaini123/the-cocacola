@@ -14,72 +14,62 @@ import {
 } from "lucide-react";
 import { SITE_CONFIG } from "@/src/config/site";
 
+interface ContactCardItem {
+    id?: number;
+    title: string;
+    description: string;
+    badge: string;
+    href: string;
+    icon?: string;
+    color?: string;
+}
+
 interface ContactData {
-    Contact_email: string;
-    Contact_number: string;
-    Terms_of_use?: any;
-    Privacy_policy_page?: any;
-    PageButton?: { BackgroundHexColor?: string; FontHexColor?: string };
+    HeroBadge?: string;
+    HeroTitle?: string;
+    HeroDescription?: string;
+    ContactCards?: ContactCardItem[];
+    Contact_email?: string;
+    Contact_number?: string | number;
+    attributes?: any;
 }
 
 interface ContactusProps {
     data: ContactData;
 }
 
-export default function ContactusClient({ data }: ContactusProps) {
-    const email = data?.Contact_email || "support@coke.com";
-    const mobile = data?.Contact_number || "+91 1800-XXX-XXXX";
+const ICON_MAP: Record<string, any> = {
+    MessageSquare,
+    Building2,
+    Factory,
+    Sparkles,
+    FileSearch,
+    HelpCircle
+};
 
-    const contactOptions = [
-        {
-            title: "General Inquiry & Feedback",
-            description: "Have a general question, sponsorship request, or an issue with a drink you purchased?",
-            icon: MessageSquare,
-            href: "/general_inquiry",
-            badge: "Customer Support",
-            color: "bg-red-50 text-red-600 border-red-100",
-        },
-        {
-            title: "Become a Distributor",
-            description: "Partner with us to distribute our world-class beverage portfolio in your area.",
-            icon: Building2,
-            href: "/become-our-distributor#contact-form",
-            badge: "Business Partnership",
-            color: "bg-blue-50 text-blue-600 border-blue-100",
-        },
-        {
-            title: "Co-Filling Services",
-            description: "Inquire about our state-of-the-art contract manufacturing and co-filling bottling facilities.",
-            icon: Factory,
-            href: "/cofilling#contact",
-            badge: "Manufacturing",
-            color: "bg-amber-50 text-amber-600 border-amber-100",
-        },
-        {
-            title: "Co-Branding Opportunities",
-            description: "Collaborate on custom branding, joint promotions, and brand partnership programs.",
-            icon: Sparkles,
-            href: "/cobranding",
-            badge: "Collaboration",
-            color: "bg-purple-50 text-purple-600 border-purple-100",
-        },
-        {
-            title: "Track Inquiry Status",
-            description: "Already submitted a form? Check the real-time status of your request or application.",
-            icon: FileSearch,
-            href: "/statuscheck",
-            badge: "Track Request",
-            color: "bg-emerald-50 text-emerald-600 border-emerald-100",
-        },
-        {
-            title: "Frequently Asked Questions",
-            description: "Find instant answers to common queries about our brands, products, and policies.",
-            icon: HelpCircle,
-            href: "/aboutus/faq",
-            badge: "Help Center",
-            color: "bg-gray-100 text-gray-700 border-gray-200",
-        },
-    ];
+export default function ContactusClient({ data }: ContactusProps) {
+    // Access Strapi properties whether flat or inside attributes
+    const rawData = data?.attributes || data;
+
+    const heroBadge = rawData?.HeroBadge;
+    const heroTitle = rawData?.HeroTitle;
+    const heroDescription = rawData?.HeroDescription;
+    const email = rawData?.Contact_email;
+    const mobile = rawData?.Contact_number;
+    const rawCards: ContactCardItem[] = rawData?.ContactCards || [];
+
+
+
+    const contactOptions = rawCards.length > 0
+        ? rawCards.map((card) => ({
+            title: card.title,
+            description: card.description,
+            badge: card.badge,
+            href: card.href,
+            icon: ICON_MAP[card.icon || ""] || MessageSquare,
+            color: card.color || "bg-red-50 text-red-600 border-red-100",
+        }))
+        : [];
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] text-slate-900">
@@ -88,13 +78,13 @@ export default function ContactusClient({ data }: ContactusProps) {
                 {/* Page Header */}
                 <div className="text-center max-w-3xl mx-auto mb-14">
                     <span className="inline-block px-4 py-1.5 mb-4 text-xs font-semibold uppercase tracking-wider text-red-600 bg-red-100 rounded-full">
-                        Contact Hub
+                        {heroBadge}
                     </span>
                     <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-slate-900">
-                        How Can We Help You Today?
+                        {heroTitle}
                     </h1>
                     <p className="text-base md:text-xl text-slate-600 leading-relaxed">
-                        Select the category that best matches your request below to get redirected to the right team.
+                        {heroDescription}
                     </p>
                 </div>
 

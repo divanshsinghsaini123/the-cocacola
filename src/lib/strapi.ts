@@ -15,7 +15,7 @@ if (!STRAPI_URLContactUs) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
-const STRAPI_URLContactHub = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/contact-hub?populate[ContactCards]=*&populate[SEO][populate]=*&populate[PageButton]=*";
+const STRAPI_URLContactHub = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/contact-hub?populate[ContactCards]=*&populate[SEO][populate]=*";
 if (!STRAPI_URLContactHub) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
