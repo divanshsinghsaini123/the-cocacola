@@ -1,14 +1,24 @@
+import os
+import re
 import time
 import random
 import json
 import pandas as pd
 from playwright.sync_api import sync_playwright
 
-PINCODES = [
-    "400001", "400002", "400003", "400004", "400005"
-    # Saare 147 pincodes yahan daal do
-]
+# Load PINCODES dynamically from pincodes.js
+PINCODES_FILE = os.path.join(os.path.dirname(__file__), "pincodes.js")
+PINCODES = []
 
+if os.path.exists(PINCODES_FILE):
+    with open(PINCODES_FILE, "r", encoding="utf-8") as f:
+        content = f.read()
+        PINCODES = re.findall(r'\b\d{6}\b', content)
+
+# if not PINCODES:
+#     # Fallback default pincodes if pincodes.js is missing
+#     PINCODES = ["400001", "400002", "400003", "400004", "400005"]
+    print(len(PINCODES))
 BATCH_SIZE = 5
 COOLDOWN_DELAY = 120
 
@@ -27,7 +37,7 @@ def run_scraper():
         print("[*] Instamart load ho raha hai fresh session create karne ke liye...")
         page.goto("https://instamart.in/", wait_until="networkidle")
         time.sleep(5)
-        print("[✓] Fresh session & WAF challenge cleared automatically!")
+        print("[OK] Fresh session & WAF challenge cleared automatically!")
 
         total = len(PINCODES)
 
@@ -145,7 +155,7 @@ def run_scraper():
                                     "max_allowed_cart_qty": v.get("cartAllowedQuantity", {}).get("allowedQuantity", 0)
                                 })
 
-                print(f"[✓] {pincode} processed successfully!")
+                print(f"[OK] {pincode} processed successfully!")
 
             except Exception as e:
                 print(f"[-] Error at {pincode}: {e}")
@@ -163,7 +173,7 @@ def run_scraper():
     if all_extracted_rows:
         df = pd.DataFrame(all_extracted_rows)
         df.to_excel("cloud9_auto_extracted.xlsx", index=False)
-        print("\n[🎉] Done! Excel file saved: cloud9_auto_extracted.xlsx")
+        print("\n[DONE] Done! Excel file saved: cloud9_auto_extracted.xlsx")
     else:
         print("\n[-] No data extracted.")
 

@@ -15,6 +15,11 @@ if (!STRAPI_URLContactUs) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
 }
 
+const STRAPI_URLContactHub = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/contact-hub?populate[ContactCards]=*&populate[SEO][populate]=*&populate[PageButton]=*";
+if (!STRAPI_URLContactHub) {
+    throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
+}
+
 const STRAPI_URLExtra = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/extra?populate[navLinks][populate]=*&populate[globalConfig][populate][customScripts][populate]=*";
 if (!STRAPI_URLExtra) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing");
@@ -180,6 +185,26 @@ export async function GetContactUsPageData() {
     } catch (error) {
         console.error("Error fetching home page data:", error);
         return null;
+    }
+}
+
+export async function GetContactHubData() {
+    try {
+        const response = await fetch(STRAPI_URLContactHub, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            next: { revalidate: 60 },
+        });
+
+        if (!response.ok) {
+            return await GetContactUsPageData();
+        }
+        const data = await response.json();
+        return data.data || (await GetContactUsPageData());
+    } catch (error) {
+        return await GetContactUsPageData();
     }
 }
 

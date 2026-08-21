@@ -1,5 +1,5 @@
 
-import { GetContactUsPageData } from "../../src/lib/strapi"
+import { GetContactHubData, GetContactUsPageData } from "../../src/lib/strapi"
 import ContactusClient from "./ContactusClient"
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 import { SITE_CONFIG } from "@/src/config/site";
 
 export async function generateMetadata(): Promise<Metadata> {
-    const strapioutput = await GetContactUsPageData();
+    const strapioutput = await GetContactHubData();
     const seo = strapioutput?.SEO || strapioutput?.seo;
 
     return {
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     };
 }
 export default async function ContactUs() {
-    const data = await GetContactUsPageData();
+    const data = await GetContactHubData();
     if (data?.DisablePage) return notFound();
 
     return (
