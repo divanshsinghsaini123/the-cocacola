@@ -44,5 +44,19 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./backups/backup.sql:/docker-entrypoint-initdb.d/init.sql
 
+  cloud9-scraper:
+    build:
+      context: ../Strapi-CocoCola
+      dockerfile: Dockerfile
+    container_name: cloud9-scraper-service
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook/scraper-finished  # Optional default webhook
+    volumes:
+      - ./cloud9_auto_extracted_*.xlsx:/app/cloud9_auto_extracted_*.xlsx  # Optional: Persist Excel files on VM host
+
 volumes:
   postgres_data:
