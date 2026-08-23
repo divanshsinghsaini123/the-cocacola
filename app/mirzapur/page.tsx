@@ -69,7 +69,7 @@ export default function MirzapurPage() {
     return (
         <main className="min-h-screen bg-neutral-950 text-white flex items-center justify-center p-4 md:p-10 font-sans">
             <div className="max-w-5xl w-full bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-2">
-                
+
                 {/* Left Side: Form */}
                 <div className="p-8 md:p-12 flex flex-col justify-center">
                     <div className="mb-8">
@@ -186,7 +186,7 @@ export default function MirzapurPage() {
                     </p>
                     <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-neutral-800 shadow-lg group">
                         <Image
-                            src="/mirzapur/mrp.png"
+                            src="/mirzapur_page.png"
                             alt="Code Location Guide"
                             width={500}
                             height={500}
