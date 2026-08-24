@@ -42,7 +42,7 @@ export default async function AboutUs() {
     const bannerUrl = heroData?.HeroBanner?.formats?.large?.url || heroData?.HeroBanner?.url;
     // console.log(heroData);
     const isLocal = isStrapiLocal();
-    const herodata_main = strapioutput.MainPageCards;
+    const herodata_main = strapioutput?.MainPageCards;
     const featuresdata = (herodata_main?.items && herodata_main.items.length > 0) ? herodata_main.items.map((item: SectionItem, index: number) => {
         const imgurl = item.image?.formats?.large?.url || item.image?.url || null;
         const button = item.button;
@@ -59,7 +59,7 @@ export default async function AboutUs() {
         }
     }) : ""
 
-    const relatedSection = strapioutput.RelatedSectionCards;
+    const relatedSection = strapioutput?.RelatedSectionCards;
     const relatedItems = (relatedSection?.items && relatedSection.items.length > 0) ? relatedSection.items.slice(0, 3).map((item: SectionItem) => {
         const itemImg = item.image;
         const imgUrlRaw = itemImg?.formats?.medium?.url || itemImg?.formats?.small?.url || itemImg?.url;
