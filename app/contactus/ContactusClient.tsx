@@ -73,17 +73,17 @@ export default function ContactusClient({ data }: ContactusProps) {
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] text-slate-900">
-            <main className="max-w-6xl mx-auto px-4 py-12 md:py-20">
+            <main className="max-w-6xl mx-auto px-4 pt-6 md:pt-10 pb-12 md:pb-20">
 
                 {/* Page Header */}
-                <div className="text-center max-w-3xl mx-auto mb-14">
+                <div className="text-center max-w-3xl mx-auto mb-8 md:mb-10">
                     <span className="inline-block px-4 py-1.5 mb-4 text-xs font-semibold uppercase tracking-wider text-red-600 bg-red-100 rounded-full">
                         {heroBadge}
                     </span>
-                    <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-slate-900">
+                    <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-4 text-slate-900">
                         {heroTitle}
                     </h1>
-                    <p className="text-base md:text-xl text-slate-600 leading-relaxed">
+                    <p className="text-sm md:text-base text-slate-600 leading-relaxed">
                         {heroDescription}
                     </p>
                 </div>
