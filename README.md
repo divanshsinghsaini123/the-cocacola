@@ -166,12 +166,64 @@ Once you have meticulously filled out the `.env` file according to the steps abo
    npm run dev
    ```
 
+---
+
+## Step 5: Google Sheets Integration (Mirzapur Contest Submissions)
+
+Submissions from the `/mirzapur` page are saved to MongoDB and automatically appended as a new row to your Google Sheet via a Google Apps Script Webhook.
+
+### How It Works:
+1. **Form Submission**: User submits their Name, Phone, Special Code, and Bottle Image on the `/mirzapur` page.
+2. **Image Processing & Storage**: The API route (`app/api/mirzapur/route.ts`) optimizes the image using Sharp to `.webp` format and uploads it to Gcore S3/CDN.
+3. **MongoDB Record**: The entry is saved in the `mirzapur` MongoDB collection.
+4. **Google Sheet Webhook Sync**: The API makes an asynchronous `POST` request to the Webhook URL configured in `GOOGLE_SHEET_MIRZAPUR_WEBHOOK_URL`.
+5. **Spreadsheet Row Append**: Google Apps Script receives the JSON payload and automatically appends a new row (`Submitted At`, `Name`, `Phone`, `Special Code`, `Bottle Image URL`) into the Google Sheet.
+
+### Setup Instructions for Google Sheet:
+1. Open your target Google Sheet: [Mirzapur Contest Spreadsheet](https://docs.google.com/spreadsheets/d/1y-tQCrVaXr4eNbAJlkQJgBa-b6MKJNH8O3XI21VeJAE/edit?gid=0#gid=0).
+2. Go to **Extensions** → **Apps Script**.
+3. Replace the existing script with:
+   ```javascript
+   function doPost(e) {
+     try {
+       var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+       var data = JSON.parse(e.postData.contents);
+       
+       sheet.appendRow([
+         data.submittedAt || new Date().toLocaleString(),
+         data.name,
+         data.phone,
+         data.specialCode,
+         data.bottleImageUrl
+       ]);
+       
+       return ContentService
+         .createTextOutput(JSON.stringify({ status: "success" }))
+         .setMimeType(ContentService.MimeType.JSON);
+     } catch (err) {
+       return ContentService
+         .createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
+         .setMimeType(ContentService.MimeType.JSON);
+     }
+   }
+   ```
+4. Click **Deploy** → **New Deployment**.
+5. Choose **Web app** with:
+   - **Execute as**: `Me`
+   - **Who has access**: `Anyone`
+6. Copy the generated Web App URL and add it to your `.env` file:
+   ```env
+   GOOGLE_SHEET_MIRZAPUR_WEBHOOK_URL="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
+   ```
+
+---
 The application should now be successfully running on `http://localhost:3000` connected to MongoDB, reading content from Strapi, and serving images from the Gcore CDN!
 
 
 
 
 # backup notes to postgres database 
+
 // for dumping the database backup 
 step : 0
 docker exec -i cloud9_postgres-db \

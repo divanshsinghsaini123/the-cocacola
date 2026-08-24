@@ -71,6 +71,26 @@ export async function POST(req: Request) {
             bottleImageUrl: fullImageUrl,
         });
 
+        // 3. Sync submission to Google Sheet via Webhook (if configured)
+        const sheetWebhookUrl = process.env.GOOGLE_SHEET_MIRZAPUR_WEBHOOK_URL;
+        if (sheetWebhookUrl) {
+            try {
+                await fetch(sheetWebhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name,
+                        phone,
+                        specialCode,
+                        bottleImageUrl: fullImageUrl,
+                        submittedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+                    }),
+                });
+            } catch (sheetErr) {
+                console.error("Failed to sync entry to Google Sheet:", sheetErr);
+            }
+        }
+
         return NextResponse.json({
             success: true,
             message: "Your entry has been accepted! We will let you know within 10 days.",
