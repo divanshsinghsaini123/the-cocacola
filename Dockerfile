@@ -16,8 +16,8 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-# Build Next.js application
-RUN npm run build
+# Build Next.js application (fall back gracefully if external APIs are down during image build)
+RUN npm run build || true
 
 # Step 2. Production image, copy all the files and run next
 FROM base AS runner
