@@ -11,6 +11,7 @@ export default function robots(): MetadataRoute.Robots {
                 "/admin/",
                 "/api/",
                 "/visicooler/",
+                "/cloud9_inventory",
             ],
         },
         sitemap: `${baseUrl}/sitemap.xml`,
