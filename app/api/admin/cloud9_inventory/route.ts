@@ -2,14 +2,16 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        const n8nUrl = "https://n8.thecoreteam.in/webhook/a7e4799d-1a16-4c16-aa8d-467cec3e5479";
+        const n8nUrl = "https://n8.thecoreteam.in/webhook/d10e5784-4333-4da5-9382-e7f78dce3401";
         const res = await fetch(n8nUrl, {
             cache: "no-store",
         });
 
         if (!res.ok) {
+            const errData = await res.json().catch(() => null);
+            const errorMessage = errData?.message || res.statusText || "Upstream webhook error";
             return NextResponse.json(
-                { error: `Webhook upstream error: ${res.statusText}` },
+                { error: `n8n Webhook Error (${res.status}): ${errorMessage}` },
                 { status: res.status }
             );
         }
