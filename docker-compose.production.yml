@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cloud9_postgres-db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-doadmin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-defaultdb}
+    volumes:
+      - strapi_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-doadmin} -d ${POSTGRES_DB:-defaultdb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - proxy
+
+  strapi:
+    build:
+      context: ./Strapi-CocoCola
+      dockerfile: Dockerfile
+    container_name: cloud9-strapi
+    restart: always
+    ports:
+      - "1337:1337"
+    env_file:
+      - ./Strapi-CocoCola/.env
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=1337
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - proxy
+
+  cloud9-frontend:
+    build:
+      context: ./the-cocacola
+      dockerfile: Dockerfile
+    container_name: cloud9-website
+    restart: always
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./the-cocacola/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    networks:
+      - proxy
+
+  cloud9-scraper:
+    build:
+      context: ./cloud9_inventory
+      dockerfile: Dockerfile
+    container_name: cloud9-scraper-service
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+    volumes:
+      - ./cloud9_inventory/output:/app/output
+
+volumes:
+  strapi_postgres_data:
+
+networks:
+  proxy:
+    external: true
