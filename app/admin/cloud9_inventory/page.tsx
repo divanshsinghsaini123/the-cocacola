@@ -503,15 +503,15 @@ export default function Cloud9InventoryPage() {
                                                                 </td>
 
                                                                 {/* Stock Status Badge */}
-                                                                <td className="py-3.5 px-4 md:px-6 text-right">
+                                                                <td className="py-3.5 px-4 md:px-6 text-right whitespace-nowrap">
                                                                     {isInStock ? (
-                                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">
-                                                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                                                            Yes
+                                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200 whitespace-nowrap">
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                                                                            In Stock
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-700 text-xs font-bold rounded-full border border-rose-200">
-                                                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-700 text-xs font-bold rounded-full border border-rose-200 whitespace-nowrap">
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
                                                                             Out of Stock
                                                                         </span>
                                                                     )}
