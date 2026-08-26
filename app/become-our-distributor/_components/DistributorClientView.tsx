@@ -15,6 +15,7 @@ export default function DistributorClientView({
     contactData: any;
 }) {
     const [activeTab, setActiveTab] = useState<"home" | "contact">("home");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { Hero, Hero2, Footer, PageButton: buttonStyle } = homeData || {};
     const buttondata = Hero?.button;
@@ -329,8 +330,13 @@ export default function DistributorClientView({
                         </select>
 
                         <div className="mt-2 flex justify-start">
-                            <button type="submit" style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="bg-[#4aa5f8] hover:bg-blue-400 text-white px-9 py-3 rounded-full font-medium transition-all shadow-md mt-2 text-[15px]">
-                                Submit
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
+                                className="bg-[#4aa5f8] hover:bg-blue-400 text-white px-9 py-3 rounded-full font-medium transition-all shadow-md mt-2 text-[15px] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                                {isSubmitting ? "Submitting..." : "Submit"}
                             </button>
                         </div>
                     </form>
@@ -340,6 +346,9 @@ export default function DistributorClientView({
     );
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
         const formData = new FormData(e.currentTarget);
         const data = {
             name: formData.get("name") as string,
@@ -366,10 +375,12 @@ export default function DistributorClientView({
 
             if (res.ok) {
                 window.location.reload();
+            } else {
+                setIsSubmitting(false);
             }
-        }
-        catch (error) {
-            console.log(error);
+        } catch (err) {
+            console.error("Error submitting distributor form:", err);
+            setIsSubmitting(false);
         }
 
         // console.log(data);

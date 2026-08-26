@@ -31,9 +31,12 @@ export default function ContactusClient({ data }: ContactusProps) {
 
     const router = useRouter();
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
 
         const formData = new FormData(e.currentTarget);
 
@@ -97,6 +100,7 @@ export default function ContactusClient({ data }: ContactusProps) {
         } catch (error) {
             console.error("Error submitting form:", error);
             alert("Failed to send message. Please try again.");
+            setIsSubmitting(false);
         }
     }
     return (
@@ -469,11 +473,11 @@ export default function ContactusClient({ data }: ContactusProps) {
                                     <div className="flex justify-center">
                                         <button
                                             type="submit"
+                                            disabled={isSubmitting || !agreed}
                                             style={data?.PageButton ? { backgroundColor: data.PageButton.BackgroundHexColor, color: data.PageButton.FontHexColor } : undefined}
-                                            className="w-full md:w-auto px-12 py-4 bg-black text-white font-bold rounded-full hover:opacity-80 transition-all text-lg"
-                                        // disabled={!agreed}
+                                            className="w-full md:w-auto px-12 py-4 bg-black text-white font-bold rounded-full hover:opacity-80 transition-all text-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                         >
-                                            Submit
+                                            {isSubmitting ? "Submitting..." : "Submit"}
                                         </button>
                                     </div>
                                 </div>

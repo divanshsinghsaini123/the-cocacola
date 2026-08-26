@@ -27,6 +27,7 @@ interface ContactUsProps {
 export default function ContactUs({ data }: ContactUsProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const formRef = React.useRef<HTMLFormElement>(null);
     const router = useRouter();
 
@@ -36,6 +37,9 @@ export default function ContactUs({ data }: ContactUsProps) {
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
         const formData = new FormData(e.currentTarget);
         const submitData = {
             fullName: formData.get('fullName'),
@@ -62,9 +66,11 @@ export default function ContactUs({ data }: ContactUsProps) {
         const response = await result.json();
         if (response.status == 400) {
             alert(response.error);
+            setIsSubmitting(false);
         }
         else {
             setIsSubmitted(true);
+            setIsSubmitting(false);
             formRef.current?.reset();
             document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
             setTimeout(() => {
@@ -229,8 +235,12 @@ export default function ContactUs({ data }: ContactUsProps) {
                                 </div>
 
                                 <div className="flex justify-end">
-                                    <button type="submit" className="bg-[#E51D29] text-white font-bold py-3 px-12 rounded uppercase hover:bg-red-700 transition-colors">
-                                        SUBMIT
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="bg-[#E51D29] text-white font-bold py-3 px-12 rounded uppercase hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                    >
+                                        {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
                                     </button>
                                 </div>
 
