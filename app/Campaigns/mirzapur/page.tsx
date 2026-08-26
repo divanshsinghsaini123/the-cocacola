@@ -41,7 +41,7 @@ export default function MirzapurPage() {
             formData.append("specialCode", specialCode);
             formData.append("bottleImage", bottleImage);
 
-            const res = await fetch("/api/mirzapur", {
+            const res = await fetch("/api/Campaigns/mirzapur", {
                 method: "POST",
                 body: formData,
             });

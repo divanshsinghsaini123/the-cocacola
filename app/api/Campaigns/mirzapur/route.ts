@@ -3,7 +3,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 import { s3 } from "@/src/lib/gcore";
 import { connectDB } from "@/src/lib/mongoose";
-import { Mirzapur } from "@/src/models/Mirzapur";
+import { Mirzapur } from "@/src/models/Campaigns/Mirzapur";
 
 export async function POST(req: Request) {
     try {
@@ -21,10 +21,10 @@ export async function POST(req: Request) {
         }
 
         // Validate image size (max 5MB)
-        const MAX_SIZE = 5 * 1024 * 1024;
+        const MAX_SIZE = 10 * 1024 * 1024;
         if (bottleImage.size > MAX_SIZE) {
             return NextResponse.json(
-                { error: "Image file size exceeds 5MB limit." },
+                { error: "Image file size exceeds 10MB limit." },
                 { status: 400 }
             );
         }
