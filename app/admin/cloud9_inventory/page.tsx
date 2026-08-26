@@ -48,7 +48,7 @@ export default function Cloud9InventoryPage() {
                 throw new Error(`Failed to fetch inventory (Status ${res.status})`);
             }
             const data: ApiResponse = await res.json();
-            
+
             let items: InventoryItem[] = [];
             if (data && Array.isArray(data.cloud9_inventory)) {
                 items = data.cloud9_inventory;
@@ -337,7 +337,7 @@ export default function Cloud9InventoryPage() {
                 <div className="bg-white p-12 rounded-2xl border border-gray-200 shadow-sm text-center flex flex-col items-center justify-center min-h-[300px]">
                     <div className="w-12 h-12 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin mb-4" />
                     <h3 className="text-lg font-semibold text-gray-800">Fetching Live Inventory</h3>
-                    <p className="text-xs text-gray-500 mt-1">Connecting to n8n webhook API...</p>
+                    <p className="text-xs text-gray-500 mt-1">Connecting to Inventory API...</p>
                 </div>
             ) : error ? (
                 <div className="bg-rose-50 border border-rose-200 p-6 rounded-2xl text-center space-y-3">
@@ -362,7 +362,7 @@ export default function Cloud9InventoryPage() {
                     </svg>
                     <h3 className="text-base font-bold text-gray-800">No inventory found</h3>
                     <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
-                        {searchQuery ? "No products or pincodes match your active search terms." : "The n8n webhook API returned no inventory items."}
+                        {searchQuery ? "No products or pincodes match your active search terms." : "The API returned no inventory items."}
                     </p>
                 </div>
             ) : (
@@ -418,9 +418,8 @@ export default function Cloud9InventoryPage() {
                                         {/* Arrow Icon */}
                                         <div className="p-2 bg-gray-100 rounded-xl text-gray-500 group-hover:bg-gray-200 transition-colors">
                                             <svg
-                                                className={`w-5 h-5 transform transition-transform duration-200 ${
-                                                    isExpanded ? "rotate-180" : ""
-                                                }`}
+                                                className={`w-5 h-5 transform transition-transform duration-200 ${isExpanded ? "rotate-180" : ""
+                                                    }`}
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
