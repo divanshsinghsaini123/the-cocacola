@@ -1,7 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { GetCampaignData } from "@/src/lib/strapi";
+import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
+
+interface MirzapurStrapiData {
+    form_tittle?: string;
+    form_heading?: string;
+    bottle_heading?: string;
+    bottle_descriptoin?: string;
+    bottle_image?: {
+        url?: string;
+    };
+    terms_and_conditions?: any;
+}
 
 export default function MirzapurPage() {
     const [name, setName] = useState("");
@@ -13,6 +26,24 @@ export default function MirzapurPage() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    // Strapi Data State
+    const [campaignData, setCampaignData] = useState<MirzapurStrapiData | null>(null);
+
+    useEffect(() => {
+        const fetchStrapiData = async () => {
+            try {
+                const data = await GetCampaignData();
+                if (data?.Mirzapur) {
+                    setCampaignData(data.Mirzapur);
+                }
+            }
+            catch (err) {
+                console.error("Failed to fetch Strapi Campaign data:", err);
+            }
+        };
+        fetchStrapiData();
+    }, []);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -66,6 +97,16 @@ export default function MirzapurPage() {
         }
     };
 
+    // Dynamic field resolution from Strapi with fallbacks
+    const formTitle = campaignData?.form_tittle;
+    const formHeading = campaignData?.form_heading;
+    const bottleHeading = campaignData?.bottle_heading;
+    const bottleDescription = campaignData?.bottle_descriptoin;
+
+    // Resolve Strapi bottle image URL if uploaded, fallback to local image
+    const strapiImageUrl = campaignData?.bottle_image?.url;
+    const guideImageSrc = getStrapiMediaUrl(strapiImageUrl) as string;
+    console.log(guideImageSrc);
     return (
         <main className="min-h-screen bg-neutral-950 text-white flex items-center justify-center p-4 md:p-10 font-sans">
             <div className="max-w-5xl w-full bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-2">
@@ -74,10 +115,10 @@ export default function MirzapurPage() {
                 <div className="p-8 md:p-12 flex flex-col justify-center">
                     <div className="mb-8">
                         <span className="inline-block px-3 py-1 bg-red-600/20 text-red-500 rounded-full text-xs font-semibold uppercase tracking-wider mb-2">
-                            Special Contest
+                            {formTitle}
                         </span>
                         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                            Mirzapur Campaign
+                            {formHeading}
                         </h1>
                         <p className="text-neutral-400 text-sm mt-2">
                             Enter your details and bottle code to participate!
@@ -145,7 +186,7 @@ export default function MirzapurPage() {
                         {/* 4. Upload Bottle Photo */}
                         <div>
                             <label className="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-2">
-                                Photo of Empty Bottle
+                                Photo of Empty Bottle with code visible
                             </label>
                             <input
                                 type="file"
@@ -176,17 +217,17 @@ export default function MirzapurPage() {
                     </form>
                 </div>
 
-                {/* Right Side: Guide Image (mrp.png) */}
+                {/* Right Side: Guide Image (mrp.png) & Strapi content */}
                 <div className="bg-neutral-950 p-8 flex flex-col justify-center items-center border-t lg:border-t-0 lg:border-l border-neutral-800 text-center">
                     <h3 className="text-lg font-bold text-neutral-200 mb-2">
-                        Where is the Special Code?
+                        {bottleHeading}
                     </h3>
                     <p className="text-xs text-neutral-400 mb-6 max-w-xs">
-                        Check your bottle wrapper or neck to find your unique special code as shown in the reference image below.
+                        {bottleDescription}
                     </p>
                     <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-neutral-800 shadow-lg group">
                         <Image
-                            src="/mirzapur_page.png"
+                            src={guideImageSrc}
                             alt="Code Location Guide"
                             width={500}
                             height={500}
@@ -199,3 +240,4 @@ export default function MirzapurPage() {
         </main>
     );
 }
+

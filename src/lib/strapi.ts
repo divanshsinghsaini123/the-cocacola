@@ -74,6 +74,11 @@ const Strapi_Landing = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/landing-page?p
 if (!Strapi_Landing) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
+
+const STRAPI_URLCampaign = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/Campaign?populate[Mirzapur][populate]=*";
+if (!STRAPI_URLCampaign) {
+    throw new Error("NEXT_PUBLIC_Campaign is missing")
+}
 let cachedHomePageData: any = null;
 export async function GetBrandPageData() {
     try {
@@ -449,6 +454,7 @@ export async function GetCofillingData() {
     }
 }
 
+
 export async function GetLandingDate() {
     try {
         const response = await fetch(
@@ -472,6 +478,32 @@ export async function GetLandingDate() {
     }
     catch (error) {
         console.error("Error fetching Landing page data:", error);
+        return null;
+    }
+}
+
+export async function GetCampaignData() {
+    try {
+        const response = await fetch(
+            STRAPI_URLCampaign,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        );
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_URLCampaign} Status: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`Response: ${errorText}`);
+            throw new Error(`Failed to fetch Landing page data: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error fetching Campaign page data:", error);
         return null;
     }
 }
