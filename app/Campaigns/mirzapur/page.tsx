@@ -14,6 +14,7 @@ interface MirzapurStrapiData {
         url?: string;
     };
     terms_and_conditions?: any;
+    DisablePage?: boolean;
 }
 
 export default function MirzapurPage() {
@@ -48,7 +49,13 @@ export default function MirzapurPage() {
         };
         fetchStrapiData();
     }, []);
-
+    if (campaignData?.DisablePage == true) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <h1 className="text-2xl font-bold text-white">Comming soon</h1>
+            </div>
+        )
+    }
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
