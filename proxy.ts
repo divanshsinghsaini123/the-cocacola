@@ -5,7 +5,9 @@ export function proxy(req: NextRequest) {
     const token = req.cookies.get("admin_token")?.value;
     const calc_token = req.cookies.get("calc_token")?.value;
     const { pathname } = req.nextUrl;
-
+    if (pathname == "/mirzapur") {
+        return NextResponse.redirect(new URL("/Campaigns/mirzapur", req.url));
+    }
     // ---- Protect /api/admin/* (cookie-based, JSON 401 responses) ----
     if (pathname.startsWith("/api/admin")) {
         // Endpoints that MUST stay public (login / password recovery):
@@ -95,6 +97,6 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/admin/:path*", "/calc/:path*", "/api/admin/:path*"],
+    matcher: ["/admin/:path*", "/calc/:path*", "/api/admin/:path*", "/mirzapur/:path*"],
 };
 
