@@ -47,7 +47,15 @@ export default function AdminLoginPage() {
             }
 
             // Success
-            router.push("/admin/portal");
+            const data = await res.json();
+            if (data.admin.role == "ecom") {
+                router.push("/admin/portal");
+            }
+
+            if (data.admin.role == "Superadmin") {
+                router.push("/admin/portal");
+            }
+
             router.refresh();
         } catch (err: any) {
             setError(err.message);
