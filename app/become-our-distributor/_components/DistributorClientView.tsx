@@ -448,7 +448,7 @@ export default function DistributorClientView({
                     </div>
                 </div>
 
-                <div className="flex shrink-0 order-2 lg:order-none">
+                <div className="flex shrink-0 order-2 lg:order-none opacity-0 pointer-events-none invisible">
                     <button
                         onClick={() => setActiveTab("contact")}
                         style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined}
