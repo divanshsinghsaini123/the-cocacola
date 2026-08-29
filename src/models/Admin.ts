@@ -20,7 +20,7 @@ const AdminSchema = new Schema(
         },
         role: {
             type: String,
-            enum: ["Superadmin", "admin"],
+            enum: ["Superadmin", "admin", "ecom"],
             default: "editor",
         },
         email: {

@@ -39,13 +39,14 @@ export async function POST(request: Request) {
         }
 
         // Check if admin exists
-        let admin = await Admin.findOne({ username });
+        const admin = await Admin.findOne({ username });
 
         if (!admin) {
             return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
         }
 
-        let unhashpassword = await bcrypt.compare(password, admin.password);
+
+        const unhashpassword = await bcrypt.compare(password, admin.password);
         // Verify Password (hashed password)
         if (!unhashpassword || !admin.isActive || (admin.role !== "Superadmin" && admin.role !== "ecom")) {
             return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
