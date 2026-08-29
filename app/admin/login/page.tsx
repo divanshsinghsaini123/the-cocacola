@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
             // Success
             const data = await res.json();
             if (data.admin.role == "ecom") {
-                router.push("/admin/portal");
+                router.push("/admin/cloud9_inventory");
             }
 
             if (data.admin.role == "Superadmin") {
