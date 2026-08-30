@@ -47,13 +47,13 @@ export async function POST(request: Request) {
 
         let unhashpassword = await bcrypt.compare(password, admin.password);
         // Verify Password (hashed password)
-        if (!unhashpassword || !admin.isActive || admin.role !== "Superadmin") {
+        if (!unhashpassword || !admin.isActive || (admin.role !== "Superadmin" && admin.role !== "ecom")) {
             return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
         }
 
         // Create Token
         const token = jwt.sign(
-            { adminId: admin._id, username: admin.username },
+            { adminId: admin._id, username: admin.username, role: admin.role },
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );
