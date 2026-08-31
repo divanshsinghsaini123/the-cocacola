@@ -67,30 +67,42 @@ export function proxy(req: NextRequest) {
     }
     // Protect admin routes
     if (req.nextUrl.pathname.startsWith("/admin")) {
-        // If user is accessing login page
+        //here i am decoding the token to verify the role 
+        let decodedToken: any = null;
+        if (token) {
+            try {
+                decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
+            } catch (err) {
+                return NextResponse.redirect(new URL("/admin/login", req.url));
+            }
+        }
+
+        // 1. If accessing login page
         if (req.nextUrl.pathname === "/admin/login") {
-            if (token) {
-                try {
-                    jwt.verify(token, process.env.JWT_SECRET!);
-                    return NextResponse.redirect(new URL("/admin/portal", req.url));
-                } catch (err) {
-                    // Invalid token, just show login page
-                    return NextResponse.next();
+            if (decodedToken) {
+                if (decodedToken.role === "ecom") {
+                    return NextResponse.redirect(new URL("/admin/cloud9_inventory", req.url));
                 }
+                return NextResponse.redirect(new URL("/admin/portal", req.url));
             }
             return NextResponse.next();
         }
 
-        if (!token) {
+        // 2. If no valid token, redirect to login page
+        if (!decodedToken) {
             return NextResponse.redirect(new URL("/admin/login", req.url));
         }
 
-        try {
-            jwt.verify(token, process.env.JWT_SECRET!);
-            return NextResponse.next();
-        } catch (err) {
-            return NextResponse.redirect(new URL("/admin/login", req.url));
+        // 3. Strict Role-Based Route Protection for 'ecom' role
+        if (decodedToken.role === "ecom") {
+            // Allow ONLY /admin/cloud9_inventory and its sub-routes
+            const isAllowedEcomRoute = req.nextUrl.pathname.startsWith("/admin/cloud9_inventory");
+            if (!isAllowedEcomRoute) {
+                return NextResponse.redirect(new URL("/admin/cloud9_inventory", req.url));
+            }
         }
+
+        return NextResponse.next();
     }
 
     return NextResponse.next();
