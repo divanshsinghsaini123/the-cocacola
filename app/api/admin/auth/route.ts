@@ -59,7 +59,13 @@ export async function POST(request: Request) {
             { expiresIn: "1h" }
         );
 
-        const response = NextResponse.json({ message: "Login successful" });
+        const response = NextResponse.json({
+            message: "Login successful",
+            admin: {
+                username: admin.username,
+                role: admin.role,
+            },
+        });
 
         // Set Cookie
         response.cookies.set("admin_token", token, {
