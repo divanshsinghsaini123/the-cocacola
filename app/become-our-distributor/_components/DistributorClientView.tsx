@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Megaphone, CheckCircle2, Map, Phone, Mail } from "lucide-react";
@@ -17,57 +17,75 @@ export default function DistributorClientView({
     const [activeTab, setActiveTab] = useState<"home" | "contact">("home");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { Hero, Hero2, Footer, PageButton: buttonStyle } = homeData || {};
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const hash = window.location.hash;
+            if (hash === "#contact-form" || hash === "#contact") {
+                setActiveTab("contact");
+            }
+        }
+    }, []);
+
+    const { Hero, Hero2, Footer, PageButton: buttonStyle, DisablePage } = homeData || {};
     const buttondata = Hero?.button;
     const showButton = buttondata ? !buttondata.disablebutton : false;
 
     // Render Home/Main View
-    const renderHome = () => (
-        <div className="w-full animation-fade-in pt-32 lg:pt-40">
-            {/* Hero Section */}
-            <section className="relative w-full flex flex-col items-center justify-center text-center px-4 overflow-hidden pb-20">
-                <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center">
-                    <div className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-5 py-2 mb-8 backdrop-blur-md">
-                        <span className="text-sm font-medium tracking-wide">👋 Welcome To Cloud9</span>
-                    </div>
+    const renderHome = () => {
+        if (DisablePage) {
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-[#070910] text-white font-medium text-lg">
+                    Page Currently Disabled
+                </div>
+            );
+        }
 
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white mb-6 leading-[1.3] text-center max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-x-4 gap-y-3 lg:gap-y-4">
-                        {Hero?.Heading ? Hero.Heading.split(" ").filter(Boolean).map((word: string, i: number) => {
-                            if (word.toLowerCase().includes("Cloud9")) {
-                                return (
-                                    <span key={i} className="bg-[#3FA2F6] text-white px-4 py-0 pb-1 rounded-2xl inline-block -rotate-2 transform hover:rotate-0 transition-transform cursor-pointer">
-                                        {word}
-                                    </span>
-                                );
-                            }
-                            if (word.toLowerCase().includes("apply")) {
-                                return (
-                                    <span key={i} className="flex items-center gap-3">
-                                        <span className="bg-[#A855F7] p-2 md:p-3 rounded-full inline-flex items-center justify-center transform -rotate-12">
-                                            <Megaphone className="text-white w-5 h-5 md:w-7 md:h-7" fill="currentColor" />
-                                        </span>
-                                        {word}
-                                    </span>
-                                );
-                            }
-                            return <span key={i}>{word}</span>;
-                        }) : null}
-                    </h1>
-
-                    <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-                        {Hero?.Description}
-                    </p>
-                    {showButton &&
-                        <div className="flex items-center justify-center w-full">
-                            <button onClick={() => setActiveTab("contact")} style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-8 py-3.5 rounded-full font-medium text-base transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:-translate-y-1">
-                                <span>{buttondata.buttonText}</span>
-                                <div className="bg-white rounded-full p-1.5 text-[#3FA2F6]">
-                                    <ArrowRight size={18} strokeWidth={3} />
-                                </div>
-                            </button>
+        return (
+            <div className="w-full animation-fade-in pt-32 lg:pt-40">
+                {/* Hero Section */}
+                <section className="relative w-full flex flex-col items-center justify-center text-center px-4 overflow-hidden pb-20">
+                    <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center">
+                        <div className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-5 py-2 mb-8 backdrop-blur-md">
+                            <span className="text-sm font-medium tracking-wide">👋 Welcome To Cloud9</span>
                         </div>
-                    }
-                    {/* {Hero?.Logo && (
+
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white mb-6 leading-[1.3] text-center max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-x-4 gap-y-3 lg:gap-y-4">
+                            {Hero?.Heading ? Hero.Heading.split(" ").filter(Boolean).map((word: string, i: number) => {
+                                if (word.toLowerCase().includes("Cloud9")) {
+                                    return (
+                                        <span key={i} className="bg-[#3FA2F6] text-white px-4 py-0 pb-1 rounded-2xl inline-block -rotate-2 transform hover:rotate-0 transition-transform cursor-pointer">
+                                            {word}
+                                        </span>
+                                    );
+                                }
+                                if (word.toLowerCase().includes("apply")) {
+                                    return (
+                                        <span key={i} className="flex items-center gap-3">
+                                            <span className="bg-[#A855F7] p-2 md:p-3 rounded-full inline-flex items-center justify-center transform -rotate-12">
+                                                <Megaphone className="text-white w-5 h-5 md:w-7 md:h-7" fill="currentColor" />
+                                            </span>
+                                            {word}
+                                        </span>
+                                    );
+                                }
+                                return <span key={i}>{word}</span>;
+                            }) : null}
+                        </h1>
+
+                        <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+                            {Hero?.Description}
+                        </p>
+                        {showButton &&
+                            <div className="flex items-center justify-center w-full">
+                                <button onClick={() => setActiveTab("contact")} style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-8 py-3.5 rounded-full font-medium text-base transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:-translate-y-1">
+                                    <span>{buttondata.buttonText}</span>
+                                    <div className="bg-white rounded-full p-1.5 text-[#3FA2F6]">
+                                        <ArrowRight size={18} strokeWidth={3} />
+                                    </div>
+                                </button>
+                            </div>
+                        }
+                        {/* {Hero?.Logo && (
                         <div className="mt-16 relative opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
                             <Image
                                 src={getStrapiMediaUrl(Hero.Logo.url)}
@@ -78,115 +96,116 @@ export default function DistributorClientView({
                             />
                         </div>
                     )} */}
-                </div>
-            </section>
-
-            {/* About / Expandable Section */}
-            <section className="py-20 px-6 max-w-7xl mx-auto flex flex-col gap-16">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20">
-                    <div className="w-full">
-                        <Accordion items={Hero2?.LeftExpendableSection || []} />
                     </div>
+                </section>
 
-                    <div className="w-full flex flex-col bg-[#111424] rounded-3xl p-8 md:p-12 border border-gray-800/50 shadow-2xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl rounded-full translate-x-10 -translate-y-10 pointer-events-none"></div>
-
-                        <div className="text-gray-300 text-[13px] md:text-[15px] leading-[1.8] tracking-wide mb-10">
-                            {Hero2?.Hero2Description?.split('\n').map((para: string, i: number) => (
-                                <p key={i} className="mb-4 last:mb-0" dangerouslySetInnerHTML={{ __html: para.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-[#3FA2F6] hover:underline">$1</a>') }} />
-                            ))}
+                {/* About / Expandable Section */}
+                <section className="py-20 px-6 max-w-7xl mx-auto flex flex-col gap-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20">
+                        <div className="w-full">
+                            <Accordion items={Hero2?.LeftExpendableSection || []} />
                         </div>
 
-                        <div className="mb-2 mt-auto">
-                            {/* <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-7 py-3 rounded-full font-medium transition-colors shadow-lg shadow-blue-500/20">
+                        <div className="w-full flex flex-col bg-[#111424] rounded-3xl p-8 md:p-12 border border-gray-800/50 shadow-2xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl rounded-full translate-x-10 -translate-y-10 pointer-events-none"></div>
+
+                            <div className="text-gray-300 text-[13px] md:text-[15px] leading-[1.8] tracking-wide mb-10">
+                                {Hero2?.Hero2Description?.split('\n').map((para: string, i: number) => (
+                                    <p key={i} className="mb-4 last:mb-0" dangerouslySetInnerHTML={{ __html: para.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-[#3FA2F6] hover:underline">$1</a>') }} />
+                                ))}
+                            </div>
+
+                            <div className="mb-2 mt-auto">
+                                {/* <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-7 py-3 rounded-full font-medium transition-colors shadow-lg shadow-blue-500/20">
                                 <span>Learn More</span>
                                 <div className="bg-white text-[#3FA2F6] rounded-full p-1.5">
                                     <ArrowRight size={16} strokeWidth={3} />
                                 </div>
                             </button> */}
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-16 border-t border-gray-800/80 mt-8">
-                    <div className="flex flex-col items-center md:items-start md:pl-10">
-                        <div className="flex items-baseline space-x-1 mb-3">
-                            <span className="text-4xl md:text-5xl font-semibold text-white tracking-tight">{Hero2?.YearsInBusiness}</span>
-                            <span className="text-3xl md:text-4xl font-semibold text-[#3FA2F6]">Y</span>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-16 border-t border-gray-800/80 mt-8">
+                        <div className="flex flex-col items-center md:items-start md:pl-10">
+                            <div className="flex items-baseline space-x-1 mb-3">
+                                <span className="text-4xl md:text-5xl font-semibold text-white tracking-tight">{Hero2?.YearsInBusiness}</span>
+                                <span className="text-3xl md:text-4xl font-semibold text-[#3FA2F6]">Y</span>
+                            </div>
+                            <span className="text-gray-400 text-sm md:text-base tracking-widest font-medium">Years in business</span>
                         </div>
-                        <span className="text-gray-400 text-sm md:text-base tracking-widest font-medium">Years in business</span>
-                    </div>
-                    <div className="flex flex-col items-center md:items-start md:border-l border-gray-800/80 md:pl-16">
-                        <div className="mb-3">
-                            <span className="text-4xl md:text-5xl font-semibold text-white tracking-tight">{Hero2?.SucessfulProjects}<span className="text-[#3FA2F6]">+</span></span>
+                        <div className="flex flex-col items-center md:items-start md:border-l border-gray-800/80 md:pl-16">
+                            <div className="mb-3">
+                                <span className="text-4xl md:text-5xl font-semibold text-white tracking-tight">{Hero2?.SucessfulProjects}<span className="text-[#3FA2F6]">+</span></span>
+                            </div>
+                            <span className="text-gray-400 text-sm md:text-base tracking-widest font-medium">Successful Projects</span>
                         </div>
-                        <span className="text-gray-400 text-sm md:text-base tracking-widest font-medium">Successful Projects</span>
-                    </div>
-                    <div className="flex flex-col items-center md:items-start md:border-l border-gray-800/80 md:pl-16">
-                        <div className="mb-3">
-                            <span className="text-4xl md:text-5xl font-semibold text-white tracking-tight">{Hero2?.HappyClients}<span className="text-[#3FA2F6]">%</span></span>
+                        <div className="flex flex-col items-center md:items-start md:border-l border-gray-800/80 md:pl-16">
+                            <div className="mb-3">
+                                <span className="text-4xl md:text-5xl font-semibold text-white tracking-tight">{Hero2?.HappyClients}<span className="text-[#3FA2F6]">%</span></span>
+                            </div>
+                            <span className="text-gray-400 text-sm md:text-base tracking-widest font-medium">Happy Clients</span>
                         </div>
-                        <span className="text-gray-400 text-sm md:text-base tracking-widest font-medium">Happy Clients</span>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* Services Section */}
-            <section className="py-24 px-6 relative">
-                <div className="max-w-[85rem] mx-auto">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-16">
-                        {Hero2?.Service?.map((service: any, index: number) => {
-                            const isLast = index === Hero2.Service.length - 1;
-                            return (
-                                <div key={service.id} className="flex flex-col group">
-                                    <div className="inline-block border border-gray-700/80 bg-gray-800/20 text-gray-300 rounded-full px-4 py-1 text-xs md:text-[13px] w-max mb-6 font-medium">
-                                        Our Services
-                                    </div>
-                                    <h2 className="text-2xl md:text-3xl font-medium text-white mb-4 tracking-tight">
-                                        {service.Heading}
-                                    </h2>
-                                    <h3 className="text-[15px] md:text-[16px] text-gray-300 mb-5 font-normal leading-relaxed">
-                                        {service.SubHeading}
-                                    </h3>
+                {/* Services Section */}
+                <section className="py-24 px-6 relative">
+                    <div className="max-w-[85rem] mx-auto">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-16">
+                            {Hero2?.Service?.map((service: any, index: number) => {
+                                const isLast = index === Hero2.Service.length - 1;
+                                return (
+                                    <div key={service.id} className="flex flex-col group">
+                                        <div className="inline-block border border-gray-700/80 bg-gray-800/20 text-gray-300 rounded-full px-4 py-1 text-xs md:text-[13px] w-max mb-6 font-medium">
+                                            Our Services
+                                        </div>
+                                        <h2 className="text-2xl md:text-3xl font-medium text-white mb-4 tracking-tight">
+                                            {service.Heading}
+                                        </h2>
+                                        <h3 className="text-[15px] md:text-[16px] text-gray-300 mb-5 font-normal leading-relaxed">
+                                            {service.SubHeading}
+                                        </h3>
 
-                                    <ul className="space-y-3 text-gray-400 text-[13px] md:text-[15px] flex-grow mb-8 leading-relaxed">
-                                        {service.BulletPoint?.map((bp: any) => {
-                                            const formattedPoint = bp.Points.replace(/^([^:]+):/, '<strong class="text-white font-medium">$1:</strong>');
-                                            return (
-                                                <li key={bp.id} className="flex gap-4 items-start">
-                                                    <div className="mt-1.5 w-1.5 h-1.5 bg-gray-500 rounded-full shrink-0 group-hover:bg-[#3FA2F6] transition-colors duration-300"></div>
-                                                    {bp.redirectlink ? (
-                                                        <Link href={bp.redirectlink} className="leading-relaxed hover:underline hover:text-[#3FA2F6] transition-colors">
-                                                            <span dangerouslySetInnerHTML={{ __html: formattedPoint }} />
-                                                        </Link>
-                                                    ) : (
-                                                        <span className="leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedPoint }} />
-                                                    )}
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
+                                        <ul className="space-y-3 text-gray-400 text-[13px] md:text-[15px] flex-grow mb-8 leading-relaxed">
+                                            {service.BulletPoint?.map((bp: any) => {
+                                                const formattedPoint = bp.Points.replace(/^([^:]+):/, '<strong class="text-white font-medium">$1:</strong>');
+                                                return (
+                                                    <li key={bp.id} className="flex gap-4 items-start">
+                                                        <div className="mt-1.5 w-1.5 h-1.5 bg-gray-500 rounded-full shrink-0 group-hover:bg-[#3FA2F6] transition-colors duration-300"></div>
+                                                        {bp.redirectlink ? (
+                                                            <Link href={bp.redirectlink} className="leading-relaxed hover:underline hover:text-[#3FA2F6] transition-colors">
+                                                                <span dangerouslySetInnerHTML={{ __html: formattedPoint }} />
+                                                            </Link>
+                                                        ) : (
+                                                            <span className="leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedPoint }} />
+                                                        )}
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
 
-                                    {isLast && (
-                                        <div className="mt-auto flex justify-end w-full">
-                                            {/* <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-6 py-3 rounded-full font-medium transition-transform hover:scale-105 shadow-lg shadow-blue-500/20">
+                                        {isLast && (
+                                            <div className="mt-auto flex justify-end w-full">
+                                                {/* <button style={buttonStyle ? { backgroundColor: buttonStyle.BackgroundHexColor, color: buttonStyle.FontHexColor } : undefined} className="inline-flex items-center space-x-3 bg-[#3FA2F6] hover:bg-blue-500 text-white px-6 py-3 rounded-full font-medium transition-transform hover:scale-105 shadow-lg shadow-blue-500/20">
                                                 <span>All Services</span>
                                                 <div className="bg-white text-[#3FA2F6] rounded-full p-1.5">
                                                     <ArrowRight size={16} strokeWidth={3} />
                                                 </div>
                                             </button> */}
-                                        </div>
-                                    )}
-                                </div>
-                            )
-                        })}
+                                            </div>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
 
-        </div>
-    );
+            </div>
+        );
+    };
 
     // Render Contact View Component
     const renderContact = () => (

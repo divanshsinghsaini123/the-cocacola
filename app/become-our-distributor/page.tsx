@@ -15,9 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BecomeOurDistributor() {
     const data = await GetBecomeOurDistributorData();
-    if (data?.DisablePage) return notFound();
+    // if (data?.DisablePage) return notFound();
     const contactData = await GetBecomeOurDistributorContactUsData();
-    
+
     if (!data) {
         return <div className="min-h-screen flex items-center justify-center bg-[#070910] text-white">Loading...</div>;
     }
@@ -26,11 +26,11 @@ export default async function BecomeOurDistributor() {
         <main className="bg-[#0A0D14] min-h-screen text-white font-sans selection:bg-[#3FA2F6] selection:text-white pb-20 relative">
             {/* Simulated global background gradient matching the whole theme */}
             <div className="fixed inset-0 z-0 bg-gradient-to-b from-[#0e1628] via-[#070910] to-[#070910] opacity-80 pointer-events-none" />
-            
+
             <div className="relative z-10 w-full">
-                <DistributorClientView 
-                    homeData={data} 
-                    contactData={contactData} 
+                <DistributorClientView
+                    homeData={data}
+                    contactData={contactData}
                 />
             </div>
         </main>
