@@ -215,9 +215,9 @@ export default function DistributorClientView({
                 {contactData?.Description}
             </p>
 
-            <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-0 rounded-[28px] overflow-hidden shadow-2xl relative">
+            <div className="w-full max-w-[900px] rounded-[28px] overflow-hidden shadow-2xl relative">
                 {/* Left Panel: Contact Info Card */}
-                <div className="bg-gradient-to-br from-[#1b509d] to-[#041d40] p-5 sm:p-8 md:p-14 flex flex-col justify-center border border-[#0d2a58]">
+                {/* <div className="bg-gradient-to-br from-[#1b509d] to-[#041d40] p-5 sm:p-8 md:p-14 flex flex-col justify-center border border-[#0d2a58]">
                     <div className="space-y-0">
                         {contactData?.Address && (
                             <div className="flex items-start gap-3 md:gap-5 border-b border-light pb-4 md:pb-8 mb-4 md:mb-8" style={{ borderBottomColor: "rgba(255,255,255,0.15)" }}>
@@ -286,7 +286,7 @@ export default function DistributorClientView({
                             </div>
                         </div>
                     )}
-                </div>
+                </div> */}
 
                 {/* Right Panel: Form Card */}
                 <div className="bg-[#0b0f19] p-5 sm:p-8 md:p-12 border border-l-0 border-[#0b0f19]">
@@ -432,12 +432,13 @@ export default function DistributorClientView({
 
                 <div className="flex w-full order-3 lg:order-none lg:w-auto justify-center">
                     <div className="flex items-center space-x-1 bg-[#1a1c2e]/60 backdrop-blur-md rounded-full border border-gray-700/50 p-1 md:p-1.5 shadow-lg scale-95 md:scale-100">
-                        <button
-                            onClick={() => setActiveTab("home")}
-                            className={`px-5 py-2 rounded-full text-[13px] md:text-sm font-medium transition-all duration-300 ${activeTab === "home" ? "bg-[#252a40] text-white shadow-md border border-gray-600/50" : "text-gray-300 hover:text-white"}`}
-                        >
-                            Home
-                        </button>
+                        {!DisablePage &&
+                            <button
+                                onClick={() => setActiveTab("home")}
+                                className={`px-5 py-2 rounded-full text-[13px] md:text-sm font-medium transition-all duration-300 ${activeTab === "home" ? "bg-[#252a40] text-white shadow-md border border-gray-600/50" : "text-gray-300 hover:text-white"}`}
+                            >
+                                Home
+                            </button>}
                         <button
                             onClick={() => setActiveTab("contact")}
                             className={`px-5 py-2 rounded-full text-[13px] md:text-sm font-medium transition-all duration-300 ${activeTab === "contact" ? "bg-[#343e5c] text-white shadow-md border border-gray-500/50" : "text-gray-300 hover:text-white"}`}
