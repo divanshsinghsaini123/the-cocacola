@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { GetCampaignData } from "@/src/lib/strapi";
 import { getStrapiMediaUrl } from "@/src/lib/strapi-media";
+import Toast from "@/app/admin/_components/Toast";
 
 interface MirzapurStrapiData {
     form_tittle?: string;
@@ -33,7 +34,9 @@ export default function MirzapurPage() {
 
     // Terms & Conditions Modal and Checkbox State
     const [termsAccepted, setTermsAccepted] = useState(false);
-    const [showTermsModal, setShowTermsModal] = useState(true); // Opens automatically on first load
+    const [showInitialModal, setShowInitialModal] = useState(true); // 1st Modal: Opens automatically on initial page load
+    const [showTermsModal, setShowTermsModal] = useState(false); // 2nd Modal: Detailed Strapi Terms & Conditions
+
 
     useEffect(() => {
         const fetchStrapiData = async () => {
@@ -209,17 +212,7 @@ export default function MirzapurPage() {
                         </p>
                     </div>
 
-                    {message && (
-                        <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm">
-                            🎉 {message}
-                        </div>
-                    )}
 
-                    {error && (
-                        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-                            ⚠️ {error}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* 1. Name */}
@@ -345,9 +338,75 @@ export default function MirzapurPage() {
 
             </div>
 
-            {/* Terms & Conditions Modal Overlay */}
-            {showTermsModal && (
+            {/* 1st Modal: Participant Acceptance (Initial Page Load) */}
+            {showInitialModal && (
                 <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-neutral-900 border border-neutral-800 rounded-3xl max-w-xl w-full flex flex-col overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+                        {/* Modal Header */}
+                        <div className="p-6 border-b border-neutral-800 flex items-center justify-between">
+                            <div>
+                                <span className="inline-block px-3 py-1 bg-red-600/20 text-red-500 rounded-full text-[10px] font-semibold uppercase tracking-wider mb-1">
+                                    Important Notice
+                                </span>
+                                <h2 className="text-xl font-bold text-white">Participant Acceptance</h2>
+                            </div>
+                            <button
+                                onClick={() => setShowInitialModal(false)}
+                                className="p-2 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-800 transition-colors"
+                                aria-label="Close Modal"
+                            >
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Modal Body */}
+                        <div className="p-6 space-y-4 text-xs md:text-sm text-neutral-300 leading-relaxed">
+                            <p>
+                                The “FREE TICKET” mention on the promotional bottle refers to an opportunity to win a ₹250 movie voucher and does not guarantee a movie ticket or voucher.
+                            </p>
+                            <p>
+                                By checking the box below and proceeding, you confirm that you have read, understood and voluntarily agreed to these Terms & Conditions, including the eligibility, verification, winner-selection and disqualification provisions. You acknowledge that participation, registration, scanning the QR code, or submission of proof does not guarantee selection as a winner or receipt of a ₹250 movie voucher.
+                            </p>
+
+                            {/* Hyperlink to 2nd Modal */}
+                            <div className="pt-2 border-t border-neutral-800/80">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowTermsModal(true)}
+                                    className="text-red-500 hover:text-red-400 font-semibold underline focus:outline-none flex items-center gap-1 text-xs"
+                                >
+                                    <span>Read Full Terms & Conditions</span>
+                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="p-6 border-t border-neutral-800 bg-neutral-950 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <p className="text-xs text-neutral-400">
+                                Please accept to proceed to the campaign page.
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setTermsAccepted(true);
+                                    setShowInitialModal(false);
+                                }}
+                                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 font-bold text-white text-xs transition-all shadow-lg shadow-red-600/20 active:scale-[0.98]"
+                            >
+                                I Accept & Agree
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 2nd Modal: Detailed Strapi Terms & Conditions Overlay */}
+            {showTermsModal && (
+                <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="bg-neutral-900 border border-neutral-800 rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
                         {/* Modal Header */}
                         <div className="p-6 border-b border-neutral-800 flex items-center justify-between">
@@ -382,6 +441,7 @@ export default function MirzapurPage() {
                                 onClick={() => {
                                     setTermsAccepted(true);
                                     setShowTermsModal(false);
+                                    setShowInitialModal(false);
                                 }}
                                 className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 font-bold text-white text-xs transition-all shadow-lg shadow-red-600/20 active:scale-[0.98]"
                             >
@@ -390,6 +450,24 @@ export default function MirzapurPage() {
                         </div>
                     </div>
                 </div>
+            )}
+            {/* Shared Toast Notifications */}
+            {message && (
+                <Toast
+                    message={message}
+                    type="success"
+                    onClose={() => setMessage(null)}
+                    duration={4000}
+                />
+            )}
+
+            {error && (
+                <Toast
+                    message={error}
+                    type="error"
+                    onClose={() => setError(null)}
+                    duration={4000}
+                />
             )}
         </main>
     );
