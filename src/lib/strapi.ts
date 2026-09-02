@@ -35,7 +35,7 @@ if (!STRAPI_URLEvents) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
-const STRAPI_URLBlogs = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/blog?populate[blog][populate]=images";
+const STRAPI_URLBlogs = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/blog?populate[blog][populate]=images&populate[SEO][populate]=*";
 
 const STRAPI_URLExtension = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/extension-page?populate[Row]=*&populate[SEO][populate]=*&populate[PageButton]=*";
 if (!STRAPI_URLExtension) {

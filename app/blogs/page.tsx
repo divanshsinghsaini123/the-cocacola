@@ -3,6 +3,9 @@ import Link from "next/link";
 import React from "react";
 import { BlogsGrid } from "./_components/BlogsGrid";
 
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+
 export interface BlogItem {
     id: number;
     slug: string;
@@ -24,16 +27,36 @@ export interface BlogsPageData {
     description?: string | null;
     date?: string;
     author?: string;
+    DisablePage?: boolean;
+    SEO?: {
+        metaTitle?: string;
+        metaDescription?: string;
+        keywords?: string;
+        shareImage?: any;
+    };
     createdAt?: string;
     updatedAt?: string;
     publishedAt?: string;
     blog: BlogItem[];
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+    const data = await GetBlogsData();
+    const seo = data?.SEO;
+
+    return {
+        title: seo?.metaTitle || "Blogs | Cloud 9",
+        description: seo?.metaDescription || "Explore latest blogs and news from Cloud 9.",
+        keywords: seo?.keywords || "Cloud 9, blogs, news",
+    };
+}
 
 export default async function BlogsPage() {
     const apiData = await GetBlogsData();
     const data: BlogsPageData = apiData;
+
+    if (!data || data?.DisablePage) return notFound();
+
 
     const pageHeading = data.heading;
     const pageDescription = data.description;

@@ -4,6 +4,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { RenderRichText } from "../_components/RenderRichText";
 
+import { Metadata } from "next";
+
 interface BlogItem {
     id: number;
     slug: string;
@@ -23,9 +25,29 @@ interface BlogsPageData {
     heading: string;
     date?: string;
     author?: string;
+    DisablePage?: boolean;
+    SEO?: {
+        metaTitle?: string;
+        metaDescription?: string;
+        keywords?: string;
+        shareImage?: any;
+    };
     blog: BlogItem[];
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const resolvedParams = await params;
+    const { slug } = resolvedParams;
+    const data = await GetBlogsData();
+    const blog = data?.blog?.find((b: BlogItem) => b.slug === slug);
+    const seo = data?.SEO;
+
+    return {
+        title: blog?.heading ? `${blog.heading} | Cloud 9` : seo?.metaTitle || "Blog | Cloud 9",
+        description: blog?.description || seo?.metaDescription || "Read blog post on Cloud 9",
+        keywords: seo?.keywords || "Cloud 9, blog",
+    };
+}
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const resolvedParams = await params;
@@ -33,6 +55,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
     const apiData = await GetBlogsData();
     const data: BlogsPageData = apiData;
+
+    if (!data || data?.DisablePage) return notFound();
+
 
     const blog = data?.blog?.find((b) => b.slug === slug);
 
