@@ -35,6 +35,8 @@ if (!STRAPI_URLEvents) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
+const STRAPI_URLBlogs = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/blog?populate[blog][populate]=images";
+
 const STRAPI_URLExtension = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/extension-page?populate[Row]=*&populate[SEO][populate]=*&populate[PageButton]=*";
 if (!STRAPI_URLExtension) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
@@ -295,6 +297,32 @@ export async function GetEventsData() {
         return null;
     }
 }
+
+export async function GetBlogsData() {
+    try {
+        const response = await fetch(
+            STRAPI_URLBlogs,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                next: { revalidate: 60 },
+            }
+        );
+        if (!response.ok) {
+            console.error(`Failed to fetch from: ${STRAPI_URLBlogs}`);
+            console.error(`Status: ${response.status} ${response.statusText}`);
+            return null;
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error fetching Blogs page data:", error);
+        return null;
+    }
+}
+
 export async function GetExtensionData() {
     try {
         const response = await fetch(
