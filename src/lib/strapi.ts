@@ -77,7 +77,7 @@ if (!Strapi_Landing) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
-const STRAPI_URLCampaign = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/Campaign?populate[Mirzapur][populate]=*";
+const STRAPI_URLCampaign = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/Campaign?populate[Mirzapur][populate]=*&populate[MirzapurVotes][populate][character][populate]=*&populate[SEO][populate]=*";
 if (!STRAPI_URLCampaign) {
     throw new Error("NEXT_PUBLIC_Campaign is missing")
 }
@@ -526,7 +526,7 @@ export async function GetCampaignData() {
             console.error(`Failed to fetch from: ${STRAPI_URLCampaign} Status: ${response.status} ${response.statusText}`);
             const errorText = await response.text();
             console.error(`Response: ${errorText}`);
-            throw new Error(`Failed to fetch Landing page data: ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to fetch Campaign page data: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         return data.data;
