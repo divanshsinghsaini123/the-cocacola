@@ -77,7 +77,7 @@ if (!Strapi_Landing) {
     throw new Error("NEXT_PUBLIC_STRAPI_URL is missing")
 }
 
-const STRAPI_URLCampaign = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/Campaign?populate[Mirzapur][populate]=*&populate[MirzapurVotes][populate][character][populate]=*&populate[SEO][populate]=*";
+const STRAPI_URLCampaign = process.env.NEXT_PUBLIC_STRAPI_URL + "/api/Campaign?populate[Mirzapur][populate]=*&populate[MirzapurVotes][populate][logo]=true&populate[MirzapurVotes][populate][character][populate]=*&populate[SEO][populate]=*";
 if (!STRAPI_URLCampaign) {
     throw new Error("NEXT_PUBLIC_Campaign is missing")
 }
