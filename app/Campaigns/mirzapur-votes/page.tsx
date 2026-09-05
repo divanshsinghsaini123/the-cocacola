@@ -105,10 +105,21 @@ export default function MirzapurVotesPage() {
             return;
         }
 
-        // Validate phone (10 digits recommended)
+        // Validate phone (Strict 10 digits, starting with 6-9, rejecting dummy numbers)
         const cleanedPhone = phone.replace(/\D/g, "");
-        if (cleanedPhone.length < 10) {
-            setFormError("Please enter a valid 10-digit phone number.");
+        if (cleanedPhone.length !== 10) {
+            setFormError("Please enter a valid 10-digit mobile number.");
+            return;
+        }
+
+        if (!/^[6-9]\d{9}$/.test(cleanedPhone)) {
+            setFormError("Please enter a valid mobile number starting with 6, 7, 8, or 9.");
+            return;
+        }
+
+        // Prevent repeated fake numbers like 0000000000, 9999999999, 1111111111
+        if (/^(\d)\1{9}$/.test(cleanedPhone)) {
+            setFormError("Please enter a valid mobile number (repeated numbers not allowed).");
             return;
         }
 
@@ -258,7 +269,7 @@ export default function MirzapurVotesPage() {
                                     {photoUrl ? (
                                         <Image
                                             src={photoUrl}
-                                            alt={char.characterName || "Mirzapur Character"}
+                                            alt={char.characterName}
                                             fill
                                             sizes="(max-width: 640px) 33vw, 180px"
                                             className={`object-cover object-top transition-transform duration-500 ${isSelected ? "scale-105" : "group-hover:scale-105"
@@ -284,14 +295,14 @@ export default function MirzapurVotesPage() {
                                     )}
 
                                     {/* Character Name Tag at Bottom */}
-                                    <div className="absolute bottom-0 inset-x-0 p-1 sm:p-1.5 text-center">
+                                    {/* <div className="absolute bottom-0 inset-x-0 p-1 sm:p-1.5 text-center">
                                         <p
                                             className={`text-[11px] sm:text-xs font-black uppercase tracking-tight truncate leading-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] ${isSelected ? "text-red-400 font-extrabold" : "text-neutral-200"
                                                 }`}
                                         >
                                             {char.characterName}
                                         </p>
-                                    </div>
+                                    </div> */}
                                 </button>
                             );
                         })
@@ -456,11 +467,17 @@ export default function MirzapurVotesPage() {
                                     </label>
                                     <input
                                         type="tel"
+                                        inputMode="numeric"
                                         value={phone}
-                                        onChange={(e) => setPhone(e.target.value)}
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, "");
+                                            if (val.length <= 10) {
+                                                setPhone(val);
+                                            }
+                                        }}
                                         placeholder="10-digit mobile number"
                                         required
-                                        maxLength={12}
+                                        maxLength={10}
                                         disabled={submitting}
                                         className="w-full px-3.5 py-2.5 bg-neutral-900 border border-neutral-800 rounded-xl text-white placeholder-neutral-500 text-xs sm:text-sm focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-colors"
                                     />

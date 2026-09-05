@@ -13,9 +13,17 @@ export async function POST(req: Request) {
         }
 
         const trimmedName = String(name).trim();
-        const trimmedPhone = String(phone).trim();
+        const cleanedPhone = String(phone).replace(/\D/g, "");
         const trimmedInstagram = instagram ? String(instagram).trim() : "";
         const trimmedCharacterName = String(characterName).trim();
+
+        // Phone Validation (10 digits, starts with 6-9, no all-same digits)
+        if (cleanedPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanedPhone) || /^(\d)\1{9}$/.test(cleanedPhone)) {
+            return NextResponse.json(
+                { error: "Please provide a valid 10-digit mobile number starting with 6, 7, 8, or 9." },
+                { status: 400 }
+            );
+        }
 
 
 
@@ -32,7 +40,7 @@ export async function POST(req: Request) {
                     body: JSON.stringify({
                         sheetName: "votes",
                         name: trimmedName,
-                        phone: trimmedPhone,
+                        phone: cleanedPhone,
                         instagram: trimmedInstagram,
                         characterName: trimmedCharacterName,
                         submittedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),

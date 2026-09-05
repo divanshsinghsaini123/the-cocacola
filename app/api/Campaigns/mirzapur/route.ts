@@ -13,9 +13,19 @@ export async function POST(req: Request) {
         const specialCode = formData.get("specialCode") as string;
         const bottleImage = formData.get("bottleImage") as File;
 
-        if (!name || !phone || !specialCode || !bottleImage) {
+        const cleanedPhone = phone ? String(phone).replace(/\D/g, "") : "";
+
+        if (!name || !cleanedPhone || !specialCode || !bottleImage) {
             return NextResponse.json(
                 { error: "All fields (Name, Phone, Special Code, Bottle Image) are required." },
+                { status: 400 }
+            );
+        }
+
+        // Phone validation (10 digits, starts with 6-9, no all-same digits)
+        if (cleanedPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanedPhone) || /^(\d)\1{9}$/.test(cleanedPhone)) {
+            return NextResponse.json(
+                { error: "Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9." },
                 { status: 400 }
             );
         }
@@ -66,7 +76,7 @@ export async function POST(req: Request) {
         await connectDB();
         const entry = await Mirzapur.create({
             name,
-            phone,
+            phone: cleanedPhone,
             specialCode,
             bottleImageUrl: fullImageUrl,
         });
@@ -80,7 +90,7 @@ export async function POST(req: Request) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         name,
-                        phone,
+                        phone: cleanedPhone,
                         specialCode,
                         bottleImageUrl: fullImageUrl,
                         submittedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),

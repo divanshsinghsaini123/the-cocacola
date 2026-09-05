@@ -77,7 +77,13 @@ export default function MirzapurPage() {
             return;
         }
 
-        if (!name || !phone || !specialCode || !bottleImage) {
+        const cleanedPhone = phone.replace(/\D/g, "");
+        if (cleanedPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanedPhone) || /^(\d)\1{9}$/.test(cleanedPhone)) {
+            setError("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
+            return;
+        }
+
+        if (!name || !cleanedPhone || !specialCode || !bottleImage) {
             setError("Please fill out all fields and upload the bottle photo.");
             return;
         }
@@ -237,10 +243,15 @@ export default function MirzapurPage() {
                             </label>
                             <input
                                 type="tel"
+                                inputMode="numeric"
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                placeholder="Enter your mobile number"
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/\D/g, "");
+                                    if (val.length <= 10) setPhone(val);
+                                }}
+                                placeholder="10-digit mobile number"
                                 required
+                                maxLength={10}
                                 className="w-full px-4 py-3 rounded-xl bg-neutral-800 border border-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500 transition-all text-sm"
                             />
                         </div>
