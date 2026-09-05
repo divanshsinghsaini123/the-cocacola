@@ -30,9 +30,16 @@ interface MirzapurVotesData {
     character?: CharacterItem[];
 }
 
+interface TermsAndConditions {
+    terms_and_conditions?: any;
+}
+
 export default function MirzapurVotesPage() {
     const [votesData, setVotesData] = useState<MirzapurVotesData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [tnc, setTnc] = useState<any>(null);
+    const [tncModal, setTncModal] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
 
     // Selected Character state
     const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
@@ -53,6 +60,10 @@ export default function MirzapurVotesPage() {
                 const data = await GetCampaignData();
                 if (data?.MirzapurVotes) {
                     setVotesData(data.MirzapurVotes);
+                }
+                const termsContent = (data?.MirzapurVotes as any)?.terms_and_conditions || data?.Mirzapur?.terms_and_conditions;
+                if (termsContent) {
+                    setTnc(termsContent);
                 }
             } catch (err) {
                 console.error("Failed to fetch MirzapurVotes data from Strapi:", err);
@@ -102,6 +113,11 @@ export default function MirzapurVotesPage() {
 
         if (!phone.trim()) {
             setFormError("Please enter your phone number.");
+            return;
+        }
+
+        if (!termsAccepted) {
+            setFormError("You must accept the Terms & Conditions to submit your vote.");
             return;
         }
 
@@ -167,7 +183,84 @@ export default function MirzapurVotesPage() {
         setFormError(null);
         if (voteSuccess) {
             setVoteSuccess(false);
+            setTermsAccepted(false);
         }
+    };
+
+    // Render Strapi Rich Text / Blocks for Terms & Conditions
+    const renderTermsContent = (terms: any) => {
+        const target = terms?.terms_and_conditions || terms;
+        if (!target) {
+            return (
+                <div className="space-y-3 text-neutral-300 text-xs sm:text-sm">
+                    <p className="font-semibold text-white">Mirzapur Voting Contest Rules:</p>
+                    <ol className="list-decimal pl-5 space-y-1.5 text-neutral-300">
+                        <li>This contest is open to legal residents of India aged 18 and above.</li>
+                        <li>Participants must vote for their character and submit a valid 10-digit mobile number.</li>
+                        <li>Only one vote per verified phone number is eligible for the reward draw.</li>
+                        <li>If your voted character survives in the show/movie, you stand a chance to win a free Mirzapur movie ticket.</li>
+                        <li>Winners will be notified via SMS or phone call. Tickets cannot be exchanged for cash.</li>
+                        <li>Cloud9 / The Coca-Cola Company reserves the right to disqualify fraudulent entries.</li>
+                    </ol>
+                </div>
+            );
+        }
+
+        if (typeof target === "string") {
+            return <div className="whitespace-pre-wrap text-neutral-300 text-xs sm:text-sm leading-relaxed">{target}</div>;
+        }
+
+        if (Array.isArray(target)) {
+            return (
+                <div className="space-y-3 text-neutral-300 text-xs sm:text-sm leading-relaxed">
+                    {target.map((block: any, idx: number) => {
+                        if (block.type === "heading") {
+                            const text = block.children?.map((c: any) => c.text).join("") || "";
+                            const level = block.level || 3;
+                            if (level === 1) return <h1 key={idx} className="text-lg sm:text-xl font-bold text-white mt-4 mb-2">{text}</h1>;
+                            if (level === 2) return <h2 key={idx} className="text-base sm:text-lg font-bold text-white mt-3 mb-2">{text}</h2>;
+                            return <h3 key={idx} className="text-sm sm:text-base font-bold text-white mt-2 mb-1">{text}</h3>;
+                        }
+
+                        if (block.type === "paragraph") {
+                            const children = block.children || [];
+                            const isBlank = children.every((c: any) => !c.text || c.text.trim() === "");
+                            if (isBlank) return <div key={idx} className="h-2" />;
+
+                            return (
+                                <p key={idx} className="text-neutral-300 text-xs sm:text-sm">
+                                    {children.map((child: any, cIdx: number) => {
+                                        let content: React.ReactNode = child.text || "";
+                                        if (child.bold) content = <strong key={cIdx} className="font-bold text-white">{content}</strong>;
+                                        if (child.italic) content = <em key={cIdx} className="italic">{content}</em>;
+                                        if (child.underline) content = <u key={cIdx} className="underline">{content}</u>;
+                                        return <React.Fragment key={cIdx}>{content}</React.Fragment>;
+                                    })}
+                                </p>
+                            );
+                        }
+
+                        if (block.type === "list") {
+                            const isOrdered = block.format === "ordered";
+                            const ListTag = isOrdered ? "ol" : "ul";
+                            return (
+                                <ListTag key={idx} className={`pl-5 space-y-1 ${isOrdered ? "list-decimal" : "list-disc"} text-neutral-300 text-xs sm:text-sm`}>
+                                    {block.children?.map((item: any, itemIdx: number) => (
+                                        <li key={itemIdx}>
+                                            {item.children?.map((c: any) => c.text).join("")}
+                                        </li>
+                                    ))}
+                                </ListTag>
+                            );
+                        }
+
+                        return null;
+                    })}
+                </div>
+            );
+        }
+
+        return null;
     };
 
     // Disabled Page State
@@ -499,10 +592,34 @@ export default function MirzapurVotesPage() {
                                     />
                                 </div>
 
+                                {/* Terms & Conditions Checkbox */}
+                                <div className="flex items-start gap-2.5 pt-1">
+                                    <input
+                                        type="checkbox"
+                                        id="voteTermsAccepted"
+                                        checked={termsAccepted}
+                                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                                        required
+                                        disabled={submitting}
+                                        className="mt-0.5 w-4 h-4 rounded bg-neutral-900 border-neutral-700 text-red-600 focus:ring-red-500 cursor-pointer accent-red-600 shrink-0"
+                                    />
+                                    <label htmlFor="voteTermsAccepted" className="text-xs text-neutral-300 leading-snug select-none cursor-pointer">
+                                        I agree to the{" "}
+                                        <button
+                                            type="button"
+                                            onClick={() => setTncModal(true)}
+                                            className="text-red-500 hover:text-red-400 font-semibold underline underline-offset-2 focus:outline-none cursor-pointer"
+                                        >
+                                            Terms & Conditions
+                                        </button>{" "}
+                                        for participating in this contest.
+                                    </label>
+                                </div>
+
                                 {/* Submit Vote Button */}
                                 <button
                                     type="submit"
-                                    disabled={submitting}
+                                    disabled={submitting || !termsAccepted}
                                     className="w-full mt-2 py-3 px-4 bg-red-600 hover:bg-red-700 active:scale-[0.99] text-white font-black rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(220,38,38,0.5)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                                 >
                                     {submitting ? (
@@ -516,6 +633,55 @@ export default function MirzapurVotesPage() {
                                 </button>
                             </form>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* Terms & Conditions Modal Overlay */}
+            {tncModal && (
+                <div className="fixed inset-0 z-[70] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+                    <div className="bg-[#0e0909] border border-red-700/60 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-[0_0_50px_rgba(220,38,38,0.5)] relative">
+                        {/* Header */}
+                        <div className="p-5 sm:p-6 border-b border-neutral-800 flex items-center justify-between">
+                            <div>
+                                <span className="inline-block px-3 py-1 bg-red-600/20 text-red-500 rounded-full text-[10px] font-black uppercase tracking-wider mb-1">
+                                    Official Rules
+                                </span>
+                                <h2 className="text-lg sm:text-xl font-black uppercase tracking-wide text-white">
+                                    Terms & Conditions
+                                </h2>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setTncModal(false)}
+                                className="text-neutral-400 hover:text-white text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center hover:bg-neutral-800/60 transition-colors cursor-pointer"
+                                aria-label="Close Terms"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        {/* Body */}
+                        <div className="p-5 sm:p-6 overflow-y-auto flex-1 text-neutral-300 text-xs sm:text-sm leading-relaxed">
+                            {renderTermsContent(tnc)}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="p-4 sm:p-5 border-t border-neutral-800 bg-neutral-950/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <p className="text-xs text-neutral-400">
+                                Please review and accept to participate in this contest.
+                            </p>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setTermsAccepted(true);
+                                    setTncModal(false);
+                                }}
+                                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 active:scale-[0.98] font-bold text-white text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(220,38,38,0.4)] cursor-pointer"
+                            >
+                                I Accept & Agree
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
