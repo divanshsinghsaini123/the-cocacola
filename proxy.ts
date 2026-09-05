@@ -8,6 +8,9 @@ export function proxy(req: NextRequest) {
     if (pathname == "/mirzapur") {
         return NextResponse.redirect(new URL("/Campaigns/mirzapur", req.url));
     }
+    if (pathname == "/mirzapur-votes") {
+        return NextResponse.redirect(new URL("/Campaigns/mirzapur-votes", req.url));
+    }
     // ---- Protect /api/admin/* (cookie-based, JSON 401 responses) ----
     if (pathname.startsWith("/api/admin")) {
         // Endpoints that MUST stay public (login / password recovery):
