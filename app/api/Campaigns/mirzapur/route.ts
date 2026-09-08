@@ -30,11 +30,32 @@ export async function POST(req: Request) {
             );
         }
 
-        // Validate image size (max 5MB)
+        // Validate image size (max 10MB)
         const MAX_SIZE = 10 * 1024 * 1024;
         if (bottleImage.size > MAX_SIZE) {
             return NextResponse.json(
                 { error: "Image file size exceeds 10MB limit." },
+                { status: 400 }
+            );
+        }
+
+        // Validate image format (webp, heic, png, jpg)
+        const allowedExtensions = ["webp", "heic", "heif", "png", "jpg", "jpeg"];
+        const allowedMimeTypes = [
+            "image/webp",
+            "image/heic",
+            "image/heif",
+            "image/png",
+            "image/jpeg",
+            "image/pjpeg",
+        ];
+        const fileExt = bottleImage.name.split(".").pop()?.toLowerCase() || "";
+        const isExtValid = allowedExtensions.includes(fileExt);
+        const isMimeValid = bottleImage.type ? allowedMimeTypes.includes(bottleImage.type.toLowerCase()) : false;
+
+        if (!isExtValid && !isMimeValid) {
+            return NextResponse.json(
+                { error: "Invalid file format. Only WebP, HEIC, PNG, and JPG formats are accepted." },
                 { status: 400 }
             );
         }

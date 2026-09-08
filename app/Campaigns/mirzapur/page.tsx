@@ -62,6 +62,29 @@ export default function MirzapurPage() {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            const allowedExtensions = ["webp", "heic", "heif", "png", "jpg", "jpeg"];
+            const allowedMimeTypes = [
+                "image/webp",
+                "image/heic",
+                "image/heif",
+                "image/png",
+                "image/jpeg",
+                "image/pjpeg",
+            ];
+
+            const ext = file.name.split(".").pop()?.toLowerCase() || "";
+            const isExtValid = allowedExtensions.includes(ext);
+            const isMimeValid = allowedMimeTypes.includes(file.type.toLowerCase());
+
+            if (!isExtValid && !isMimeValid) {
+                setError("Please upload an image in WEBP, HEIC, PNG, or JPG format.");
+                e.target.value = "";
+                setBottleImage(null);
+                setImagePreview(null);
+                return;
+            }
+
+            setError(null);
             setBottleImage(file);
             setImagePreview(URL.createObjectURL(file));
         }
@@ -85,6 +108,21 @@ export default function MirzapurPage() {
 
         if (!name || !cleanedPhone || !specialCode || !bottleImage) {
             setError("Please fill out all fields and upload the bottle photo.");
+            return;
+        }
+
+        const allowedExtensions = ["webp", "heic", "heif", "png", "jpg", "jpeg"];
+        const allowedMimeTypes = [
+            "image/webp",
+            "image/heic",
+            "image/heif",
+            "image/png",
+            "image/jpeg",
+            "image/pjpeg",
+        ];
+        const ext = bottleImage.name.split(".").pop()?.toLowerCase() || "";
+        if (!allowedExtensions.includes(ext) && !allowedMimeTypes.includes(bottleImage.type.toLowerCase())) {
+            setError("Please upload an image in WEBP, HEIC, PNG, or JPG format.");
             return;
         }
 
@@ -273,12 +311,17 @@ export default function MirzapurPage() {
 
                         {/* 4. Upload Bottle Photo */}
                         <div>
-                            <label className="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-2">
-                                Photo of Empty Bottle with code visible
-                            </label>
+                            <div className="flex items-baseline justify-between mb-2">
+                                <label className="block text-xs font-semibold text-neutral-300 uppercase tracking-wider">
+                                    Photo of Empty Bottle with code visible
+                                </label>
+                                <span className="text-[10px] text-neutral-400 font-medium">
+                                    WEBP, HEIC, PNG, JPG
+                                </span>
+                            </div>
                             <input
                                 type="file"
-                                accept="image/*"
+                                accept=".webp,.heic,.heif,.png,.jpg,.jpeg,image/webp,image/heic,image/heif,image/png,image/jpeg"
                                 onChange={handleImageChange}
                                 required
                                 className="w-full text-xs text-neutral-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-neutral-800 file:text-white hover:file:bg-neutral-700 cursor-pointer"
