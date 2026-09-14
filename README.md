@@ -1,9 +1,9 @@
-# Project Setup, Configuration, & Architecture Guide
+# Project Setup & Configuration Guide
 
-Welcome to the comprehensive setup guide for this project. This documentation explains step-by-step how to configure your Database (MongoDB), CDN & Cloud Storage (Gcore), and Headless CMS (Strapi). 
+Welcome to the project setup guide. This documentation walks through configuring Database (MongoDB), CDN & Cloud Storage (Gcore), and Headless CMS (Strapi).
 
 > [!NOTE]
-> For a visual and detailed technical breakdown of the production deployment, database pipelines, triggers, and automated GitHub Action cron backup workflows, please check the [System Architecture Guide](file:///d:/the-cocacola/ARCHITECTURE.md).
+> For the complete visual system architecture, data pipelines, triggers, and automated workflows, refer to the [System Architecture Guide](./ARCHITECTURE.md).
 
 Before starting, ensure you have Node.js and a package manager (npm) installed on your machine.
 
