@@ -62,24 +62,6 @@ NEXT_PUBLIC_COMPANY_ADDRESS="Cloud9 Beverages 101, Bhakti Park, R.H.B. Road, Mul
 NEXT_PUBLIC_DEFAULT_KEYWORDS="beverages,drinks,refreshment,manufacturing,distribution"
 NEXT_PUBLIC_COPYRIGHT="© 2025 The Cloud9 Beverages Company. All rights reserved."
 
-# DYNAMIC PAGE METADATA defaults
-NEXT_PUBLIC_HOME_TITLE="Home"
-NEXT_PUBLIC_HOME_DESCRIPTION="Experience the refreshing taste of our world-class beverages."
-NEXT_PUBLIC_ABOUT_TITLE="About Us"
-NEXT_PUBLIC_ABOUT_DESCRIPTION="Learn about our company, our history, and our mission to refresh the world."
-NEXT_PUBLIC_BRANDS_TITLE="Our Brands"
-NEXT_PUBLIC_BRANDS_DESCRIPTION="Explore our portfolio of world-class beverage brands."
-NEXT_PUBLIC_CONTACT_TITLE="Contact Us"
-NEXT_PUBLIC_CONTACT_DESCRIPTION="Get in touch with us. Find our contact info, location, and send us a message."
-NEXT_PUBLIC_EVENTS_TITLE="Events"
-NEXT_PUBLIC_EVENTS_DESCRIPTION="Join us at our events and stay updated with community happenings."
-NEXT_PUBLIC_EXTENSION_TITLE="Extension"
-NEXT_PUBLIC_EXTENSION_DESCRIPTION="Explore our extensions and additional offerings."
-NEXT_PUBLIC_COBRANDING_TITLE="Cobranding"
-NEXT_PUBLIC_COBRANDING_DESCRIPTION="Partner with us for successful cobranding campaigns."
-NEXT_PUBLIC_MANUFACTURING_TITLE="Manufacturing"
-NEXT_PUBLIC_MANUFACTURING_DESCRIPTION="Learn about our manufacturing processes, facilities, and high standards."
-
 # TRACKING ANALYTICS PIXELS
 NEXT_PUBLIC_GA_MEASUREMENT_ID=""
 NEXT_PUBLIC_META_PIXEL_ID=""
