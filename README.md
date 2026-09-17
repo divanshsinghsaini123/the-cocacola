@@ -47,10 +47,19 @@ GITHUB_OWNER="github_username_or_organization"
 GITHUB_REPO="github_repository_name"
 GITHUB_TOKEN="your_github_personal_access_token"
 
-# TRANSACTIONAL EMAIL & BACKUP CRONS
+# TRANSACTIONAL EMAIL NOTIFICATIONS (Nodemailer SMTP)
 EMAIL_USER="your_sending_gmail_address@gmail.com"
 EMAIL_PASS="your_gmail_app_password"
 REPORT_EMAIL_TO="recipient_email_address_1@gmail.com, recipient_email_address_2@gmail.com"
+
+# CATEGORY-SPECIFIC EMAIL ROUTING
+# 1. Manufacturing, Copacking, Co-branding, Cofilling, Factory plant
+MANUFACTURING_EMAIL_TO="manufacturing@yourdomain.com"
+MANUFACTURING_EMAIL_CC="manufacturing-cc@yourdomain.com"
+
+# 2. Marketing, General Contact Us, Become Our Distributor, Customer Inquiries
+MARKETING_EMAIL_TO="marketing@yourdomain.com"
+MARKETING_EMAIL_CC=""
 
 # COMPANY INFORMATION & MULTI-BRANDING CONFIGURATION
 NEXT_PUBLIC_COMPANY_NAME="The Cloud9 Beverages Company"
