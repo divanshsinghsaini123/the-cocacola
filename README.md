@@ -45,7 +45,19 @@ NEXT_PUBLIC_GCORE_CDN_URL="https://cdn.yourdomain.com"
 # GITHUB WORKFLOWS AUTOMATED DISPATCHERS
 GITHUB_OWNER="github_username_or_organization"
 GITHUB_REPO="github_repository_name"
+GITHUB_BRANCH="main"
 GITHUB_TOKEN="your_github_personal_access_token"
+
+# POSTGRES DATABASE CREDENTIALS (FOR WEEKLY AUTOMATED BACKUPS & RESTORES)
+DATABASE_CLIENT="postgres"
+DATABASE_HOST="your_postgres_host.db.ondigitalocean.com"
+DATABASE_PORT="25060"
+DATABASE_NAME="defaultdb"
+DATABASE_USERNAME="doadmin"
+DATABASE_PASSWORD="your_postgres_password"
+DATABASE_SSL="true"
+DATABASE_SSL_REJECT_UNAUTHORIZED="false"
+DATABASE_URL="postgresql://username:password@host:port/dbname?sslmode=require"
 
 # TRANSACTIONAL EMAIL NOTIFICATIONS (Nodemailer SMTP)
 EMAIL_USER="your_sending_gmail_address@gmail.com"
