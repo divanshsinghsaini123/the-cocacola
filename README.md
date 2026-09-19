@@ -20,8 +20,10 @@ MONGODB_URI="your_mongodb_connection_string"
 # JWT CONFIG
 JWT_SECRET="your_secure_jwt_secret"
 
-# SITE URL
-NEXT_PUBLIC_BASE_URL="https://your-deployed-site-url.com"
+# SERVER & HOST CONFIGURATION
+HOST="cloud9beverages.com"
+PROTOCOL="https"
+NEXT_PUBLIC_BASE_URL="https://cloud9beverages.com"
 
 # STRAPI CONFIGURATION
 # Local Development: NEXT_PUBLIC_STRAPI_URL="http://localhost:1337"
@@ -37,7 +39,7 @@ GCORE_ENDPOINT="https://s-ed1.cloud.gcore.lu"
 GCORE_CDN_HOSTNAME="s-ed1.cloud.gcore.lu"
 GCORE_BUCKET_NAME="cocacola-bucket"
 GCORE_REGION="s-ed1"
-NEXT_PUBLIC_GCORE_CDN_URL="https://cdn.yourdomain.com"
+NEXT_PUBLIC_GCORE_CDN_URL="https://cdn.cloud9beverages.com"
 
 # DEV ENVIRONMENT SSL FIX (Local development ONLY - NEVER set this in production!)
 # NODE_TLS_REJECT_UNAUTHORIZED="0"
@@ -86,9 +88,12 @@ NEXT_PUBLIC_COPYRIGHT="© 2025 The Cloud9 Beverages Company. All rights reserved
 # TRACKING ANALYTICS PIXELS
 NEXT_PUBLIC_GA_MEASUREMENT_ID=""
 NEXT_PUBLIC_META_PIXEL_ID=""
+
+# GOOGLE SHEETS WEBHOOK (MIRZAPUR CONTEST SUBMISSIONS)
+GOOGLE_SHEET_MIRZAPUR_WEBHOOK_URL="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
 ```
 
---- npm install
+---
 
 ## Step 1: MongoDB Database Setup
 
@@ -220,7 +225,7 @@ Submissions from the `/mirzapur` page are saved to MongoDB and automatically app
    ```
 
 ---
-The application should now be successfully running on `http://localhost:3000` connected to MongoDB, reading content from Strapi, and serving images from the Gcore CDN!
+The application should now be successfully running on `https://cloud9beverages.com` (or `http://localhost:3000` for local development) connected to MongoDB, reading content from Strapi, and serving images from the Gcore CDN!
 
 
 
