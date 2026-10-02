@@ -96,6 +96,13 @@ export function proxy(req: NextRequest) {
             return NextResponse.redirect(new URL("/admin/login", req.url));
         }
 
+        // 3. Agar user logged in hai aur sirf "/admin" likhta hai, to portal bhejo
+        if (req.nextUrl.pathname === "/admin") {
+            if (decodedToken.role === "ecom") {
+                return NextResponse.redirect(new URL("/admin/cloud9_inventory", req.url));
+            }
+            return NextResponse.redirect(new URL("/admin/portal", req.url));
+        }
         // 3. Strict Role-Based Route Protection for 'ecom' role
         if (decodedToken.role === "ecom") {
             // Allow ONLY /admin/cloud9_inventory and its sub-routes
