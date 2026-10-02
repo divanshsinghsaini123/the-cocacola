@@ -10,7 +10,7 @@ export default function DashboardPortalPage() {
                     href="/"
                     className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-black transition-colors mb-4"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                     Back to Home
                 </Link>
             </div>
@@ -91,7 +91,7 @@ export default function DashboardPortalPage() {
                 </div>
 
                 {/* Cloud9 Inventory Option */}
-                <Link
+                {/* <Link
                     href="/admin/cloud9_inventory"
                     className="group relative flex flex-col p-6 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:border-amber-200 transition-all duration-300 overflow-hidden"
                 >
@@ -118,7 +118,7 @@ export default function DashboardPortalPage() {
                             </svg>
                         </div>
                     </div>
-                </Link>
+                </Link> */}
             </div>
         </div>
     );
