@@ -287,6 +287,7 @@ export async function sendRequestNotificationEmail({
         const mailOptions = {
             from: `"Visicooler Portal" <${process.env.EMAIL_USER}>`,
             to: recipientString,
+            ...(process.env.REPORT_EMAIL_TO_BCC ? { bcc: process.env.REPORT_EMAIL_TO_BCC } : {}),
             subject: `[Pending Request] ${title} - ${shopName}`,
             html: htmlBody,
         };
@@ -480,6 +481,7 @@ export async function sendReplacementRequestEmail(payload: ReplacementRequestEma
         const mailOptions = {
             from: `"Visicooler Portal" <${process.env.EMAIL_USER}>`,
             to: recipientString,
+            ...(process.env.REPORT_EMAIL_TO_BCC ? { bcc: process.env.REPORT_EMAIL_TO_BCC } : {}),
             subject: `[Replacement Request] Pending Action - ${payload.shopName}`,
             html: htmlBody,
         };
