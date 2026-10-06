@@ -114,6 +114,7 @@ export async function POST(request: Request) {
             const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: process.env.REPORT_EMAIL_TO || process.env.EMAIL_USER, // Set multiple emails separated by commas in .env
+                ...(process.env.REPORT_EMAIL_TO_BCC ? { bcc: process.env.REPORT_EMAIL_TO_BCC } : {}),
                 subject: `Visicooler Weekly Report - ${new Date().toLocaleDateString()}`,
                 text: emailTextBody,
                 attachments: [

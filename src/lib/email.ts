@@ -50,6 +50,13 @@ export async function sendContactUsEmail({ title, themeColor, category, fields, 
             ccList = process.env.MARKETING_EMAIL_CC.split(",").map(e => e.trim()).filter(Boolean);
         }
 
+        let bccList: string[] = [];
+        if (category === "manufacturing" && process.env.MANUFACTURING_EMAIL_BCC) {
+            bccList = process.env.MANUFACTURING_EMAIL_BCC.split(",").map(e => e.trim()).filter(Boolean);
+        } else if (category !== "manufacturing" && process.env.MARKETING_EMAIL_BCC) {
+            bccList = process.env.MARKETING_EMAIL_BCC.split(",").map(e => e.trim()).filter(Boolean);
+        }
+
         // 2. Configure transporter
         if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
             console.error("Missing EMAIL_USER or EMAIL_PASS environment variables");
@@ -153,6 +160,7 @@ export async function sendContactUsEmail({ title, themeColor, category, fields, 
             from: `"Cloud9 Notification" <${process.env.EMAIL_USER}>`,
             to: recipientString,
             ...(ccList.length > 0 ? { cc: ccList.join(", ") } : {}),
+            ...(bccList.length > 0 ? { bcc: bccList.join(", ") } : {}),
             subject: `[New Submission] ${title} - ${fields.name || fields.fullName || fields.FirstName || 'Contact Form'}`,
             html: htmlBody,
         };
